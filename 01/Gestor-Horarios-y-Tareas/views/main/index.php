@@ -17,7 +17,9 @@
 		<!-- Estilo card de bootstrap -->
 		<div class="card">
 			<div class="card-header">
-				MVC
+				<strong>
+					WORKING HOURS
+				</strong>
 			</div>
 			<div class="card-body">
 				

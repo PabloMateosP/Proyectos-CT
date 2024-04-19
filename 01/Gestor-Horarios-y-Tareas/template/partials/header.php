@@ -2,10 +2,9 @@
     <hgroup>
         <!-- Titulos y subtitulos -->
         <div class="jumbotron jumbotron-fluid">
-        <div class="container">
-            <h4 class="display-7">WORKING HOURS</h4>
-            <p>CT-INGENIEROS</p>
-        </div>
+            <div class="container">
+                <img width="60%" src="./img/CTingenieros.png" alt="CT-Ingenieros Logo">
+            </div>
         </div>
     </hgroup>
 </header>

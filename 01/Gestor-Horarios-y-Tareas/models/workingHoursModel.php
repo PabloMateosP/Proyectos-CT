@@ -60,7 +60,7 @@ class workingHoursModel extends Model
                 );
             ";
         } catch (PDOException $error) {
-            require_once("template/partials/errorDB.php");
+            require_once ("template/partials/errorDB.php");
             exit();
         }
     }
@@ -293,27 +293,40 @@ class workingHoursModel extends Model
 
             $sql = "
                     SELECT 
-                        id,
-                        concat_ws(', ', apellidos, nombre) cliente,
-                        telefono,
-                        ciudad,
-                        dni,
-                        email
+                        wh.id, 
+                        wh.id_employee, 
+                        concat_ws(', ', emp.last_name, emp.name) AS employee_name, 
+                        tc.time_code, 
+                        p.project AS project_name,  
+                        t.description AS task_description,  
+                        wo.description AS work_order_description, 
+                        wh.date_worked, 
+                        wh.duration 
                     FROM 
-                        clientes 
+                        working_hours wh
+                    JOIN 
+                        employees emp ON wh.id_employee = emp.id
+                    JOIN 
+                        time_codes tc ON wh.id_time_code = tc.id
+                    JOIN 
+                        projects p ON wh.id_project = p.id
+                    JOIN 
+                        tasks t ON wh.id_task = t.id
+                    JOIN 
+                        work_orders wo ON wh.id_work_order = wo.id
                     WHERE 
                         concat_ws(  
-                                    ' ',
-                                    id,
-                                    apellidos,
-                                    nombre,
-                                    telefono,
-                                    ciudad,
-                                    dni,
-                                    email
-                                )
+                            ' ',
+                            emp.last_name,
+                            emp.name,
+                            tc.time_code,
+                            t.description,
+                            wo.description,
+                            wh.date_worked,
+                            wh.duration
+                            )
                         LIKE 
-                                :expresion
+                            :expresion
                     
                     ORDER BY id ASC";
 
