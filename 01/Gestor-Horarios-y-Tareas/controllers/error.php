@@ -9,8 +9,6 @@
             $this->view->render('error/index');
         }
 
-      
-
     }
 
 ?>

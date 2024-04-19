@@ -1,11 +1,10 @@
 <!-- Navigation -->
 
-<!-- En los enlaces pondremos el nombre del controlador -->
-
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">WORKING HOURS</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+      aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarScroll">
@@ -15,18 +14,17 @@
         </li>
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="<?= URL ?>contactar">Contactar</a>
-          <!-- Añadimos opción contactar en el menú inicial antes de registro -->
         </li>
       </ul>
       <div class="d-flex">
         <div class="collapse navbar-collapse" id="exCollapsingNavbar">
-              <ul class="nav navbar-nav flex-row justify-content-between ml-auto">
-                  <li class="nav-item"><a href="<?= URL ?>login" class="nav-link active">Login</a></li>
-                  <li class="nav-item"><a href="<?= URL ?>register" class="nav-link active">Sign Up</a></li>
-              </ul>
+          <ul class="nav navbar-nav flex-row justify-content-between ml-auto">
+            <li class="nav-item"><a href="<?= URL ?>login" class="nav-link active">Login</a></li>
+            <li class="nav-item"><a href="<?= URL ?>register" class="nav-link active">Sign Up</a></li>
+          </ul>
         </div>
       </div>
     </div>
-    
+
   </div>
 </nav>

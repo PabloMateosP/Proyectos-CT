@@ -2,7 +2,6 @@
 
     class Login Extends Controller {
 
-
         public function render() {
 
             # Iniciar o continuar sesión segura
@@ -108,7 +107,6 @@
                 
                 header("location:". URL. "employees");
             }
-
 
         }
     }

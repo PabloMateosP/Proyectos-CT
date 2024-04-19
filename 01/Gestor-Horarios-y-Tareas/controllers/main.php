@@ -6,7 +6,6 @@
 
             parent ::__construct();
             
-            
         }
 
         function render() {

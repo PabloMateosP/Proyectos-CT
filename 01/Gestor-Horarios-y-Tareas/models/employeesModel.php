@@ -38,12 +38,12 @@ class employeesModel extends Model
     }
 
     # Método create
-    # Permite ejecutar INSERT en la tabla clientes
+    # Permite ejecutar INSERT en la tabla employees
     public function create(classCliente $cliente)
     {
         try {
             $sql = " INSERT INTO 
-                        clientes 
+                        employees 
                         (
                             nombre, 
                             apellidos, 
@@ -83,13 +83,13 @@ class employeesModel extends Model
     }
 
     # Método delete
-    # Permite ejecutar comando DELETE en la tabla clientes
+    # Permite ejecutar comando DELETE en la tabla employees
     public function delete($id)
     {
         try {
 
             $sql = " 
-                   DELETE FROM clientes WHERE id = :id;
+                   DELETE FROM employees WHERE id = :id;
                    ";
 
             $conexion = $this->db->connect();
@@ -119,7 +119,7 @@ class employeesModel extends Model
                         dni,
                         email
                     FROM  
-                        clientes  
+                        employees  
                     WHERE
                         id = :id";
 
@@ -149,7 +149,7 @@ class employeesModel extends Model
             dni,
             email
         FROM 
-            clientes
+            employees
         WHERE id =  :id;
                 ";
 
@@ -178,7 +178,7 @@ class employeesModel extends Model
     {
         try {
             $sql = " 
-                    UPDATE clientes
+                    UPDATE employees
                     SET
                         apellidos=:apellidos,
                         nombre=:nombre,
@@ -225,7 +225,7 @@ class employeesModel extends Model
                         dni,
                         email
                     FROM 
-                        clientes 
+                        employees 
                     ORDER BY
                         :criterio";
 
@@ -244,7 +244,7 @@ class employeesModel extends Model
     }
 
     # Método filter
-    # Permite filtar la tabla clientes a partir de una expresión de búsqueda
+    # Permite filtar la tabla employees a partir de una expresión de búsqueda
     public function filter($expresion)
     {
         try {
@@ -258,7 +258,7 @@ class employeesModel extends Model
                         dni,
                         email
                     FROM 
-                        clientes 
+                        employees 
                     WHERE 
                         concat_ws(  
                                     ' ',
@@ -297,7 +297,7 @@ class employeesModel extends Model
         try {
 
             $sql = "
-                SELECT * FROM clientes
+                SELECT * FROM employees
                 WHERE email = :email
             ";
 
@@ -328,7 +328,7 @@ class employeesModel extends Model
         try {
 
             $sql = "
-                SELECT * FROM clientes
+                SELECT * FROM employees
                 WHERE dni = :dni
             ";
 
