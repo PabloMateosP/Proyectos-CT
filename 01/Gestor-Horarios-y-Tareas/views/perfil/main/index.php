@@ -54,7 +54,7 @@
                             <!-- botones acción -->
                             <div class="row mb-3">
                                 <div class="col-sm-9 offset-sm-3">
-                                    <a class="btn btn-secondary" href="<?=URL?>clientes" role="button">Salir</a>
+                                    <a class="btn btn-secondary" href="<?=URL?>employees" role="button">Salir</a>
                                 </div>
                             </div>
                        
