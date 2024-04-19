@@ -16,6 +16,10 @@
         <li class="nav-item">
           <a class="nav-link active" href="<?=URL?>workingHours/">Horas Laborales</a>
         </li>
+        <li class="nav-item">
+                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['admin']) ?: 'disabled' ?>"
+                        href="<?= URL ?>users">Usuarios</a>
+                </li>
       </ul>
       <div class="d-flex">
         <div class="collapse navbar-collapse" id="exCollapsingNavbar">

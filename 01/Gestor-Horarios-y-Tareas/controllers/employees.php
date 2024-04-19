@@ -25,7 +25,7 @@ class Employees extends Controller
             }
 
             $this->view->title = "Tabla Empleados";
-            $this->view->employees = $this->model->get();
+            $this->view->employees = $this->model->get(); 
             $this->view->render("employees/main/index");
         }
     }

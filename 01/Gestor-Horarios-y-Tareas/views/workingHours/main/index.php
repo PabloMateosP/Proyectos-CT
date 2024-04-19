@@ -26,7 +26,7 @@
                     <th>Time Code</th>
                     <th>Work Order</th>
                     <th>Project</th>
-                    <th>Description</th>
+                    <th>Description (Task)</th>
                     <th>Date Worked</th>
                     <th>Duration</th>
                     

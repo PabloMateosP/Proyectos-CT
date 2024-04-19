@@ -24,12 +24,13 @@
                         Ordenar
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/ordenar/1">ID</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/ordenar/2">Cliente</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/ordenar/6">Email</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/ordenar/3">Telefono</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/ordenar/5">dni</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/ordenar/4">ciudad</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/ordenar/4">Time Code</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/ordenar/3">Nombre Empleado</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/ordenar/5">Nombre Proyecto</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/ordenar/6">Tarea</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/ordenar/7">Orden de Trabajo</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/ordenar/8">Fecha de Trabajo</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/ordenar/9">Duración</a></li>
                     </ul>
                 </li>
             </ul>

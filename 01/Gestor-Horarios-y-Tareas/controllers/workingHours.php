@@ -3,7 +3,7 @@
 class WorkingHours extends Controller
 {
 
-    # Método principal. Muestra todos los clientes
+    # Método principal. Muestra todos los workingHours
     public function render($param = [])
     {
         #inicio o continuo sesion
@@ -27,9 +27,6 @@ class WorkingHours extends Controller
             $this->view->title = "Working Hours";
             $this->view->workingHours = $this->model->get();
 
-            # Función con la cual leeremos la suma de las horas trabajadas
-            $this->view->sums = $this->model->getSumForEachEmployee();
-
             $this->view->render("workingHours/main/index");
         }
     }
@@ -46,9 +43,9 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['clientes']['new']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['new']))) {
             $_SESSION['mensaje'] = "Operación sin privilegio";
-            header("location:" . URL . "clientes");
+            header("location:" . URL . "workingHours");
         } else {
 
             # Creamos un objeto vacio
@@ -68,12 +65,12 @@ class WorkingHours extends Controller
                 // debemos liberar las variables de sesión ya que su cometido ha sido resuelto
                 unset($_SESSION['error']);
                 unset($_SESSION['errores']);
-                unset($_SESSION['clientes']);
+                unset($_SESSION['workingHours']);
                 // Si estas variables existen cuando no hay errores, entraremos en los bloques de error en las condicionales
             }
 
             $this->view->title = "Formulario cliente nuevo";
-            $this->view->render("clientes/nuevo/index");
+            $this->view->render("workingHours/nuevo/index");
         }
     }
     # Método create. 
@@ -88,10 +85,10 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if (!in_array($_SESSION['id_rol'], $GLOBALS['clientes']['new'])) {
+        } else if (!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['new'])) {
 
             $_SESSION['mensaje'] = "Operación sin privilegio";
-            header("location:" . URL . "clientes");
+            header("location:" . URL . "workingHours");
 
         } else {
 
@@ -191,7 +188,7 @@ class WorkingHours extends Controller
                 $_SESSION['error'] = 'Formulario no validado';
                 $_SESSION['errores'] = $errores;
 
-                header('location:' . URL . 'clientes/nuevo');
+                header('location:' . URL . 'workingHours/nuevo');
 
             } else {
                 //crear cliente
@@ -201,8 +198,8 @@ class WorkingHours extends Controller
                 #Mensaje
                 $_SESSION['mensaje'] = "Cliente creado correctamente";
 
-                # Redirigimos al main de clientes
-                header('location:' . URL . 'clientes');
+                # Redirigimos al main de workingHours
+                header('location:' . URL . 'workingHours');
             }
         }
     }
@@ -217,15 +214,15 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['clientes']['delete']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['delete']))) {
             $_SESSION['mensaje'] = "Operación sin privilegio";
-            header("location:" . URL . "clientes");
+            header("location:" . URL . "workingHours");
         } else {
             $id = $param[0];
             $this->model->delete($id);
             $_SESSION['mensaje'] = 'Alumno eliminado correctamente';
 
-            header("Location:" . URL . "clientes");
+            header("Location:" . URL . "workingHours");
         }
     }
 
@@ -240,10 +237,10 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if (!in_array($_SESSION['id_rol'], $GLOBALS['clientes']['edit'])) {
+        } else if (!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['edit'])) {
             $_SESSION['mensaje'] = "Operación sin privilegios";
 
-            header('location:' . URL . 'clientes');
+            header('location:' . URL . 'workingHours');
 
         } else {
 
@@ -274,11 +271,11 @@ class WorkingHours extends Controller
                 // debemos liberar las variables de sesión ya que su cometido ha sido resuelto
                 unset($_SESSION['error']);
                 unset($_SESSION['errores']);
-                unset($_SESSION['clientes']);
+                unset($_SESSION['workingHours']);
                 // Si estas variables existen cuando no hay errores, entraremos en los bloques de error en las condicionales
             }
 
-            $this->view->render("clientes/editar/index");
+            $this->view->render("workingHours/editar/index");
         }
     }
     # Método update.
@@ -294,9 +291,9 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['clientes']['edit']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['edit']))) {
             $_SESSION['mensaje'] = "Operación sin privilegio";
-            header("location:" . URL . "clientes");
+            header("location:" . URL . "workingHours");
         } else {
 
             #1.Seguridad. Saneamos los datos del formulario
@@ -414,8 +411,8 @@ class WorkingHours extends Controller
                 $_SESSION['error'] = 'Formulario no validado';
                 $_SESSION['errores'] = $errores;
 
-                # Redirigimos al main de clientes
-                header('location:' . URL . 'clientes/editar/' . $id);
+                # Redirigimos al main de workingHours
+                header('location:' . URL . 'workingHours/editar/' . $id);
             } else {
                 //crear alumno
                 # Añadir registro a la tabla
@@ -425,7 +422,7 @@ class WorkingHours extends Controller
                 $_SESSION['mensaje'] = "Cliente actualizado correctamente";
 
                 # Redirigimos al main de alumnos
-                header('location:' . URL . 'clientes');
+                header('location:' . URL . 'workingHours');
             }
         }
     }
@@ -441,19 +438,19 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['clientes']['show']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['show']))) {
             $_SESSION['mensaje'] = "Operación sin privilegio";
-            header("location:" . URL . "clientes");
+            header("location:" . URL . "workingHours");
         } else {
             $id = $param[0];
             $this->view->title = "Formulario Cliente Mostar";
             $this->view->cliente = $this->model->getCliente($id);
-            $this->view->render("clientes/mostrar/index");
+            $this->view->render("workingHours/mostrar/index");
         }
     }
 
     # Método ordenar
-    # Permite ordenar la tabla de clientes por cualquiera de las columnas de la tabla
+    # Permite ordenar la tabla de workingHours por cualquiera de las columnas de la tabla
     public function ordenar($param = [])
     {
         session_start();
@@ -462,20 +459,20 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['clientes']['order']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['order']))) {
             $_SESSION['mensaje'] = "Operación sin privilegio";
-            header("location:" . URL . "clientes");
+            header("location:" . URL . "workingHours");
         } else {
             $criterio = $param[0];
-            $this->view->title = "Tabla Clientes";
-            $this->view->clientes = $this->model->order($criterio);
-            $this->view->render("clientes/main/index");
+            $this->view->title = "Tabla workingHours";
+            $this->view->workingHours = $this->model->order($criterio);
+            $this->view->render("workingHours/main/index");
         }
 
     }
 
     # Método buscar
-    # Permite buscar los registros de clientes que cumplan con el patrón especificado en la expresión
+    # Permite buscar los registros de workingHours que cumplan con el patrón especificado en la expresión
     # de búsqueda
     public function buscar($param = [])
     {
@@ -485,14 +482,14 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['clientes']['filter']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['filter']))) {
             $_SESSION['mensaje'] = "Operación sin privilegio";
-            header("location:" . URL . "clientes");
+            header("location:" . URL . "workingHours");
         } else {
             $expresion = $_GET["expresion"];
-            $this->view->title = "Tabla Clientes";
-            $this->view->clientes = $this->model->filter($expresion);
-            $this->view->render("clientes/main/index");
+            $this->view->title = "Tabla workingHours";
+            $this->view->workingHours = $this->model->filter($expresion);
+            $this->view->render("workingHours/main/index");
         }
     }
 
@@ -504,17 +501,17 @@ class WorkingHours extends Controller
             $_SESSION['mensaje'] = "Usuario debe autentificarse";
             header("location:" . URL . "login");
             exit();  // Terminar la ejecución para evitar procesar la exportación sin autenticación
-        } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['clientes']['export'])) {
+        } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['export'])) {
             $_SESSION['mensaje'] = "Operación sin privilegio";
-            header("location:" . URL . "clientes");
+            header("location:" . URL . "workingHours");
             exit();  // Terminar la ejecución para evitar procesar la exportación sin privilegios
         }
 
-        // Obtener datos de clientes
-        $clientes = $this->model->get()->fetchAll(PDO::FETCH_ASSOC);
+        // Obtener datos de workingHours
+        $workingHours = $this->model->get()->fetchAll(PDO::FETCH_ASSOC);
 
         // Nombre del archivo CSV
-        $csvExportado = 'export_clientes.csv';
+        $csvExportado = 'export_workingHours.csv';
 
         // Establecer las cabeceras para la descarga del archivo
         header('Content-Type: text/csv');
@@ -526,8 +523,8 @@ class WorkingHours extends Controller
         // Escribir la primera fila con los encabezados
         fputcsv($archivo, ['apellidos', 'nombre', 'telefono', 'ciudad', 'dni', 'email', 'create_at', 'update_at'], ';');
 
-        // Iterar sobre los clientes y escribir cada fila en el archivo
-        foreach ($clientes as $cliente) {
+        // Iterar sobre los workingHours y escribir cada fila en el archivo
+        foreach ($workingHours as $cliente) {
             // Separar el campo "cliente" en "apellidos" y "nombre"
             list($apellidos, $nombre) = explode(', ', $cliente['cliente']);
 
@@ -562,9 +559,9 @@ class WorkingHours extends Controller
             $_SESSION['mensaje'] = "Usuario debe autentificarse";
             header("location:" . URL . "login");
             exit();
-        } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['clientes']['import'])) {
+        } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['import'])) {
             $_SESSION['mensaje'] = "Operación sin privilegio";
-            header("location:" . URL . "clientes");
+            header("location:" . URL . "workingHours");
             exit();
         }
 
@@ -572,7 +569,7 @@ class WorkingHours extends Controller
         // Validar si se ha subido un archivo
         if (!isset($_FILES['archivos']) || $_FILES['archivos']['error'] != UPLOAD_ERR_OK) {
             $_SESSION['mensaje'] = "Error al subir el archivo CSV. ";
-            header("location:" . URL . "clientes");
+            header("location:" . URL . "workingHours");
             exit();
         }
 
@@ -585,7 +582,7 @@ class WorkingHours extends Controller
         // Validar que se pudo abrir el archivo
         if (!$archivo) {
             $_SESSION['mensaje'] = "Error al abrir el archivo CSV.";
-            header("location:" . URL . "clientes");
+            header("location:" . URL . "workingHours");
             exit();
         }
 
@@ -610,7 +607,7 @@ class WorkingHours extends Controller
 
         // Redirigir después de importar
         $_SESSION['mensaje'] = "Datos importados correctamente.";
-        header("location:" . URL . "clientes");
+        header("location:" . URL . "workingHours");
         exit();
     }
 
@@ -622,7 +619,7 @@ class WorkingHours extends Controller
             $_SESSION['mensaje'] = "Usuario debe autentificarse";
             header("location:" . URL . "login");
             exit();
-        } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['clientes']['export'])) {
+        } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['export'])) {
             $_SESSION['mensaje'] = "Operación sin privilegio";
             header("location:" . URL . "cuentas");
             exit();
@@ -638,7 +635,7 @@ class WorkingHours extends Controller
             ['header' => 'Email', 'field' => 'email', 'width' => 40],
         ];
 
-        $pdf = new PDFClientes();
+        $pdf = new PDFworkingHours();
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->TituloInforme();

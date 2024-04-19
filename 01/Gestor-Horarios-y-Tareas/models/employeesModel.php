@@ -210,8 +210,6 @@ class employeesModel extends Model
         }
     }
 
-
-
     # Método update
     # Permite ordenar la tabla de cliente por cualquiera de las columnas del main
     # El criterio de ordenación se establec mediante el número de la columna del select
