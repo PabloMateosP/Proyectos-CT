@@ -416,13 +416,14 @@ DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE IF NOT EXISTS `users` (
     `id` INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    `id_employee` INT UNSIGNED UNIQUE,
     `name` VARCHAR(50),
     `email` VARCHAR(50) UNIQUE,
     `password` CHAR(60),
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `update_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     KEY `id_employee` (`id_employee`),
-    FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (`id_employee`) REFERENCES `employees` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 --
