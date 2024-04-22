@@ -8,7 +8,12 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['employees']['export']) ?: 'disabled' ?>" href="<?= URL ?>employees/exportar">Exportar CSV</a>
+                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['employees']['new']) ?: 'disabled' ?>"
+                        href="<?= URL ?>employees/nuevo">Nuevo</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['employees']['export']) ?: 'disabled' ?>"
+                        href="<?= URL ?>employees/exportar">Exportar CSV</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['employees']['import']) ?: 'disabled' ?>"
