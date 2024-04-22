@@ -416,7 +416,6 @@ DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE IF NOT EXISTS `users` (
     `id` INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    `id_employee` INT UNSIGNED UNIQUE,
     `name` VARCHAR(50),
     `email` VARCHAR(50) UNIQUE,
     `password` CHAR(60),
