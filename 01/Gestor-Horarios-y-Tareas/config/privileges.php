@@ -27,7 +27,7 @@ $GLOBALS['workingHours']['order'] = [1, 2, 3];
 $GLOBALS['workingHours']['export'] = [1];
 $GLOBALS['workingHours']['import'] = [1];
 
-// Variables para Modificación y Borrado de usuarios
+// Variables para solo uso de administrador
 $GLOBALS['admin'] = [1];
 $GLOBALS['admin']['mostrar'] = [1];
 $GLOBALS['admin']['nuevo'] = [1];

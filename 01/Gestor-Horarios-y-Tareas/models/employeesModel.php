@@ -37,6 +37,32 @@ class employeesModel extends Model
         }
     }
 
+    public function getEmployeeById($id)
+    {
+        try {
+            $sql = "SELECT 
+                id,
+                concat_ws(', ', last_name, name) employee,
+                phone,
+                city,
+                dni,
+                email,
+                total_hours
+            FROM 
+                employees WHERE id = :id";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":id", $id, PDO::PARAM_INT);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
     # Método create
     # Permite ejecutar INSERT en la tabla employees
     public function create(classEmployee $employee)
