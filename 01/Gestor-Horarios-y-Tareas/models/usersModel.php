@@ -68,7 +68,7 @@ class usersModel extends Model
 
     # Método create
     # Insertamos un nuevo registro 
-    public function create($nombre, $email, $password, $id_rol)
+    public function create($nombre, $email, $password, $id_rol, $id_employee)
     {
         try {
 
@@ -82,6 +82,7 @@ class usersModel extends Model
                         :nombre,
                         :email,
                         :pass,
+                        :id_employee
                         default,
                         now())";
 
@@ -91,6 +92,7 @@ class usersModel extends Model
             $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
             $stmt->bindParam(':pass', $password, PDO::PARAM_STR);
+            $stmt->bindParam(':id_employee', $id_employee, PDO::PARAM_INT);
 
             $stmt->execute();
 

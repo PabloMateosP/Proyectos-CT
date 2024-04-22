@@ -1,8 +1,5 @@
 <?php
 
-
-// No respeta la propiedad de encapsulamiento
-
 class Movimiento
 {
 

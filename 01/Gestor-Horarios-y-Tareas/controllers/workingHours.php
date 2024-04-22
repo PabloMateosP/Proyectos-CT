@@ -31,15 +31,15 @@ class WorkingHours extends Controller
         }
     }
 
-    # Método nuevo. Muestra formulario añadir cliente
-    public function nuevo($param = [])
+    # "New" method. Form to add an new working Hours
+    public function new($param = [])
     {
-        # Continuamos la sesion
+        # Continue session if exists
         session_start();
 
-        # compruebo usuario autentificado
+        # User authenticated?
         if (!isset($_SESSION['id'])) {
-            $_SESSION['notify'] = "Usuario debe autentificarse";
+            $_SESSION['notify'] = "User must authenticated";
 
             header("location:" . URL . "login");
 

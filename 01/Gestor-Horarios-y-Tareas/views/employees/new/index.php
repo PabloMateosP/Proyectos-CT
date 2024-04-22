@@ -105,6 +105,19 @@
                         <?php endif; ?>
                     </div>
 
+                    <!-- ID_user -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Id User</label>
+                        <input type="text" class="form-control" name="id_user"
+                            value="<?= $this->employee->id_user ?>">
+                        <!-- Mostrar posible error -->
+                        <?php if (isset($this->errores['id_user'])): ?>
+                            <span class="form-text text-danger" role="alert">
+                                <?= $this->errores['id_user'] ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+
                     <!-- botones de acción -->
                     <div class="mb-3">
                         <a class="btn btn-secondary" href="<?= URL ?>employees" role="button">Cancelar</a>

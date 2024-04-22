@@ -86,6 +86,21 @@
                         <?php endif; ?>
                     </div>
 
+                    <!-- Employee Id -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Employee Id</label>
+                        <input type="text"
+                            class="form-control <?= (isset($this->errores['employeeId'])) ? 'is-invalid' : null ?>"
+                            name="employeeId">
+
+                        <!-- Mostrar posible error -->
+                        <?php if (isset($this->errores['employeeId'])): ?>
+                            <span class="form-text text-danger" role="alert">
+                                <?= $this->errores['employeeId'] ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+
                     <!-- Contraseña -->
                     <div class="mb-3">
                         <label for="" class="form-label">Contraseña</label>

@@ -11,6 +11,7 @@ class classEmployee
     public $dni;
     public $email;
     public $total_hours;
+    public $id_user;
     public $create_at;
     public $update_at;
     
@@ -25,6 +26,7 @@ class classEmployee
         $dni = null,
         $email = null,
         $total_hours = null,
+        $id_user = null,
         $create_at = null,
         $update_at = null,
 
@@ -38,6 +40,7 @@ class classEmployee
         $this->dni= $dni;
         $this->email=$email;
         $this->total_hours= $total_hours;
+        $this->id_user= $id_user;
         $this->create_at= $create_at;
         $this->update_at= $update_at;
 

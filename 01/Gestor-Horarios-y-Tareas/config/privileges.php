@@ -1,11 +1,4 @@
 <?php
-/*
-    Perfiles	 	Nuevo	Editar	Eliminar	 Mostrar	Buscar 	Ordenar 
-ADMINISTRADOR	 	SI	SI	SI	 SI	 SI	 SI
-EDITOR	 	SI	SI	NO	 SI	 SI	SI 
-REGISTRADO	 	NO	NO	NO	 SI	 SI 	 SI
-
-*/
 
 $GLOBALS['employees']['main'] = [1, 2, 3];
 $GLOBALS['employees']['new'] = [1, 2];
@@ -18,9 +11,9 @@ $GLOBALS['employees']['export'] = [1];
 $GLOBALS['employees']['import'] = [1];
 
 $GLOBALS['workingHours']['main'] = [1, 2, 3];
-$GLOBALS['workingHours']['new'] = [2, 3];
-$GLOBALS['workingHours']['edit'] = [1, 2];
-$GLOBALS['workingHours']['delete'] = [1];
+$GLOBALS['workingHours']['new'] = [3];
+$GLOBALS['workingHours']['edit'] = [3];
+$GLOBALS['workingHours']['delete'] = [3];
 $GLOBALS['workingHours']['show'] = [1, 2, 3];
 $GLOBALS['workingHours']['filter'] = [1, 2, 3];
 $GLOBALS['workingHours']['order'] = [1, 2, 3];
