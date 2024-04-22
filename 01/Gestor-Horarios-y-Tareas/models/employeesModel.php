@@ -32,52 +32,55 @@ class employeesModel extends Model
             return $pdoSt;
 
         } catch (PDOException $e) {
-            require_once("template/partials/errorDB.php");
+            require_once ("template/partials/errorDB.php");
             exit();
         }
     }
 
     # Método create
     # Permite ejecutar INSERT en la tabla employees
-    public function create(classCliente $cliente)
+    public function create(classEmployee $employee)
     {
         try {
             $sql = " INSERT INTO 
                         employees 
                         (
-                            nombre, 
-                            apellidos, 
-                            email, 
-                            telefono, 
-                            ciudad, 
-                            dni
+                            name, 
+                            last_name, 
+                            phone, 
+                            city, 
+                            dni, 
+                            email,
+                            total_hours
                         ) 
                         VALUES 
                         ( 
-                            :nombre,
-                            :apellidos,
+                            :name,
+                            :last_name,
+                            :phone,
+                            :city,
+                            :dni,
                             :email,
-                            :telefono,
-                            :ciudad,
-                            :dni
+                            :total_hours
                         )";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
 
             //Vinculamos los parámetros
-            $pdoSt->bindParam(":nombre", $cliente->nombre, PDO::PARAM_STR, 30);
-            $pdoSt->bindParam(":apellidos", $cliente->apellidos, PDO::PARAM_STR, 50);
-            $pdoSt->bindParam(":email", $cliente->email, PDO::PARAM_STR, 50);
-            $pdoSt->bindParam(":telefono", $cliente->telefono, PDO::PARAM_STR, 9);
-            $pdoSt->bindParam(":ciudad", $cliente->ciudad, PDO::PARAM_STR, 30);
-            $pdoSt->bindParam(":dni", $cliente->dni, PDO::PARAM_STR, 9);
+            $pdoSt->bindParam(":name", $employee->name, PDO::PARAM_STR, 20);
+            $pdoSt->bindParam(":last_name", $employee->last_name, PDO::PARAM_STR, 45);
+            $pdoSt->bindParam(":phone", $employee->phone, PDO::PARAM_INT, 9);
+            $pdoSt->bindParam(":city", $employee->city, PDO::PARAM_STR, 20);
+            $pdoSt->bindParam(":dni", $employee->dni, PDO::PARAM_STR, 9);
+            $pdoSt->bindParam(":email", $employee->email, PDO::PARAM_STR, 45);
+            $pdoSt->bindParam(":total_hours", $employee->total_hours, PDO::PARAM_INT, 2);
 
-            // ejecuto
+            // Execute
             $pdoSt->execute();
 
         } catch (PDOException $e) {
-            require_once("template/partials/errorDB.php");
+            require_once ("template/partials/errorDB.php");
             exit();
         }
     }
@@ -88,9 +91,7 @@ class employeesModel extends Model
     {
         try {
 
-            $sql = " 
-                   DELETE FROM employees WHERE id = :id;
-                   ";
+            $sql = " DELETE FROM employees WHERE id = :id;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
@@ -99,21 +100,21 @@ class employeesModel extends Model
             return $pdoSt;
 
         } catch (PDOException $error) {
-            require_once("template/partials/errorDB.php");
+            require_once ("template/partials/errorDB.php");
             exit();
         }
     }
 
-    # Método getCliente
-    # Obtiene los detalles de un cliente a partir del id
-    public function getCliente($id)
+    # Método getemployee
+    # Obtiene los detalles de un employee a partir del id
+    public function getemployee($id)
     {
         try {
             $sql = " 
                     SELECT     
                         id,
-                        apellidos,
-                        nombre,
+                        last_name,
+                        name,
                         telefono,
                         ciudad,
                         dni,
@@ -131,7 +132,7 @@ class employeesModel extends Model
             return $pdoSt->fetch();
 
         } catch (PDOException $e) {
-            require_once("template/partials/errorDB.php");
+            require_once ("template/partials/errorDB.php");
             exit();
         }
     }
@@ -142,8 +143,8 @@ class employeesModel extends Model
         try {
             $sql = " SELECT
             id,
-            apellidos, 
-            nombre,
+            last_name, 
+            name,
             telefono,
             ciudad,
             dni,
@@ -166,22 +167,22 @@ class employeesModel extends Model
             return $pdoSt->fetch();
 
         } catch (PDOException $e) {
-            include_once('template/partials/errorDB.php');
+            include_once ('template/partials/errorDB.php');
             exit();
         }
 
     }
 
     # Método update
-    # Actuliza los detalles de un cliente una vez editados en el formuliario
-    public function update(classCliente $cliente, $id)
+    # Actuliza los detalles de un employee una vez editados en el formuliario
+    public function update(classemployee $employee, $id)
     {
         try {
             $sql = " 
                     UPDATE employees
                     SET
-                        apellidos=:apellidos,
-                        nombre=:nombre,
+                        last_name=:last_name,
+                        name=:name,
                         telefono=:telefono,
                         ciudad=:ciudad,
                         dni=:dni,
@@ -194,24 +195,24 @@ class employeesModel extends Model
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
             //Vinculamos los parámetros
-            $pdoSt->bindParam(":nombre", $cliente->nombre, PDO::PARAM_STR, 30);
-            $pdoSt->bindParam(":apellidos", $cliente->apellidos, PDO::PARAM_STR, 50);
-            $pdoSt->bindParam(":email", $cliente->email, PDO::PARAM_STR, 50);
-            $pdoSt->bindParam(":telefono", $cliente->telefono, PDO::PARAM_STR, 9);
-            $pdoSt->bindParam(":ciudad", $cliente->ciudad, PDO::PARAM_STR, 30);
-            $pdoSt->bindParam(":dni", $cliente->dni, PDO::PARAM_STR, 9);
+            $pdoSt->bindParam(":name", $employee->name, PDO::PARAM_STR, 30);
+            $pdoSt->bindParam(":last_name", $employee->last_name, PDO::PARAM_STR, 50);
+            $pdoSt->bindParam(":email", $employee->email, PDO::PARAM_STR, 50);
+            $pdoSt->bindParam(":telefono", $employee->telefono, PDO::PARAM_STR, 9);
+            $pdoSt->bindParam(":ciudad", $employee->ciudad, PDO::PARAM_STR, 30);
+            $pdoSt->bindParam(":dni", $employee->dni, PDO::PARAM_STR, 9);
             $pdoSt->bindParam(":id", $id, PDO::PARAM_INT);
 
             $pdoSt->execute();
 
         } catch (PDOException $error) {
-            require_once("template/partials/errorDB.php");
+            require_once ("template/partials/errorDB.php");
             exit();
         }
     }
 
     # Método update
-    # Permite ordenar la tabla de cliente por cualquiera de las columnas del main
+    # Permite ordenar la tabla de employee por cualquiera de las columnas del main
     # El criterio de ordenación se establec mediante el número de la columna del select
     public function order(int $criterio)
     {
@@ -219,7 +220,7 @@ class employeesModel extends Model
             $sql = "
                     SELECT 
                         id,
-                        concat_ws(', ', apellidos, nombre) cliente,
+                        concat_ws(', ', last_name, name) employee,
                         telefono,
                         ciudad,
                         dni,
@@ -238,7 +239,7 @@ class employeesModel extends Model
 
             return $pdoSt;
         } catch (PDOException $e) {
-            require_once("template/partials/errorDB.php");
+            require_once ("template/partials/errorDB.php");
             exit();
         }
     }
@@ -252,7 +253,7 @@ class employeesModel extends Model
             $sql = "
                     SELECT 
                         id,
-                        concat_ws(', ', apellidos, nombre) cliente,
+                        concat_ws(', ', last_name, name) employee,
                         telefono,
                         ciudad,
                         dni,
@@ -263,8 +264,8 @@ class employeesModel extends Model
                         concat_ws(  
                                     ' ',
                                     id,
-                                    apellidos,
-                                    nombre,
+                                    last_name,
+                                    name,
                                     telefono,
                                     ciudad,
                                     dni,
@@ -287,7 +288,7 @@ class employeesModel extends Model
             return $pdoSt;
 
         } catch (PDOException $e) {
-            require_once("template/partials/errorDB.php");
+            require_once ("template/partials/errorDB.php");
             exit();
         }
     }
@@ -317,7 +318,7 @@ class employeesModel extends Model
 
         } catch (PDOException $e) {
 
-            include_once('template/partials/errorDB.php');
+            include_once ('template/partials/errorDB.php');
             exit();
 
         }
@@ -348,7 +349,7 @@ class employeesModel extends Model
 
         } catch (PDOException $e) {
 
-            include_once('template/partials/errorDB.php');
+            include_once ('template/partials/errorDB.php');
             exit();
 
         }

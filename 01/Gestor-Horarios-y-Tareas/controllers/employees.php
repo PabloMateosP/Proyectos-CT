@@ -3,95 +3,99 @@
 class Employees extends Controller
 {
 
-    # Método principal. Muestra todos los employees
+    # "Render" Method. That show all the employees
     public function render($param = [])
     {
-        #inicio o continuo sesion
+        # Began or continuo session
         session_start();
         if (!isset($_SESSION['id'])) {
-            $_SESSION['notify'] = "Usuario sin autentificar";
+            $_SESSION['notify'] = "Unauthenticated User";
 
             header("location:" . URL . "login");
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['employees']['main']))) {
-            $_SESSION['mensaje'] = "Usuario sin autentificar";
+            $_SESSION['mensaje'] = "Unauthenticated User";
             header("location:" . URL . "index");
 
         } else {
-            #comprobar si existe mensaje
+
+            # Check if message exists
             if (isset($_SESSION['mensaje'])) {
                 $this->view->mensaje = $_SESSION['mensaje'];
                 unset($_SESSION['mensaje']);
-
             }
 
-            $this->view->title = "Tabla Empleados";
-            $this->view->employees = $this->model->get(); 
+            $this->view->title = "Employees Table";
+            $this->view->employees = $this->model->get();
             $this->view->render("employees/main/index");
         }
     }
 
-    # Método nuevo. Muestra formulario añadir employee
-    public function nuevo($param = [])
+    # "New" Method. Show a formulary to add new employees
+    public function new($param = [])
     {
-        # Continuamos la sesion
+        # Continue session
         session_start();
 
-        # compruebo usuario autentificado
+        # Authenticated user?
         if (!isset($_SESSION['id'])) {
-            $_SESSION['notify'] = "Usuario debe autentificarse";
+            $_SESSION['notify'] = "User must authenticated";
 
             header("location:" . URL . "login");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['employees']['new']))) {
-            $_SESSION['mensaje'] = "Operación sin privilegio";
+            $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "employees");
         } else {
 
-            # Creamos un objeto vacio
-            $this->view->employee = new classemployee();
+            # Create and instance of classEmployee
+            $this->view->employee = new classEmployee();
 
-            # Comprobamos si hay errores -> esta variable se crea al lanzar un error de validacion
+            // Check if there are errors -> this variable is created when a validation error occurs
             if (isset($_SESSION['error'])) {
-                // rescatemos el mensaje
+                // Let's retrieve the message
                 $this->view->error = $_SESSION['error'];
 
-                // Autorellenamos el formulario
+                // Autopopulate the form
                 $this->view->employee = unserialize($_SESSION['employee']);
 
-                // Recupero array de errores específicos
-                $this->view->errores = $_SESSION['errores'];
+                // Retrieve array of specific errors
+                $this->view->errors = $_SESSION['errors'];
 
-                // debemos liberar las variables de sesión ya que su cometido ha sido resuelto
+                // We must unset the session variables as their purpose has been resolved
                 unset($_SESSION['error']);
-                unset($_SESSION['errores']);
+                unset($_SESSION['errors']);
                 unset($_SESSION['employees']);
-                // Si estas variables existen cuando no hay errores, entraremos en los bloques de error en las condicionales
+                // If these variables exist when there are no errors, we will enter the error blocks in the conditionals
             }
 
-            $this->view->title = "Formulario employee nuevo";
-            $this->view->render("employees/nuevo/index");
+            $this->view->title = "Form new employee";
+            $this->view->render("employees/new/index");
         }
     }
-    # Método create. 
-    # Permite añadir nuevo employee a partir de los detalles del formuario
+
+    # Method create.
+    # Allows adding a new employee based on the form details.
     public function create($param = [])
     {
-        #Iniciar Sesión
+        # Start Session
         session_start();
 
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario debe autentificarse";
+            $_SESSION['message'] = "User must authenticate";
 
             header("location:" . URL . "login");
 
         } else if (!in_array($_SESSION['id_rol'], $GLOBALS['employees']['new'])) {
 
-            $_SESSION['mensaje'] = "Operación sin privilegio";
+            $_SESSION['message'] = "Operation without privileges";
             header("location:" . URL . "employees");
 
         } else {
 
-            #1.Seguridad. Saneamos los datos del formulario
+            # --
+            #1. Security. Sanitize form data
+            # --
+
             $last_name = filter_var($_POST['last_name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $name = filter_var($_POST['name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $phone = filter_var($_POST['phone'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -100,7 +104,10 @@ class Employees extends Controller
             $email = filter_var($_POST['email'] ??= '', FILTER_SANITIZE_EMAIL);
             $total_hours = filter_var($_POST['total_hours'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
 
-            #2. Creamos employee con los datos saneados
+            # --
+            #2. Create employee with sanitized data
+            # --
+
             $employee = new classEmployee(
                 null,
                 $last_name,
@@ -114,48 +121,53 @@ class Employees extends Controller
                 null
             );
 
-            #3.Validacion
-            $errores = [];
+            # --
+            #3. Validation
+            # --
 
-            //last_name: max 45 characters
+            $errors = [];
+
+            // last_name: max 45 characters
             if (empty($last_name)) {
-                $errores['last_name'] = 'The Last Name field is required';
+                $errors['last_name'] = 'The Last Name field is required';
             } else if (strlen($last_name) > 45) {
-                $errores['last_name'] = 'The Last Name field is too long';
+                $errors['last_name'] = 'The Last Name field is too long';
 
             }
 
-            //name: max 20 characters
+            // name: max 20 characters
             if (empty($name)) {
-                $errores['name'] = 'The name field is required';
+                $errors['name'] = 'The name field is required';
             } else if (strlen($name) > 20) {
-                $errores['name'] = 'The name field is too long';
+                $errors['name'] = 'The name field is too long';
             }
 
-            //phone: max 9 characters
+            // phone: max 9 characters
             if (empty($phone)) {
-                $errores['phone'] = 'The phone field is required';
+                $errors['phone'] = 'The phone field is required';
             } else if (strlen($phone) > 9) {
-                $errores['phone'] = 'The phone field is too long';
+                $errors['phone'] = 'The phone field is too long';
             }
 
-            //City: max 20 characters
-            if (empty($ciudad)) {
-                $errores['ciudad'] = 'The city field is required';
-            } else if (strlen($ciudad) > 20) {
-                $errores['ciudad'] = 'The city field is too long';
+            // City: max 20 characters
+            if (empty($city)) {
+                $errors['city'] = 'The city field is required';
+            } else if (strlen($city) > 20) {
+                $errors['city'] = 'The city field is too long';
 
             }
-            //Email: must be validate and unique
+
+            // Email: must be validated and unique
             if (empty($email)) {
-                $errores['email'] = 'The email field is required';
+                $errors['email'] = 'The email field is required';
             } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errores['email'] = 'The format entered is incorrect';
+                $errors['email'] = 'The format entered is incorrect';
             } else if (!$this->model->validateUniqueEmail($email)) {
-                $errores['email'] = 'The email is already registered';
+                $errors['email'] = 'The email is already registered';
 
             }
-            //Dni: obligatorio, formato válido y clave secundaria
+
+            // Dni: must be validated and unique
             $options = [
                 'options' => [
                     'regexp' => '/^(\d{8})([A-Z])$/'
@@ -163,39 +175,44 @@ class Employees extends Controller
             ];
 
             if (empty($dni)) {
-                $errores['dni'] = 'El campo dni es obligatorio';
+                $errors['dni'] = 'The dni field is required';
             } else if (!filter_var($dni, FILTER_VALIDATE_REGEXP, $options)) {
-                $errores['dni'] = 'El formato introducido es incorrecto';
+                $errors['dni'] = 'Wrong format entered';
             } else if (!$this->model->validateUniqueDni($dni)) {
-                $errores['dni'] = 'Dni ya registrado';
+                $errors['dni'] = 'DNI already registered';
 
             }
 
+            # --
+            # 4. Check Validation
+            # --
 
+            if (!empty($errors)) {
 
-            #4. Comprobar validacion
-
-            if (!empty($errores)) {
-                //errores de validacion
+                // Validation errors 
                 $_SESSION['employee'] = serialize($employee);
-                $_SESSION['error'] = 'Formulario no validado';
-                $_SESSION['errores'] = $errores;
+                $_SESSION['error'] = 'Invalid form';
+                $_SESSION['errors'] = $errors;
 
-                header('location:' . URL . 'employees/nuevo');
+                header('location:' . URL . 'employees/new');
 
             } else {
-                //crear employee
-                # Añadir registro a la tabla
+
+                // Create employee
+
+                # Add employee
                 $this->model->create($employee);
 
-                #Mensaje
-                $_SESSION['mensaje'] = "employee creado correctamente";
+                # Message
+                $_SESSION['message'] = "Employee created correctly";
 
-                # Redirigimos al main de employees
+                # Redirect
                 header('location:' . URL . 'employees');
+
             }
         }
     }
+
 
     # Método delete. 
     # Permite la eliminación de un employee
@@ -586,7 +603,7 @@ class Employees extends Controller
 
             $employee->name = $fila[1];
             $employee->last_name = $fila[0];
-            $employee->email = $fila[5]; 
+            $employee->email = $fila[5];
             $employee->telefono = $fila[2];
             $employee->ciudad = $fila[3];
             $employee->dni = $fila[4];

@@ -16,8 +16,11 @@
           <a class="nav-link active" href="<?= URL ?>workingHours/">Horas Laborales</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['admin']) ?: 'disabled' ?>"
-            href="<?= URL ?>users">Usuarios</a>
+          <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin'])): ?>
+            <a class="nav-link active" href="<?= URL ?>users">Users</a>
+          <?php else: ?>
+            <!-- No tienes los permisos necesarios para ver este enlace -->
+          <?php endif; ?>
         </li>
       </ul>
       <div class="d-flex">

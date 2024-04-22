@@ -7,14 +7,14 @@
 </head>
 
 <body>
-    <!-- menu fijo superior -->
+    <!-- Top fixed menu -->
     <?php require_once "template/partials/menuAut.php"; ?>
     <!-- capa principal -->
     <div class="container" style="margin-top: 5%;">
         <!-- card that contains the form -->
         <div class="card">
             <div class="card-header">
-                <h4>New Employee</h4>
+                <?php require_once "views/employees/partials/header.php"; ?>
             </div>
             <div class="card-body">
                 <!-- formulario  -->
@@ -30,6 +30,7 @@
                             </span>
                         <?php endif; ?>
                     </div>
+
                     <!-- last_name -->
                     <div class="mb-3">
                         <label for="" class="form-label">Last Name</label>
@@ -42,6 +43,7 @@
                             </span>
                         <?php endif; ?>
                     </div>
+
                     <!-- city -->
                     <div class="mb-3">
                         <label for="" class="form-label">City</label>
@@ -53,6 +55,7 @@
                             </span>
                         <?php endif; ?>
                     </div>
+
                     <!-- email -->
                     <div class="mb-3">
                         <label for="" class="form-label">Email</label>
@@ -64,10 +67,11 @@
                             </span>
                         <?php endif; ?>
                     </div>
+
                     <!-- phone -->
                     <div class="mb-3">
                         <label for="" class="form-label">Phone</label>
-                        <input type="text" class="form-control" name="phone" value="<?= $this->employee->phone ?>">
+                        <input type="number" class="form-control" name="phone" value="<?= $this->employee->phone ?>">
                         <!-- Mostrar posible error -->
                         <?php if (isset($this->errores['phone'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -75,6 +79,7 @@
                             </span>
                         <?php endif; ?>
                     </div>
+
                     <!-- dni -->
                     <div class="mb-3">
                         <label for="" class="form-label">DNI</label>
@@ -86,7 +91,8 @@
                             </span>
                         <?php endif; ?>
                     </div>
-                    <!-- dni -->
+
+                    <!-- Total_hours -->
                     <div class="mb-3">
                         <label for="" class="form-label">Total Hours</label>
                         <input type="text" class="form-control" name="total_hours"
@@ -98,9 +104,10 @@
                             </span>
                         <?php endif; ?>
                     </div>
+
                     <!-- botones de acción -->
                     <div class="mb-3">
-                        <a name="" id="" class="btn btn-secondary" href="<?= URL ?>employees" role="button">Cancelar</a>
+                        <a class="btn btn-secondary" href="<?= URL ?>employees" role="button">Cancelar</a>
                         <button type="reset" class="btn btn-danger">Borrar</button>
                         <button type="submit" class="btn btn-primary">Crear</button>
                     </div>
@@ -108,8 +115,6 @@
             </div>
         </div>
     </div>
-
-    <br><br><br>
 
     <!-- footer -->
     <?php require_once "template/partials/footer.php" ?>

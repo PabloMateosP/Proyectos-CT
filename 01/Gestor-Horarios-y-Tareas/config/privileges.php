@@ -18,7 +18,7 @@ $GLOBALS['employees']['export'] = [1];
 $GLOBALS['employees']['import'] = [1];
 
 $GLOBALS['workingHours']['main'] = [1, 2, 3];
-$GLOBALS['workingHours']['new'] = [1, 2];
+$GLOBALS['workingHours']['new'] = [2, 3];
 $GLOBALS['workingHours']['edit'] = [1, 2];
 $GLOBALS['workingHours']['delete'] = [1];
 $GLOBALS['workingHours']['show'] = [1, 2, 3];
