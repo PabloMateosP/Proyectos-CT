@@ -135,6 +135,7 @@ class Users extends Controller
             $nombre = filter_var($_POST['nombre'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $email = filter_var($_POST['email'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $roles = filter_var($_POST['roles'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $id_employee = filter_var($_POST['id'] ??= '', FILTER_SANITIZE_NUMBER_INT);
             $contraseña = filter_var($_POST['contraseña'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $confirmarContraseña = filter_var($_POST['confirmarContraseña'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -144,6 +145,7 @@ class Users extends Controller
                 null,
                 $nombre,
                 $email,
+                $id_employee,
                 $contraseña,
                 $confirmarContraseña
             );
@@ -151,30 +153,35 @@ class Users extends Controller
             # 3. Validación
             $errores = [];
 
-            //Nombre: Obligatorio
+            //nombre: required
             if (empty($nombre)) {
-                $errores['nombre'] = 'El campo nombre es obligatorio';
+                $errores['nombre'] = 'El campo nombre es required';
             }
 
-            //Email: Obligatorio, debe ser un email	, debe ser único	
+            //Email: required and unique	
             if (empty($email)) {
-                $errores['email'] = 'El campo email es obligatorio';
+                $errores['email'] = 'El campo email es required';
             } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errores['email'] = 'El formato del email no es correcto';
             } else if (!$this->model->validateUniqueEmail($email)) {
                 $errores['email'] = 'El email ya existe';
             }
 
-            //Contraseña: Obligatorio
+            //Id User: Required
+            if (empty($nombre)) {
+                $errores['nombre'] = 'El campo nombre es required';
+            }
+
+            //Contraseña: required
             if (empty($contraseña)) {
-                $errores['contraseña'] = 'El campo contraseña es obligatorio';
+                $errores['contraseña'] = 'El campo contraseña es required';
             } else if ($contraseña != $confirmarContraseña) {
                 $errores['contraseña'] = 'Las contraseñas no coinciden';
             }
 
-            //confirmarContraseña: Obligatorio, tiene que coincidir con el campo contraseña
+            //confirmarContraseña: required, tiene que coincidir con el campo contraseña
             if (empty($confirmarContraseña)) {
-                $errores['confirmarContraseña'] = 'El campo confirmar contraseña es obligatorio';
+                $errores['confirmarContraseña'] = 'El campo confirmar contraseña es required';
             } else if ($contraseña != $confirmarContraseña) {
                 $errores['confirmarContraseña'] = 'Las contraseñas no coinciden';
             }
@@ -191,7 +198,7 @@ class Users extends Controller
                 header('location:' . URL . 'users/nuevo/index');
             } else {
                 # Añadimos el registro a la tabla
-                $this->model->create($nombre, $email, $contraseña, $roles);
+                $this->model->create($nombre, $email, $contraseña, $roles, $id_employee);
 
                 $_SESSION['mensaje'] = "Se ha creado el usuario correctamente.";
 
@@ -314,22 +321,22 @@ class Users extends Controller
 
             $errores = [];
 
-            //Name: obligatorio, maximo 20 caracteres
+            //Name: required, maximo 20 caracteres
             if (strcmp($user->name, $user_orig->name) !== 0) {
 
                 if (empty($name)) {
-                    $errores['name'] = 'El campo nombre es obligatorio';
+                    $errores['name'] = 'El campo nombre es required';
                 } else if (strlen($name) > 20) {
                     $errores['name'] = 'El campo nombre es demasiado largo';
 
                 }
             }
 
-            //Email: obligatorio, formato válido y clave secundaria
+            //Email: required, formato válido y clave secundaria
             if (strcmp($user->email, $user_orig->email) !== 0) {
 
                 if (empty($email)) {
-                    $errores['email'] = 'El campo email es obligatorio';
+                    $errores['email'] = 'El campo email es required';
                 } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                     $errores['email'] = 'El formato introducido es incorrecto';
                 } else if (!$this->model->validateUniqueEmail($email)) {

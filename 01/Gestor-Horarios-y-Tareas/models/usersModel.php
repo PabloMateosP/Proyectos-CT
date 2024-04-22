@@ -3,7 +3,6 @@
 class usersModel extends Model
 {
 
-
     # Método Get
     # Consulta SELECT a la tabla usuarios 
     public function get()
@@ -82,7 +81,7 @@ class usersModel extends Model
                         :nombre,
                         :email,
                         :pass,
-                        :id_employee
+                        :id_employee,
                         default,
                         now())";
 

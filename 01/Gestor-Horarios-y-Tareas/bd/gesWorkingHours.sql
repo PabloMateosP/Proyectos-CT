@@ -21,7 +21,6 @@ create table `employees` (
     `dni` char(9) DEFAULT NULL,
     `email` varchar(45) DEFAULT NULL,
     `total_hours` int(2) DEFAULT NULL, 
-    `id_user` int(10) unsigned NOT NULL,
     `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
     `update_at` timestamp NOT NULL DEFAULT current_timestamp(),
     PRIMARY KEY (`id`),
@@ -420,10 +419,8 @@ CREATE TABLE IF NOT EXISTS `users` (
     `name` VARCHAR(50),
     `email` VARCHAR(50) UNIQUE,
     `password` CHAR(60),
-    `id_employee` INT UNSIGNED DEFAULT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `update_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (`id_employee`) REFERENCES `employees` (`id`) ON DELETE NULL ON UPDATE CASCADE
+    `update_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 --

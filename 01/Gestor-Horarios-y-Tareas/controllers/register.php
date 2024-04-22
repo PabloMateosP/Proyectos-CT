@@ -31,7 +31,7 @@ class Register extends Controller
         $this->view->name = null;
         $this->view->email = null;
         $this->view->password = null;
-
+        
         if (isset($_SESSION['error'])) {
 
             # Mensaje de error
@@ -113,48 +113,48 @@ class Register extends Controller
 
             $this->model->create($name, $email, $password);
 
-            // Código para enviar el correo de registro ---------------------------------------------
-            // Creamos un objeto de la clase PHPMailer
-            $mail = new PHPMailer(true);
+            // // Código para enviar el correo de registro ---------------------------------------------
+            // // Creamos un objeto de la clase PHPMailer
+            // $mail = new PHPMailer(true);
 
-            // Configuración de PHPMailer
-            $mail->CharSet = "UTF-8";
-            $mail->Encoding = "quoted-printable";
-            $mail->Username = USERNAME;
-            $mail->Password = PASSWD;
+            // // Configuración de PHPMailer
+            // $mail->CharSet = "UTF-8";
+            // $mail->Encoding = "quoted-printable";
+            // $mail->Username = USERNAME;
+            // $mail->Password = PASSWD;
 
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // tls Habilita el cifrado TLS implícito
-            $mail->Port = 587;
+            // $mail->isSMTP();
+            // $mail->Host = 'smtp.gmail.com';
+            // $mail->SMTPAuth = true;
+            // $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // tls Habilita el cifrado TLS implícito
+            // $mail->Port = 587;
 
-            $destinatario = $email;
-            $remitente = USERNAME;
-            $asunto = "Registro Exitoso";
-            $mensaje = "
-            <h1>Hola!! $name</h1>
-            <p>Usuario registrado con éxito</p>
-            <p>Datos: </p>
-            <ul>
-                <li><b>Nombre: </b>" . $name . "</li>
-                <li><b>Correo Electrónico: </b>" . $email . "</li>
-                <li><b>Password: </b>" . $password . "</li>
-            </ul>";
+            // $destinatario = $email;
+            // $remitente = USERNAME;
+            // $asunto = "Registro Exitoso";
+            // $mensaje = "
+            // <h1>Hola!! $name</h1>
+            // <p>Usuario registrado con éxito</p>
+            // <p>Datos: </p>
+            // <ul>
+            //     <li><b>Nombre: </b>" . $name . "</li>
+            //     <li><b>Correo Electrónico: </b>" . $email . "</li>
+            //     <li><b>Password: </b>" . $password . "</li>
+            // </ul>";
 
-            // Configuración del correo con PHPMailer
-            $mail->setFrom($remitente, 'Pablo');
-            $mail->addAddress($destinatario, $name);
-            $mail->addReplyTo($remitente, 'Pablo Mateos');
+            // // Configuración del correo con PHPMailer
+            // $mail->setFrom($remitente, 'Pablo');
+            // $mail->addAddress($destinatario, $name);
+            // $mail->addReplyTo($remitente, 'Pablo Mateos');
 
-            // Configuración del contenido del correo
-            $mail->isHTML(true);
-            $mail->Subject = $asunto;
-            $mail->Body = $mensaje;
+            // // Configuración del contenido del correo
+            // $mail->isHTML(true);
+            // $mail->Subject = $asunto;
+            // $mail->Body = $mensaje;
 
-            // Esta línea la he tenido que añadir para mi pc en casa porque me daba fallo el certificado SSL
-            $mail->SMTPOptions = array('ssl' => array('verify_peer' => false, 'verify_peer_name' => false, 'allow_self_signed' => true));
-            $mail->send();
+            // // Esta línea la he tenido que añadir para mi pc en casa porque me daba fallo el certificado SSL
+            // $mail->SMTPOptions = array('ssl' => array('verify_peer' => false, 'verify_peer_name' => false, 'allow_self_signed' => true));
+            // $mail->send();
 
             // -------------------------------------------------------------------------------
 
@@ -165,8 +165,6 @@ class Register extends Controller
             #Vuelve login
             header("location:" . URL . "login");
         }
-
-
 
     }
 

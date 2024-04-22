@@ -49,7 +49,7 @@ class WorkingHours extends Controller
         } else {
 
             # Creamos un objeto vacio
-            $this->view->cliente = new classCliente();
+            $this->view->workingHours = new classWorkingHours();
 
             # Comprobamos si hay errores -> esta variable se crea al lanzar un error de validacion
             if (isset($_SESSION['error'])) {
@@ -57,7 +57,7 @@ class WorkingHours extends Controller
                 $this->view->error = $_SESSION['error'];
 
                 // Autorellenamos el formulario
-                $this->view->cliente = unserialize($_SESSION['cliente']);
+                $this->view->workingHours = unserialize($_SESSION['workingHours']);
 
                 // Recupero array de errores específicos
                 $this->view->errores = $_SESSION['errores'];
@@ -69,12 +69,12 @@ class WorkingHours extends Controller
                 // Si estas variables existen cuando no hay errores, entraremos en los bloques de error en las condicionales
             }
 
-            $this->view->title = "Formulario cliente nuevo";
-            $this->view->render("workingHours/nuevo/index");
+            $this->view->title = "Formulario workingHours nuevo";
+            $this->view->render("workingHours/new/index");
         }
     }
     # Método create. 
-    # Permite añadir nuevo cliente a partir de los detalles del formuario
+    # Permite añadir nuevo workingHours a partir de los detalles del formuario
     public function create($param = [])
     {
         #Iniciar Sesión
@@ -100,8 +100,8 @@ class WorkingHours extends Controller
             $dni = filter_var($_POST['dni'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $email = filter_var($_POST['email'] ??= '', FILTER_SANITIZE_EMAIL);
 
-            #2. Creamos cliente con los datos saneados
-            $cliente = new classCliente(
+            #2. Creamos workingHours con los datos saneados
+            $workingHours = new classworkingHours(
                 null,
                 $apellidos,
                 $nombre,
@@ -184,19 +184,19 @@ class WorkingHours extends Controller
 
             if (!empty($errores)) {
                 //errores de validacion
-                $_SESSION['cliente'] = serialize($cliente);
+                $_SESSION['workingHours'] = serialize($workingHours);
                 $_SESSION['error'] = 'Formulario no validado';
                 $_SESSION['errores'] = $errores;
 
                 header('location:' . URL . 'workingHours/nuevo');
 
             } else {
-                //crear cliente
+                //crear workingHours
                 # Añadir registro a la tabla
-                $this->model->create($cliente);
+                $this->model->create($workingHours);
 
                 #Mensaje
-                $_SESSION['mensaje'] = "Cliente creado correctamente";
+                $_SESSION['mensaje'] = "workingHours creado correctamente";
 
                 # Redirigimos al main de workingHours
                 header('location:' . URL . 'workingHours');
@@ -205,7 +205,7 @@ class WorkingHours extends Controller
     }
 
     # Método delete. 
-    # Permite la eliminación de un cliente
+    # Permite la eliminación de un workingHours
     public function delete($param = [])
     {
         session_start();
@@ -227,7 +227,7 @@ class WorkingHours extends Controller
     }
 
     # Método editar. 
-    # Muestra un formulario que permita editar los detalles de un cliente
+    # Muestra un formulario que permita editar los detalles de un workingHours
     public function editar($param = [])
     {
         session_start();
@@ -244,18 +244,18 @@ class WorkingHours extends Controller
 
         } else {
 
-            # obtengo el id del cliente que voy a editar
+            # obtengo el id del workingHours que voy a editar
 
             $id = $param[0];
 
             $this->view->id = $id;
-            $this->view->title = "Formulario  editar cliente";
-            $this->view->cliente = $this->model->read($id);
+            $this->view->title = "Formulario  editar workingHours";
+            $this->view->workingHours = $this->model->read($id);
 
-            $this->view->cliente = $this->model->getCliente($this->view->id);
+            $this->view->workingHours = $this->model->getworkingHours($this->view->id);
 
             # Creamos un objeto vacio
-            // $this->view->cliente = new classCliente();
+            // $this->view->workingHours = new classworkingHours();
 
             # Comprobamos si hay errores -> esta variable se crea al lanzar un error de validacion
             if (isset($_SESSION['error'])) {
@@ -263,7 +263,7 @@ class WorkingHours extends Controller
                 $this->view->error = $_SESSION['error'];
 
                 // Autorellenamos el formulario
-                $this->view->cliente = unserialize($_SESSION['cliente']);
+                $this->view->workingHours = unserialize($_SESSION['workingHours']);
 
                 // Recupero array de errores específicos
                 $this->view->errores = $_SESSION['errores'];
@@ -279,7 +279,7 @@ class WorkingHours extends Controller
         }
     }
     # Método update.
-    # Actualiza los detalles de un cliente a partir de los datos del formulario de edición
+    # Actualiza los detalles de un workingHours a partir de los datos del formulario de edición
     public function update($param = [])
     {
 
@@ -304,7 +304,7 @@ class WorkingHours extends Controller
             $dni = filter_var($_POST['dni'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $email = filter_var($_POST['email'] ??= '', FILTER_SANITIZE_EMAIL);
 
-            $cliente = new classCliente(
+            $workingHours = new classworkingHours(
                 null,
                 $apellidos,
                 $nombre,
@@ -317,8 +317,8 @@ class WorkingHours extends Controller
             );
             $id = $param[0];
 
-            #Obtengo el objeto cliente original
-            $cliente_orig = $this->model->read($id);
+            #Obtengo el objeto workingHours original
+            $workingHours_orig = $this->model->read($id);
 
             #3. Validación
             //Sólo si es necesario
@@ -327,7 +327,7 @@ class WorkingHours extends Controller
             $errores = [];
 
             //Apellidos: obligatorio, maximo 45 caracteres
-            if (strcmp($cliente->apellidos, $cliente_orig->apellidos) !== 0) {
+            if (strcmp($workingHours->apellidos, $workingHours_orig->apellidos) !== 0) {
                 if (empty($apellidos)) {
                     $errores['apellidos'] = 'El campo apellidos es obligatorio';
                 } else if (strlen($apellidos) > 45) {
@@ -338,7 +338,7 @@ class WorkingHours extends Controller
 
 
             //Nombre: obligatorio, maximo 20 caracteres
-            if (strcmp($cliente->nombre, $cliente_orig->nombre) !== 0) {
+            if (strcmp($workingHours->nombre, $workingHours_orig->nombre) !== 0) {
 
                 if (empty($nombre)) {
                     $errores['nombre'] = 'El campo nombre es obligatorio';
@@ -351,7 +351,7 @@ class WorkingHours extends Controller
 
 
             //Teléfono: no obligatorio, 9 caracteres numéricos
-            // if (strcmp($cliente->telefono, $cliente_orig->telefono) !== 0) {
+            // if (strcmp($workingHours->telefono, $workingHours_orig->telefono) !== 0) {
             // $options_tlf=[
             //     'options_tlf'=> [
             //         'regexp' => '/^\d{9}$/'
@@ -363,7 +363,7 @@ class WorkingHours extends Controller
             // }
 
             //Ciudad: obligatorio, maximo 20 caracteres
-            if (strcmp($cliente->ciudad, $cliente_orig->ciudad) !== 0) {
+            if (strcmp($workingHours->ciudad, $workingHours_orig->ciudad) !== 0) {
 
                 if (empty($ciudad)) {
                     $errores['ciudad'] = 'El campo ciudad es obligatorio';
@@ -373,7 +373,7 @@ class WorkingHours extends Controller
                 }
             }
             //Email: obligatorio, formato válido y clave secundaria
-            if (strcmp($cliente->email, $cliente_orig->email) !== 0) {
+            if (strcmp($workingHours->email, $workingHours_orig->email) !== 0) {
 
                 if (empty($email)) {
                     $errores['email'] = 'El campo email es obligatorio';
@@ -385,7 +385,7 @@ class WorkingHours extends Controller
                 }
             }
             //Dni: obligatorio, formato válido y clave secundaria
-            if (strcmp($cliente->dni, $cliente_orig->dni) !== 0) {
+            if (strcmp($workingHours->dni, $workingHours_orig->dni) !== 0) {
                 $options = [
                     'options' => [
                         'regexp' => '/^(\d{8})([A-Z])$/'
@@ -407,7 +407,7 @@ class WorkingHours extends Controller
 
             if (!empty($errores)) {
                 //errores de validacion
-                $_SESSION['cliente'] = serialize($cliente);
+                $_SESSION['workingHours'] = serialize($workingHours);
                 $_SESSION['error'] = 'Formulario no validado';
                 $_SESSION['errores'] = $errores;
 
@@ -416,10 +416,10 @@ class WorkingHours extends Controller
             } else {
                 //crear alumno
                 # Añadir registro a la tabla
-                $this->model->update($cliente, $id);
+                $this->model->update($workingHours, $id);
 
                 #Mensaje
-                $_SESSION['mensaje'] = "Cliente actualizado correctamente";
+                $_SESSION['mensaje'] = "workingHours actualizado correctamente";
 
                 # Redirigimos al main de alumnos
                 header('location:' . URL . 'workingHours');
@@ -429,7 +429,7 @@ class WorkingHours extends Controller
 
 
     # Método mostrar
-    # Muestra en un formulario de solo lectura los detalles de un cliente
+    # Muestra en un formulario de solo lectura los detalles de un workingHours
     public function mostrar($param = [])
     {
         session_start();
@@ -443,8 +443,8 @@ class WorkingHours extends Controller
             header("location:" . URL . "workingHours");
         } else {
             $id = $param[0];
-            $this->view->title = "Formulario Cliente Mostar";
-            $this->view->cliente = $this->model->getCliente($id);
+            $this->view->title = "Formulario workingHours Mostar";
+            $this->view->workingHours = $this->model->getworkingHours($id);
             $this->view->render("workingHours/mostrar/index");
         }
     }
@@ -524,24 +524,24 @@ class WorkingHours extends Controller
         fputcsv($archivo, ['apellidos', 'nombre', 'telefono', 'ciudad', 'dni', 'email', 'create_at', 'update_at'], ';');
 
         // Iterar sobre los workingHours y escribir cada fila en el archivo
-        foreach ($workingHours as $cliente) {
-            // Separar el campo "cliente" en "apellidos" y "nombre"
-            list($apellidos, $nombre) = explode(', ', $cliente['cliente']);
+        foreach ($workingHours as $workingHours) {
+            // Separar el campo "workingHours" en "apellidos" y "nombre"
+            list($apellidos, $nombre) = explode(', ', $workingHours['workingHours']);
 
-            // Construir el array del cliente con los datos necesarios
-            $clienteData = [
+            // Construir el array del workingHours con los datos necesarios
+            $workingHoursData = [
                 'apellidos' => $apellidos,
                 'nombre' => $nombre,
-                'telefono' => $cliente['telefono'],
-                'ciudad' => $cliente['ciudad'],
-                'dni' => $cliente['dni'],
-                'email' => $cliente['email'],
+                'telefono' => $workingHours['telefono'],
+                'ciudad' => $workingHours['ciudad'],
+                'dni' => $workingHours['dni'],
+                'email' => $workingHours['email'],
                 'create_at' => date('Y-m-d H:i:s'),
                 'update_at' => null
             ];
 
             // Escribir la fila en el archivo
-            fputcsv($archivo, $clienteData, ';');
+            fputcsv($archivo, $workingHoursData, ';');
         }
 
         // Cerramos el archivo
@@ -589,16 +589,16 @@ class WorkingHours extends Controller
         // Iterar sobre las filas del archivo CSV
         while (($fila = fgetcsv($archivo, 150, ';')) !== false) {
             // Crear un array asociativo con los datos de la fila
-            $cliente = new classCliente();
+            $workingHours = new classworkingHours();
 
-            $cliente->nombre = $fila[1];
-            $cliente->apellidos = $fila[0];
-            $cliente->email = $fila[5]; 
-            $cliente->telefono = $fila[2];
-            $cliente->ciudad = $fila[3];
-            $cliente->dni = $fila[4];
+            $workingHours->nombre = $fila[1];
+            $workingHours->apellidos = $fila[0];
+            $workingHours->email = $fila[5]; 
+            $workingHours->telefono = $fila[2];
+            $workingHours->ciudad = $fila[3];
+            $workingHours->dni = $fila[4];
 
-            $this->model->create($cliente);
+            $this->model->create($workingHours);
 
         }
 
@@ -628,7 +628,7 @@ class WorkingHours extends Controller
         $data = $this->model->get()->fetchAll(PDO::FETCH_ASSOC);
 
         $columnas = [
-            ['header' => 'Cliente', 'field' => 'cliente', 'width' => 60],
+            ['header' => 'workingHours', 'field' => 'workingHours', 'width' => 60],
             ['header' => 'Telefono', 'field' => 'telefono', 'width' => 40],
             ['header' => 'Ciudad', 'field' => 'ciudad', 'width' => 30],
             ['header' => 'DNI', 'field' => 'dni', 'width' => 25],
