@@ -12,7 +12,7 @@ class WorkingHours extends Controller
             $_SESSION['notify'] = "Usuario sin autentificar";
 
             header("location:" . URL . "login");
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['main']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['coordinador_empleado']))) {
             $_SESSION['mensaje'] = "Usuario sin autentificar";
             header("location:" . URL . "index");
 
@@ -43,7 +43,7 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['new']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['coordinador_empleado']))) {
             $_SESSION['mensaje'] = "Operación sin privilegio";
             header("location:" . URL . "workingHours");
         } else {
@@ -85,7 +85,7 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if (!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['new'])) {
+        } else if (!in_array($_SESSION['id_rol'], $GLOBALS['coordinador_empleado'])) {
 
             $_SESSION['mensaje'] = "Operación sin privilegio";
             header("location:" . URL . "workingHours");

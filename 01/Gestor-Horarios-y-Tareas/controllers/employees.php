@@ -30,42 +30,6 @@ class Employees extends Controller
         }
     }
 
-    # --
-    # Method to use in the future when we will have the id employee in the table user
-    # and the user (employee) can only look his hours
-    # --
-
-    // public function render($param = [])
-    // {
-    //     # Begin or continue session
-    //     session_start();
-    //     if (!isset($_SESSION['id'])) {
-    //         $_SESSION['notify'] = "Unauthenticated User";
-    //         header("location:" . URL . "login");
-    //     } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
-    //         $_SESSION['mensaje'] = "Unauthenticated User";
-    //         header("location:" . URL . "index");
-    //     } else {
-    //         # Check if message exists
-    //         if (isset($_SESSION['mensaje'])) {
-    //             $this->view->mensaje = $_SESSION['mensaje'];
-    //             unset($_SESSION['mensaje']);
-    //         }
-
-    //         $this->view->title = "Employees Table";
-    //         if ($_SESSION['id_rol'] === 'admin') {
-    //             # Si el usuario es admin, usar el método get()
-    //             $this->view->employees = $this->model->get();
-    //         } else {
-    //             # Si el usuario no es admin, usar el método getEmployeeById($id)
-    //             $this->view->employees = $this->model->getEmployeeById($_SESSION['id']);
-    //         }
-
-    //         $this->view->render("employees/main/index");
-    //     }
-    // }
-
-
     # "New" Method. Show a formulary to add new employees
     public function new($param = [])
     {

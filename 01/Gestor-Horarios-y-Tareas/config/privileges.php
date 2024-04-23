@@ -10,7 +10,7 @@ $GLOBALS['admin_coordinador'] = [1,2];
 $GLOBALS['coordinador'] = [2];
 
 // Variables para uso de coordinador y empleado 
-$GLOBALS['coordinaror_empleado'] = [2, 3];
+$GLOBALS['coordinador_empleado'] = [2, 3];
 
 // Variables para uso de empleado 
 $GLOBALS['empleado'] = [3];
