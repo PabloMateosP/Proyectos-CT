@@ -93,7 +93,7 @@ class WorkingHours extends Controller
         session_start();
 
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario debe autentificarse";
+            $_SESSION['mensaje'] = "User must authenticated";
 
             header("location:" . URL . "login");
 
@@ -105,22 +105,25 @@ class WorkingHours extends Controller
         } else {
 
             #1.Seguridad. Saneamos los datos del formulario
-            $apellidos = filter_var($_POST['apellidos'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $nombre = filter_var($_POST['nombre'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $telefono = filter_var($_POST['telefono'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $ciudad = filter_var($_POST['ciudad'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $dni = filter_var($_POST['dni'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $email = filter_var($_POST['email'] ??= '', FILTER_SANITIZE_EMAIL);
+            $id_time_code= filter_var($_POST['id_time_code'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $id_work_order = filter_var($_POST['id_work_order'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $id_project = filter_var($_POST['id_project'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $id_task = filter_var($_POST['id_task'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $description = filter_var($_POST['description'] ??= '', FILTER_SANITIZE_EMAIL);
+            $duration = filter_var($_POST['duration'] ??= '', FILTER_SANITIZE_EMAIL);
+            $date_worked = filter_var($_POST['date_worked'] ??= '', FILTER_SANITIZE_EMAIL);
 
             #2. Creamos workingHours con los datos saneados
             $workingHours = new classworkingHours(
                 null,
-                $apellidos,
-                $nombre,
-                $telefono,
-                $ciudad,
-                $dni,
-                $email,
+                $_SESSION['id'],
+                $id_time_code,
+                $id_work_order,
+                $id_project,
+                $id_task,
+                $description,
+                $duration,
+                $date_worked,
                 null,
                 null
             );
@@ -128,35 +131,20 @@ class WorkingHours extends Controller
             #3.Validacion
             $errores = [];
 
-            //Apellidos: obligatorio, maximo 45 caracteres
-
-            if (empty($apellidos)) {
-                $errores['apellidos'] = 'El campo apellidos es obligatorio';
-            } else if (strlen($apellidos) > 45) {
-                $errores['apellidos'] = 'El campo apellidos es demasiado largo';
-
+            //Id_time_code
+            if (empty($id_time_code)) {
+                $errores['id_time_code'] = 'The field id_time_code is required';
+            } else if (strlen($id_time_code) > 10) {
+                $errores['id_time_code'] = 'The field id_time_code is too long';
             }
 
-            //Nombre: obligatorio, maximo 20 caracteres
-            if (empty($nombre)) {
-                $errores['nombre'] = 'El campo nombre es obligatorio';
-            } else if (strlen($nombre) > 20) {
-                $errores['nombre'] = 'El campo nombre es demasiado largo';
+            //id_work_order
+            if (empty($id_work_order)) {
+                $errores['id_work_order'] = 'The field id_work_order is required';
+            } else if (strlen($id_work_order) > 10) {
+                $errores['id_work_order'] = 'El campo id_work_order es demasiado largo';
 
             }
-
-
-
-            //Teléfono: no obligatorio, 9 caracteres numéricos
-            // $options_tlf=[
-            //     'options_tlf'=> [
-            //         'regexp' => '/^\d{9}$/'
-            //     ]
-            // ];
-            // if(!filter_var($telefono, FILTER_VALIDATE_REGEXP, $options_tlf)){
-            //     $errores['telefono'] = 'El formato introducido es incorrecto';
-
-            // }
 
             //Ciudad: obligatorio, maximo 20 caracteres
             if (empty($ciudad)) {
@@ -200,7 +188,7 @@ class WorkingHours extends Controller
                 $_SESSION['error'] = 'Formulario no validado';
                 $_SESSION['errores'] = $errores;
 
-                header('location:' . URL . 'workingHours/nuevo');
+                header('location:' . URL . 'workingHours/new');
 
             } else {
                 //crear workingHours
@@ -309,8 +297,8 @@ class WorkingHours extends Controller
         } else {
 
             #1.Seguridad. Saneamos los datos del formulario
-            $apellidos = filter_var($_POST['apellidos'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $nombre = filter_var($_POST['nombre'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $id_time_code = filter_var($_POST['id_time_code'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $id_work_order = filter_var($_POST['id_work_order'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $telefono = filter_var($_POST['telefono'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $ciudad = filter_var($_POST['ciudad'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $dni = filter_var($_POST['dni'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -318,8 +306,8 @@ class WorkingHours extends Controller
 
             $workingHours = new classworkingHours(
                 null,
-                $apellidos,
-                $nombre,
+                $id_time_code,
+                $id_work_order,
                 $telefono,
                 $ciudad,
                 $dni,
@@ -338,24 +326,24 @@ class WorkingHours extends Controller
 
             $errores = [];
 
-            //Apellidos: obligatorio, maximo 45 caracteres
-            if (strcmp($workingHours->apellidos, $workingHours_orig->apellidos) !== 0) {
-                if (empty($apellidos)) {
-                    $errores['apellidos'] = 'El campo apellidos es obligatorio';
-                } else if (strlen($apellidos) > 45) {
-                    $errores['apellidos'] = 'El campo apellidos es demasiado largo';
+            //id_time_code: obligatorio, maximo 45 caracteres
+            if (strcmp($workingHours->id_time_code, $workingHours_orig->id_time_code) !== 0) {
+                if (empty($id_time_code)) {
+                    $errores['id_time_code'] = 'El campo id_time_code es obligatorio';
+                } else if (strlen($id_time_code) > 45) {
+                    $errores['id_time_code'] = 'El campo id_time_code es demasiado largo';
 
                 }
             }
 
 
-            //Nombre: obligatorio, maximo 20 caracteres
-            if (strcmp($workingHours->nombre, $workingHours_orig->nombre) !== 0) {
+            //id_work_order: obligatorio, maximo 20 caracteres
+            if (strcmp($workingHours->id_work_order, $workingHours_orig->id_work_order) !== 0) {
 
-                if (empty($nombre)) {
-                    $errores['nombre'] = 'El campo nombre es obligatorio';
-                } else if (strlen($nombre) > 20) {
-                    $errores['nombre'] = 'El campo nombre es demasiado largo';
+                if (empty($id_work_order)) {
+                    $errores['id_work_order'] = 'El campo id_work_order es obligatorio';
+                } else if (strlen($id_work_order) > 20) {
+                    $errores['id_work_order'] = 'El campo id_work_order es demasiado largo';
 
                 }
             }
@@ -522,7 +510,7 @@ class WorkingHours extends Controller
         // Obtener datos de workingHours
         $workingHours = $this->model->get()->fetchAll(PDO::FETCH_ASSOC);
 
-        // Nombre del archivo CSV
+        // id_work_order del archivo CSV
         $csvExportado = 'export_workingHours.csv';
 
         // Establecer las cabeceras para la descarga del archivo
@@ -533,17 +521,17 @@ class WorkingHours extends Controller
         $archivo = fopen('php://output', 'w');
 
         // Escribir la primera fila con los encabezados
-        fputcsv($archivo, ['apellidos', 'nombre', 'telefono', 'ciudad', 'dni', 'email', 'create_at', 'update_at'], ';');
+        fputcsv($archivo, ['id_time_code', 'id_work_order', 'telefono', 'ciudad', 'dni', 'email', 'create_at', 'update_at'], ';');
 
         // Iterar sobre los workingHours y escribir cada fila en el archivo
         foreach ($workingHours as $workingHours) {
-            // Separar el campo "workingHours" en "apellidos" y "nombre"
-            list($apellidos, $nombre) = explode(', ', $workingHours['workingHours']);
+            // Separar el campo "workingHours" en "id_time_code" y "id_work_order"
+            list($id_time_code, $id_work_order) = explode(', ', $workingHours['workingHours']);
 
             // Construir el array del workingHours con los datos necesarios
             $workingHoursData = [
-                'apellidos' => $apellidos,
-                'nombre' => $nombre,
+                'id_time_code' => $id_time_code,
+                'id_work_order' => $id_work_order,
                 'telefono' => $workingHours['telefono'],
                 'ciudad' => $workingHours['ciudad'],
                 'dni' => $workingHours['dni'],
@@ -585,7 +573,7 @@ class WorkingHours extends Controller
             exit();
         }
 
-        // Obtener el nombre del archivo temporal
+        // Obtener el id_work_order del archivo temporal
         $archivo_temporal = $_FILES['archivos']['tmp_name'];
 
         // Abrir el archivo temporal
@@ -603,8 +591,8 @@ class WorkingHours extends Controller
             // Crear un array asociativo con los datos de la fila
             $workingHours = new classworkingHours();
 
-            $workingHours->nombre = $fila[1];
-            $workingHours->apellidos = $fila[0];
+            $workingHours->id_work_order = $fila[1];
+            $workingHours->id_time_code = $fila[0];
             $workingHours->email = $fila[5]; 
             $workingHours->telefono = $fila[2];
             $workingHours->ciudad = $fila[3];
