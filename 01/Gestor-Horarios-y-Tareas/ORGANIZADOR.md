@@ -137,9 +137,9 @@ All the working hours must be associate with an employee
 ### Working Hours --> Time Code
 A working hour must have a time code 
 
-### ---------------------------------------------------------------------------------------------------------|
-If the working hour is associated with the time_code = 200, 900, 901, 905 the relations below could be alone |
-### ---------------------------------------------------------------------------------------------------------|
+---------------------------------------------------------------------------------------------------------
+If the working hour is associated with the time_code = 200, 900, 901, 905 the relations below could be alone 
+---------------------------------------------------------------------------------------------------------
 
 ### Working Hours --> Work Order
 A working hour must be associated with a work order
@@ -150,4 +150,4 @@ A working hour must be associated with a task
 ### Working Hours --> Project
 A working hour must be associated with a project
 
-### ---------------------------------------------------------------------------------------------------------|
+---------------------------------------------------------------------------------------------------------
