@@ -25,7 +25,7 @@ class WorkingHours extends Controller
             }
 
             $this->view->title = "Working Hours";
-            
+
             if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['coordinador'])) {
                 $this->view->workingHours = $this->model->get();
             } elseif (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['empleado'])) {
@@ -105,7 +105,7 @@ class WorkingHours extends Controller
         } else {
 
             #1.Seguridad. Saneamos los datos del formulario
-            $id_time_code= filter_var($_POST['id_time_code'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $id_time_code = filter_var($_POST['id_time_code'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $id_work_order = filter_var($_POST['id_work_order'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $id_project = filter_var($_POST['id_project'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $id_task = filter_var($_POST['id_task'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -479,6 +479,64 @@ class WorkingHours extends Controller
         }
     }
 
+    // public function exportar($param = [])
+    // {
+    //     // Validar la sesión del usuario
+    //     session_start();
+    //     if (!isset($_SESSION['id'])) {
+    //         $_SESSION['mensaje'] = "Usuario debe autentificarse";
+    //         header("location:" . URL . "login");
+    //         exit();  // Terminar la ejecución para evitar procesar la exportación sin autenticación
+    //     } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) {
+    //         $_SESSION['mensaje'] = "Operación sin privilegio";
+    //         header("location:" . URL . "workingHours");
+    //         exit();  // Terminar la ejecución para evitar procesar la exportación sin privilegios
+    //     }
+
+    //     // Obtener datos de workingHours
+    //     $workingHours = $this->model->get()->fetchAll(PDO::FETCH_ASSOC);
+
+    //     // id_work_order del archivo CSV
+    //     $csvExportado = 'export_workingHours.csv';
+
+    //     // Establecer las cabeceras para la descarga del archivo
+    //     header('Content-Type: text/csv');
+    //     header('Content-Disposition: attachment; filename="' . $csvExportado . '"');
+
+    //     // Abrir el puntero al archivo de salida
+    //     $archivo = fopen('php://output', 'w');
+
+    //     // Escribir la primera fila con los encabezados
+    //     fputcsv($archivo, ['id_time_code', 'id_work_order', 'telefono', 'ciudad', 'dni', 'email', 'create_at', 'update_at'], ';');
+
+    //     // Iterar sobre los workingHours y escribir cada fila en el archivo
+    //     foreach ($workingHours as $workingHour) {
+    //         // Separar el campo "workingHours" en "id_time_code" y "id_work_order"
+    //         list($id_time_code, $id_work_order) = explode(', ', $workingHour['workingHours']);
+
+    //         // Construir el array del workingHours con los datos necesarios
+    //         $workingHoursData = [
+    //             'id_time_code' => $id_time_code,
+    //             'id_work_order' => $id_work_order,
+    //             'telefono' => $workingHour['telefono'],
+    //             'ciudad' => $workingHour['ciudad'],
+    //             'dni' => $workingHour['dni'],
+    //             'email' => $workingHour['email'],
+    //             'create_at' => date('Y-m-d H:i:s'),
+    //             'update_at' => null
+    //         ];
+
+    //         // Escribir la fila en el archivo
+    //         fputcsv($archivo, $workingHoursData, ';');
+    //     }
+
+    //     // Cerramos el archivo
+    //     fclose($archivo);
+
+    //     // Enviar el contenido del archivo al navegador
+    //     readfile('php://output');
+    // }
+
     public function exportar($param = [])
     {
         // Validar la sesión del usuario
@@ -487,17 +545,20 @@ class WorkingHours extends Controller
             $_SESSION['mensaje'] = "Usuario debe autentificarse";
             header("location:" . URL . "login");
             exit();  // Terminar la ejecución para evitar procesar la exportación sin autenticación
-        } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['export'])) {
+        } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) {
             $_SESSION['mensaje'] = "Operación sin privilegio";
             header("location:" . URL . "workingHours");
             exit();  // Terminar la ejecución para evitar procesar la exportación sin privilegios
         }
 
-        // Obtener datos de workingHours
-        $workingHours = $this->model->get()->fetchAll(PDO::FETCH_ASSOC);
+        // Obtener el correo electrónico del usuario actual
+        $user_email = $_SESSION['email'];
 
-        // id_work_order del archivo CSV
-        $csvExportado = 'export_workingHours.csv';
+        // Obtener datos de horas trabajadas del empleado
+        $employee_hours = $this->model->get_employeeHours($user_email)->fetchAll(PDO::FETCH_ASSOC);
+
+        // Nombre del archivo CSV exportado
+        $csvExportado = 'export_employee_hours.csv';
 
         // Establecer las cabeceras para la descarga del archivo
         header('Content-Type: text/csv');
@@ -507,27 +568,22 @@ class WorkingHours extends Controller
         $archivo = fopen('php://output', 'w');
 
         // Escribir la primera fila con los encabezados
-        fputcsv($archivo, ['id_time_code', 'id_work_order', 'telefono', 'ciudad', 'dni', 'email', 'create_at', 'update_at'], ';');
+        fputcsv($archivo, ['ID', 'ID Empleado', 'Nombre Empleado', 'Código de Tiempo', 'Nombre Proyecto', 'Descripción de Tarea', 'Descripción de la Orden de Trabajo', 'Fecha Trabajada', 'Duración'], ';');
 
-        // Iterar sobre los workingHours y escribir cada fila en el archivo
-        foreach ($workingHours as $workingHours) {
-            // Separar el campo "workingHours" en "id_time_code" y "id_work_order"
-            list($id_time_code, $id_work_order) = explode(', ', $workingHours['workingHours']);
-
-            // Construir el array del workingHours con los datos necesarios
-            $workingHoursData = [
-                'id_time_code' => $id_time_code,
-                'id_work_order' => $id_work_order,
-                'telefono' => $workingHours['telefono'],
-                'ciudad' => $workingHours['ciudad'],
-                'dni' => $workingHours['dni'],
-                'email' => $workingHours['email'],
-                'create_at' => date('Y-m-d H:i:s'),
-                'update_at' => null
-            ];
-
+        // Iterar sobre los datos de horas trabajadas y escribir cada fila en el archivo
+        foreach ($employee_hours as $hour) {
             // Escribir la fila en el archivo
-            fputcsv($archivo, $workingHoursData, ';');
+            fputcsv($archivo, [
+                $hour['id'],
+                $hour['id_employee'],
+                $hour['employee_name'],
+                $hour['time_code'],
+                $hour['project_name'],
+                $hour['task_description'],
+                $hour['work_order_description'],
+                $hour['date_worked'],
+                $hour['duration']
+            ], ';');
         }
 
         // Cerramos el archivo
@@ -536,6 +592,7 @@ class WorkingHours extends Controller
         // Enviar el contenido del archivo al navegador
         readfile('php://output');
     }
+
 
     public function importar($param = [])
     {
@@ -579,7 +636,7 @@ class WorkingHours extends Controller
 
             $workingHours->id_work_order = $fila[1];
             $workingHours->id_time_code = $fila[0];
-            $workingHours->email = $fila[5]; 
+            $workingHours->email = $fila[5];
             $workingHours->telefono = $fila[2];
             $workingHours->ciudad = $fila[3];
             $workingHours->dni = $fila[4];

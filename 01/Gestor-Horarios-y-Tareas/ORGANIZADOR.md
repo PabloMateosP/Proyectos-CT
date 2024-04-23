@@ -162,4 +162,8 @@ Another big problem that we must solve is the addition of workingHours, we must 
 ## Tasks 
 1. We must do delete and edit for the working hours (only employees) and for the employees (only admin can edit and delete employees)
 
-2. We must add a function that sum the working hours of the employee and show it in the employees table and in a section of sum of working hours. 
+2. We must add a function that sum the working hours of the employee and show it in the employees table and in a section of sum of working hours, and it must be shown in the working hours table.
+
+3. We must reset the hours of the employee and the table working hours each sunday
+
+4. In the function export to csv we must solve the problem creating a new variable to save the email of the employee 
