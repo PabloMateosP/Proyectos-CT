@@ -65,7 +65,7 @@
                         <label for="" class="form-label">Roles</label>
                         <select class="form-select <?= (isset($this->errores['roles'])) ? 'is-invalid' : null ?>"
                             name="roles">
-                            <option selected disabled>Seleccione un cliente </option>
+                            <option selected disabled>Seleccione un rol </option>
                             <?php foreach ($this->roles as $rol): ?>
                                 <div class="form-check">
                                     <?php

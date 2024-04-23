@@ -73,7 +73,7 @@ class Users extends Controller
             $_SESSION['mensaje'] = "Usuario No Autentificado";
 
             header("location:" . URL . "login");
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']['nuevo']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
             $_SESSION['mensaje'] = "Operación sin privilegios";
             header('location:' . URL . 'users');
         } else {

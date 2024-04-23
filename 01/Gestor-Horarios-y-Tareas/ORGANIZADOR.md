@@ -151,3 +151,6 @@ A working hour must be associated with a task
 A working hour must be associated with a project
 
 ---------------------------------------------------------------------------------------------------------
+
+## Problems 
+The main problem now is the relation between the table users and the table employees because when que log up on the app we must only saw the information of his account (employee). 
