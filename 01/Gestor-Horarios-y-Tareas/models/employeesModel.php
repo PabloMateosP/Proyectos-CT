@@ -62,6 +62,26 @@ class employeesModel extends Model
             exit();
         }
     }
+    
+    public function getEmployeeByEmail($email) {
+        try {
+
+            $sql = "SELECT * FROM employees WHERE email= :email LIMIT 1";
+            $pdo = $this->db->connect();
+            $stmt = $pdo->prepare($sql);
+            $stmt->setFetchMode(PDO::FETCH_OBJ);
+            $stmt->bindParam(":email", $email, PDO::PARAM_STR);
+            $stmt->execute();
+            
+            return $stmt->fetch();
+
+        }  catch (PDOException $e) {
+            
+            include_once('template/partials/errorDB.php');
+            exit();
+
+        }
+    }
 
     # Método create
     # Permite ejecutar INSERT en la tabla employees

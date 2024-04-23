@@ -1,9 +1,10 @@
-<?php 
-    class loginModel extends Model {
-
+<?php
+class loginModel extends Model
+{
 
     # Devuelve un objeto de la clase Users a partir del email de usuario
-    public function getUserEmail($email) {
+    public function getUserEmail($email)
+    {
         try {
 
             $sql = "SELECT * FROM Users WHERE email= :email LIMIT 1";
@@ -12,19 +13,41 @@
             $stmt->setFetchMode(PDO::FETCH_OBJ);
             $stmt->bindParam(":email", $email, PDO::PARAM_STR);
             $stmt->execute();
-            
+
             return $stmt->fetch();
 
-        }  catch (PDOException $e) {
-            
-            include_once('template/partials/errorDB.php');
+        } catch (PDOException $e) {
+
+            include_once ('template/partials/errorDB.php');
             exit();
 
         }
     }
 
+    public function getEmployeeId($email)
+    {
+        try {
+            $sql = "SELECT * FROM Employees where email = :email LIMIT 1";
+            $pdo = $this->db->connect();
+            $stmt = $pdo->prepare($sql);
+            $stmt->setFetchMode(PDO::FETCH_OBJ);
+            $stmt->bindParam(":email", $email, PDO::PARAM_STR);
+            $stmt->execute();
+
+            return $stmt->fetch();
+
+        } catch (PDOException $e) {
+
+            include_once ('template/partials/errorDB.php');
+            exit();
+
+        }
+
+    }
+
     # Devuelve id de perfil a partir del id de usuario
-    public function getUserIdPerfil($id) {
+    public function getUserIdPerfil($id)
+    {
 
         try {
 
@@ -45,17 +68,18 @@
             return $resultado->fetch()->role_id;
 
         } catch (PDOException $e) {
-            
-            include_once('template/partials/errorDB.php');
+
+            include_once ('template/partials/errorDB.php');
             exit();
 
         }
 
     }
 
-        
+
     # Obtener el nombre perfil a partir del id de perfil
-    public function getUserPerfil($id) {
+    public function getUserPerfil($id)
+    {
 
         try {
 
@@ -75,12 +99,12 @@
             return $resultado->fetch()->name;
 
         } catch (PDOException $e) {
-            
-            include_once('template/partials/errorDB.php');
+
+            include_once ('template/partials/errorDB.php');
             exit();
-    
+
         }
-        
+
     }
 
 }

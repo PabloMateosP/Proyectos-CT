@@ -25,7 +25,7 @@ class WorkingHours extends Controller
             }
 
             $this->view->title = "Working Hours";
-
+            
             if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['coordinador'])) {
                 $this->view->workingHours = $this->model->get();
             } elseif (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['empleado'])) {
@@ -114,9 +114,9 @@ class WorkingHours extends Controller
             $date_worked = filter_var($_POST['date_worked'] ??= '', FILTER_SANITIZE_EMAIL);
 
             #2. Creamos workingHours con los datos saneados
-            $workingHours = new classworkingHours(
+            $workingHours = new classWorkingHours(
                 null,
-                $_SESSION['id'],
+                $_SESSION['employee_id'],
                 $id_time_code,
                 $id_work_order,
                 $id_project,
@@ -131,56 +131,42 @@ class WorkingHours extends Controller
             #3.Validacion
             $errores = [];
 
-            //Id_time_code
+            // Id_time_code
             if (empty($id_time_code)) {
                 $errores['id_time_code'] = 'The field id_time_code is required';
             } else if (strlen($id_time_code) > 10) {
                 $errores['id_time_code'] = 'The field id_time_code is too long';
             }
 
-            //id_work_order
+            // Id_work_order
             if (empty($id_work_order)) {
                 $errores['id_work_order'] = 'The field id_work_order is required';
             } else if (strlen($id_work_order) > 10) {
-                $errores['id_work_order'] = 'El campo id_work_order es demasiado largo';
-
+                $errores['id_work_order'] = 'The field id_work_order is too long';
             }
 
-            //Ciudad: obligatorio, maximo 20 caracteres
-            if (empty($ciudad)) {
-                $errores['ciudad'] = 'El campo ciudad es obligatorio';
-            } else if (strlen($ciudad) > 20) {
-                $errores['ciudad'] = 'El campo ciudad es demasiado largo';
-
+            // Id_project
+            if (empty($id_project)) {
+                $errores['id_project'] = 'The field project is required';
+            } else if (strlen($id_project) > 10) {
+                $errores['id_project'] = 'The field project is too long';
             }
-            //Email: obligatorio, formato válido y clave secundaria
-            if (empty($email)) {
-                $errores['email'] = 'El campo email es obligatorio';
-            } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errores['email'] = 'El formato introducido es incorrecto';
-            } else if (!$this->model->validateUniqueEmail($email)) {
+
+            // Id_task
+            if (empty($id_task)) {
+                $errores['id_task'] = 'The field task is required';
+            } else if (strlen($id_task) > 10) {
                 $errores['email'] = 'Email ya registrado';
-
             }
-            //Dni: obligatorio, formato válido y clave secundaria
-            $options = [
-                'options' => [
-                    'regexp' => '/^(\d{8})([A-Z])$/'
-                ]
-            ];
 
-            if (empty($dni)) {
-                $errores['dni'] = 'El campo dni es obligatorio';
-            } else if (!filter_var($dni, FILTER_VALIDATE_REGEXP, $options)) {
-                $errores['dni'] = 'El formato introducido es incorrecto';
-            } else if (!$this->model->validateUniqueDni($dni)) {
+            // Description
+            if (empty($description)) {
+                $errores['dni'] = 'The field description is required';
+            } else if (strlen($description) > 10) {
                 $errores['dni'] = 'Dni ya registrado';
-
             }
 
-
-
-            #4. Comprobar validacion
+            #4. Verify Validation
 
             if (!empty($errores)) {
                 //errores de validacion
@@ -191,12 +177,12 @@ class WorkingHours extends Controller
                 header('location:' . URL . 'workingHours/new');
 
             } else {
-                //crear workingHours
+                //Create workingHours
                 # Añadir registro a la tabla
                 $this->model->create($workingHours);
 
                 #Mensaje
-                $_SESSION['mensaje'] = "workingHours creado correctamente";
+                $_SESSION['mensaje'] = "Working Hour creado correctamente";
 
                 # Redirigimos al main de workingHours
                 header('location:' . URL . 'workingHours');

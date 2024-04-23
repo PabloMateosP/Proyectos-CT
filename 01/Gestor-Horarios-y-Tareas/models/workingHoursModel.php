@@ -89,6 +89,8 @@ class workingHoursModel extends Model
         }
     }
 
+
+
     # Method get_userEmailById
     # With that method we can take the email of a user by his id
     public function get_userEmailById($user_id)
@@ -134,7 +136,7 @@ class workingHoursModel extends Model
     {
         try {
             $sql = " INSERT INTO 
-                        workingHours 
+                        working_hours 
                         (
                             id_employee, 
                             id_time_code, 
@@ -152,7 +154,7 @@ class workingHoursModel extends Model
                             :id_work_order, 
                             :id_project, 
                             :id_task, 
-                            :description,
+                            :description_,
                             :duration,
                             :date_worked
                         )";
@@ -161,12 +163,13 @@ class workingHoursModel extends Model
             $pdoSt = $conexion->prepare($sql);
 
             // Link the parameters
-            $pdoSt->bindParam(":id_employee", $_SESSION['id'], PDO::PARAM_STR, 10);
+            //-----------------------------------------------------------------------------------
+            $pdoSt->bindParam(":id_employee", $workingHours->id_employee, PDO::PARAM_STR, 10);
             $pdoSt->bindParam(":id_time_code", $workingHours->id_time_code, PDO::PARAM_STR, 10);
             $pdoSt->bindParam(":id_work_order", $workingHours->id_work_order, PDO::PARAM_STR, 10);
             $pdoSt->bindParam(":id_project", $workingHours->id_project, PDO::PARAM_STR, 10);
             $pdoSt->bindParam(":id_task", $workingHours->id_task, PDO::PARAM_STR, 10);
-            $pdoSt->bindParam(":description", $workingHours->description, PDO::PARAM_STR, 50);
+            $pdoSt->bindParam(":description_", $workingHours->description, PDO::PARAM_STR, 50);
             $pdoSt->bindParam(":duration", $workingHours->duration, PDO::PARAM_STR, 2);
             $pdoSt->bindParam(":date_worked", $workingHours->date_worked, PDO::PARAM_STR, 20);
 

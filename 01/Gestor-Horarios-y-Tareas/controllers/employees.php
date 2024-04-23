@@ -65,6 +65,7 @@ class Employees extends Controller
                 unset($_SESSION['error']);
                 unset($_SESSION['errors']);
                 unset($_SESSION['employees']);
+
                 // If these variables exist when there are no errors, we will enter the error blocks in the conditionals
             }
 

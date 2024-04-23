@@ -111,7 +111,7 @@
 
                     <!-- Duration -->
                     <div class="mb-3">
-                        <label for="" class="form-label">Duration</label>
+                        <label for="duration" class="form-label">Duration</label>
                         <input type="number" class="form-control" name="duration">
                         <!-- Show possible error -->
                         <?php if (isset($this->errores['duration'])): ?>

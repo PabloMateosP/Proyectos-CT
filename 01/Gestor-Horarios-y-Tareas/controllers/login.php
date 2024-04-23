@@ -105,6 +105,9 @@ class Login extends Controller
             $_SESSION['name_user'] = $user->name;
             $_SESSION['id_rol'] = $this->model->getUserIdPerfil($user->id);
             $_SESSION['name_rol'] = $this->model->getUserPerfil($_SESSION['id_rol']);
+            
+            $employeee = $this->model->getEmployeeId($email);
+            $_SESSION['employee_id'] = $employeee->id;
 
             if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
                 # Si el usuario es admin, redirigir a la página de employees
@@ -119,5 +122,3 @@ class Login extends Controller
 
     }
 }
-
-?>
