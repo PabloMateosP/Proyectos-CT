@@ -56,15 +56,15 @@
                                 </td>
                                 <td>
                                     <!-- botones de acción -->
-                                    <a href="<?= URL ?>users/mostrar/<?= $user->id ?>" title="Mostrar" class="btn btn-warning<?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin']['mostrar'])) ?
+                                    <a href="<?= URL ?>users/mostrar/<?= $user->id ?>" title="Mostrar" class="btn btn-warning<?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
                                             'disabled' : null ?>"> <i class="bi bi-eye"></i> </a>
                                     <a href="<?= URL ?>users/delete/<?= $user->id ?>" title="Eliminar"
                                         onclick="return confirm('¿Quieres Borrar?')" class="btn btn-danger"
-                                        <?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin']['delete'])) ?
+                                        <?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
                                             'disabled' : null ?>>
                                         <i class="bi bi-trash"></i> </a>
                                     <a href="<?= URL ?>users/editar/<?= $user->id ?>" title="Editar" class="btn btn-primary
-                            <?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin']['editar'])) ?
+                            <?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
                                 'disabled' : null ?>"> <i class="bi bi-pencil"></i> </a>
                                 </td>
                             </tr>

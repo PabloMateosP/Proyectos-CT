@@ -9,24 +9,28 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarScroll">
       <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-        
-      <li class="nav-item">
+
+        <li class="nav-item">
           <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin'])): ?>
             <a class="nav-link active" href="<?= URL ?>employees/">Empleados</a>
           <?php else: ?>
-            <!-- No tienes los permisos necesarios para ver este enlace -->
+            <!-- No permitido -->
           <?php endif; ?>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link active" href="<?= URL ?>workingHours/">Horas Laborales</a>
+          <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin'])): ?>
+            <!-- No permitido -->
+          <?php else: ?>
+            <a class="nav-link active" href="<?= URL ?>workingHours/">Horas Laborales</a>
+          <?php endif; ?>
         </li>
 
         <li class="nav-item">
           <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin'])): ?>
             <a class="nav-link active" href="<?= URL ?>users">Users</a>
           <?php else: ?>
-            <!-- No tienes los permisos necesarios para ver este enlace -->
+            <!-- No permitido -->
           <?php endif; ?>
         </li>
       </ul>

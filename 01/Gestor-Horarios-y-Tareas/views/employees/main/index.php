@@ -58,7 +58,7 @@
                                     <?= $employee->total_hours ?>
                                 </td>
                                 <td style="display:flex; justify-content:space-between;">
-                                    <a href="#" title="Mostrar" class="btn btn-warning<?= (!in_array($_SESSION['id_rol'], $GLOBALS['employees']['show'])) ?
+                                    <a href="#" title="Mostrar" class="btn btn-warning<?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
                                         'disabled' : null ?>"> <i class="bi bi-eye"></i> </a>
                                 </td>
                             </tr>

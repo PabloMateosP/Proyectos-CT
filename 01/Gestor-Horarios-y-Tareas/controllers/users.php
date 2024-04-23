@@ -14,7 +14,7 @@ class Users extends Controller
             $_SESSION['notify'] = "Usuario sin autentificar";
 
             header("location:" . URL . "login");
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']['mostrar']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
             $_SESSION['mensaje'] = "Usuario sin autentificar";
             header("location:" . URL . "index");
 

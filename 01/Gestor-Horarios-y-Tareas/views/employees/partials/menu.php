@@ -8,19 +8,19 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['employees']['new']) ?: 'disabled' ?>"
+                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['admin_coordinador']) ?: 'disabled' ?>"
                         href="<?= URL ?>employees/new">Nuevo</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['employees']['export']) ?: 'disabled' ?>"
+                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['admin_coordinador']) ?: 'disabled' ?>"
                         href="<?= URL ?>employees/exportar">Exportar CSV</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['employees']['import']) ?: 'disabled' ?>"
+                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['admin_coordinador']) ?: 'disabled' ?>"
                         href="#" data-bs-toggle="modal" data-bs-target="#importar">Importar CSV</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['employees']['export']) ?: 'disabled' ?>"
+                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['admin_coordinador']) ?: 'disabled' ?>"
                         href="<?= URL ?>employees/pdf">Exportar PDF</a>
                 </li>
                 <li class="nav-item dropdown">
@@ -42,7 +42,7 @@
                 <input class="form-control me-2" type="search" placeholder="Buscar..." aria-label="Search"
                     name="expresion">
                 <button
-                    class="btn btn-outline-secondary <?= in_array($_SESSION['id_rol'], $GLOBALS['employees']['filter']) ? 'null' : 'disabled' ?>"
+                    class="btn btn-outline-secondary <?= in_array($_SESSION['id_rol'], $GLOBALS['admin_coordinador']) ? 'null' : 'disabled' ?>"
                     type="submit">Buscar</button>
             </form>
         </div>
