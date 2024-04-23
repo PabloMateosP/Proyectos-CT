@@ -19,101 +19,116 @@
             <div class="card-body">
                 <!-- formulario  -->
                 <form action="<?= URL ?>workingHours/create" method="POST">
-                    <!-- name -->
+                    <!-- Time Code -->
                     <div class="mb-3">
-                        <label for="" class="form-label">Name</label>
-                        <input type="text" class="form-control" name="name" value="<?= $this->workingHour->id ?>">
-                        <!-- Mostrar posible error -->
-                        <?php if (isset($this->errores['name'])): ?>
+                        <label for="id_time_code" class="form-label">Time Code</label>
+                        <select class="form-select" name="id_time_code" id="id_time_code">
+                            <option selected disabled>Select time code </option>
+                            <?php foreach ($this->time_Codes as $time_Code): ?>
+                                <option value="<?= $time_Code->id ?>">
+                                    <?= $time_Code->time_code ?> (<?= $time_Code->description ?>)
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <!-- Show possible error -->
+                        <?php if (isset($this->errores['id_time_code'])): ?>
                             <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['name'] ?>
+                                <?= $this->errores['id_time_code'] ?>
                             </span>
                         <?php endif; ?>
                     </div>
 
-                    <!-- last_name -->
+                    <!-- Work Order -->
                     <div class="mb-3">
-                        <label for="" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" name="last_name"
-                            value="<?= $this->workingHour->last_name ?>">
-                        <!-- Mostrar posible error -->
-                        <?php if (isset($this->errores['last_name'])): ?>
+                        <label for="id_work_order" class="form-label">Work Order</label>
+                        <select class="form-select" name="id_work_order" id="id_work_order">
+                            <option selected disabled>Select work order </option>
+                            <?php foreach ($this->work_Ordes as $work_Orde): ?>
+                                <option value="<?= $work_Orde->id ?>">
+                                    <?= $work_Orde->work_order ?> (<?= $work_Orde->description ?>) - Work Order Manager:
+                                    <?= $work_Orde->order_responsible ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <!-- Show possible error -->
+                        <?php if (isset($this->errores['id_work_order'])): ?>
                             <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['last_name'] ?>
+                                <?= $this->errores['id_work_order'] ?>
                             </span>
                         <?php endif; ?>
                     </div>
 
-                    <!-- city -->
+                    <!-- Project -->
                     <div class="mb-3">
-                        <label for="" class="form-label">City</label>
-                        <input type="text" class="form-control" name="city" value="<?= $this->workingHour->city ?>">
-                        <!-- Mostrar posible error -->
-                        <?php if (isset($this->errores['city'])): ?>
+                        <label for="id_project" class="form-label">Project</label>
+                        <select class="form-select" name="id_project" id="id_project">
+                            <option selected disabled>Select project </option>
+                            <?php foreach ($this->projects as $project_): ?>
+                                <option value="<?= $project_->id ?>">
+                                    <?= $project_->project ?> (<?= $project_->description ?>) - Project Manager:
+                                    <?= $project_->manager_name ?>, <?= $project_->manager_last_name ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <!-- Show possible error -->
+                        <?php if (isset($this->errores['id_project'])): ?>
                             <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['city'] ?>
+                                <?= $this->errores['id_project'] ?>
                             </span>
                         <?php endif; ?>
                     </div>
 
-                    <!-- email -->
+                    <!-- Task -->
                     <div class="mb-3">
-                        <label for="" class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" value="<?= $this->workingHour->email ?>">
-                        <!-- Mostrar posible error -->
-                        <?php if (isset($this->errores['email'])): ?>
+                        <label for="id_task" class="form-label">Task</label>
+                        <select class="form-select" name="id_task" id="id_task">
+                            <option selected disabled>Select project </option>
+                            <?php foreach ($this->tasks as $task_): ?>
+                                <option value="<?= $task_->id ?>">
+                                    <?= $task_->task ?> (<?= $task_->description ?>) - Project: <?= $task_->project ?> (<?= $task_->project_description ?>)
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <!-- Show possible error -->
+                        <?php if (isset($this->errores['id_task'])): ?>
                             <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['email'] ?>
+                                <?= $this->errores['id_task'] ?>
                             </span>
                         <?php endif; ?>
                     </div>
 
-                    <!-- phone -->
+                    <!-- Description -->
                     <div class="mb-3">
-                        <label for="" class="form-label">Phone</label>
-                        <input type="number" class="form-control" name="phone" value="<?= $this->workingHour->phone ?>">
+                        <label for="description" class="form-label">Description</label>
+                        <input type="text" step="any" class="form-control" name="description">
                         <!-- Mostrar posible error -->
-                        <?php if (isset($this->errores['phone'])): ?>
+                        <?php if (isset($this->errores['description'])): ?>
                             <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['phone'] ?>
+                                <?= $this->errores['description'] ?>
                             </span>
                         <?php endif; ?>
                     </div>
 
-                    <!-- dni -->
+                    <!-- Duration -->
                     <div class="mb-3">
-                        <label for="" class="form-label">DNI</label>
-                        <input type="text" class="form-control" name="dni" value="<?= $this->workingHour->dni ?>">
-                        <!-- Mostrar posible error -->
-                        <?php if (isset($this->errores['dni'])): ?>
+                        <label for="" class="form-label">Duration</label>
+                        <input type="number" class="form-control" name="duration">
+                        <!-- Show possible error -->
+                        <?php if (isset($this->errores['duration'])): ?>
                             <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['dni'] ?>
+                                <?= $this->errores['duration'] ?>
                             </span>
                         <?php endif; ?>
                     </div>
 
-                    <!-- Total_hours -->
+                    <!-- Date Worked -->
                     <div class="mb-3">
-                        <label for="" class="form-label">Total Hours</label>
-                        <input type="text" class="form-control" name="total_hours"
-                            value="<?= $this->workingHour->total_hours ?>">
-                        <!-- Mostrar posible error -->
-                        <?php if (isset($this->errores['total_hours'])): ?>
+                        <label for="date_worked" class="form-label">Date Worked</label>
+                        <input type="date" class="form-control" name="date_worked">
+                        <!-- Show possible error -->
+                        <?php if (isset($this->errores['date_worked'])): ?>
                             <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['total_hours'] ?>
-                            </span>
-                        <?php endif; ?>
-                    </div>
-
-                    <!-- ID_user -->
-                    <div class="mb-3">
-                        <label for="" class="form-label">Id User</label>
-                        <input type="text" class="form-control" name="id_user"
-                            value="<?= $this->workingHour->id_user ?>">
-                        <!-- Mostrar posible error -->
-                        <?php if (isset($this->errores['id_user'])): ?>
-                            <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['id_user'] ?>
+                                <?= $this->errores['date_worked'] ?>
                             </span>
                         <?php endif; ?>
                     </div>

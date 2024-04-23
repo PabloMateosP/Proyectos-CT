@@ -11,7 +11,6 @@ class classEmployee
     public $dni;
     public $email;
     public $total_hours;
-    public $id_user;
     public $create_at;
     public $update_at;
     

@@ -25,7 +25,15 @@ class WorkingHours extends Controller
             }
 
             $this->view->title = "Working Hours";
-            $this->view->workingHours = $this->model->get();
+
+            if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['coordinador'])) {
+                $this->view->workingHours = $this->model->get();
+            } elseif (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['empleado'])) {
+                $email = $this->view->email_account = $this->model->get_userEmailById($_SESSION['id']);
+                $this->view->workingHours = $this->model->get_employeeHours($email);
+            } else {
+                // You can't look that 
+            }
 
             $this->view->render("workingHours/main/index");
         }
@@ -70,6 +78,10 @@ class WorkingHours extends Controller
             }
 
             $this->view->title = "Formulario workingHours nuevo";
+            $this->view->time_Codes = $this->model->get_times_codes();
+            $this->view->work_Ordes = $this->model->get_work_ordes();
+            $this->view->projects = $this->model->get_projects();
+            $this->view->tasks = $this->model->get_tasks();
             $this->view->render("workingHours/new/index");
         }
     }

@@ -7,7 +7,6 @@ class classUser
     public $name;
     public $email;
     public $password;
-    public $id_employee;
     public $create_at;
     public $update_at;
 

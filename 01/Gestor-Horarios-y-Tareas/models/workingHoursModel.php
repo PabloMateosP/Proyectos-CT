@@ -45,6 +45,69 @@ class workingHoursModel extends Model
         }
     }
 
+    public function get_employeeHours($user_email)
+    {
+        try {
+            $sql = "
+        SELECT 
+            wh.id,
+            wh.id_employee,
+            concat_ws(', ', emp.last_name, emp.name) employee_name,
+            tc.time_code,
+            p.project AS project_name,
+            t.description AS task_description,
+            wo.description AS work_order_description,
+            wh.date_worked,
+            wh.duration
+        FROM 
+            working_hours wh
+        JOIN 
+            employees emp ON wh.id_employee = emp.id
+        JOIN 
+            time_codes tc ON wh.id_time_code = tc.id
+        JOIN 
+            projects p ON wh.id_project = p.id
+        JOIN 
+            tasks t ON wh.id_task = t.id
+        JOIN 
+            work_orders wo ON wh.id_work_order = wo.id
+        JOIN users u on emp.email = u.email
+        WHERE
+            u.email = :email
+        ORDER BY wh.id ASC;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':email', $user_email);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    # Method get_userEmailById
+    # With that method we can take the email of a user by his id
+    public function get_userEmailById($user_id)
+    {
+        try {
+            $sql = "SELECT email FROM users WHERE id = :user_id";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':user_id', $user_id);
+            $pdoSt->execute();
+            $result = $pdoSt->fetch(PDO::FETCH_ASSOC);
+            return $result['email'];
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
     # Método update para las horas totales del usuario
     # Permite actualizar las horas totales de un usuario mediante la suma de la duración de las horas laborales 
     #
@@ -65,43 +128,49 @@ class workingHoursModel extends Model
         }
     }
 
-    # Método create
-    # Permite ejecutar INSERT en la tabla clientes
-    public function create(classCliente $cliente)
+    # Method create
+    # Allow to create a new working hour
+    public function create(classWorkingHours $workingHours)
     {
         try {
             $sql = " INSERT INTO 
-                        clientes 
+                        workingHours 
                         (
-                            nombre, 
-                            apellidos, 
-                            email, 
-                            telefono, 
-                            ciudad, 
-                            dni
+                            id_employee, 
+                            id_time_code, 
+                            id_work_order, 
+                            id_project, 
+                            id_task, 
+                            description,
+                            duration,
+                            date_worked
                         ) 
                         VALUES 
                         ( 
-                            :nombre,
-                            :apellidos,
-                            :email,
-                            :telefono,
-                            :ciudad,
-                            :dni
+                            :id_employee, 
+                            :id_time_code, 
+                            :id_work_order, 
+                            :id_project, 
+                            :id_task, 
+                            :description,
+                            :duration,
+                            :date_worked
                         )";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
 
-            //Vinculamos los parámetros
-            $pdoSt->bindParam(":nombre", $cliente->nombre, PDO::PARAM_STR, 30);
-            $pdoSt->bindParam(":apellidos", $cliente->apellidos, PDO::PARAM_STR, 50);
-            $pdoSt->bindParam(":email", $cliente->email, PDO::PARAM_STR, 50);
-            $pdoSt->bindParam(":telefono", $cliente->telefono, PDO::PARAM_STR, 9);
-            $pdoSt->bindParam(":ciudad", $cliente->ciudad, PDO::PARAM_STR, 30);
-            $pdoSt->bindParam(":dni", $cliente->dni, PDO::PARAM_STR, 9);
+            // Link the parameters
+            $pdoSt->bindParam(":id_employee", $_SESSION['id'], PDO::PARAM_STR, 10);
+            $pdoSt->bindParam(":id_time_code", $workingHours->id_time_code, PDO::PARAM_STR, 10);
+            $pdoSt->bindParam(":id_work_order", $workingHours->id_work_order, PDO::PARAM_STR, 10);
+            $pdoSt->bindParam(":id_project", $workingHours->id_project, PDO::PARAM_STR, 10);
+            $pdoSt->bindParam(":id_task", $workingHours->id_task, PDO::PARAM_STR, 10);
+            $pdoSt->bindParam(":description", $workingHours->description, PDO::PARAM_STR, 50);
+            $pdoSt->bindParam(":duration", $workingHours->duration, PDO::PARAM_STR, 2);
+            $pdoSt->bindParam(":date_worked", $workingHours->date_worked, PDO::PARAM_STR, 20);
 
-            // ejecuto
+            // execute
             $pdoSt->execute();
 
         } catch (PDOException $e) {
@@ -110,14 +179,105 @@ class workingHoursModel extends Model
         }
     }
 
+    public function get_times_codes()
+    {
+        try {
+            $sql = "SELECT id, time_code, description FROM time_codes";
+            $conexion = $this->db->connect();
+            $result = $conexion->prepare($sql);
+            $result->setFetchMode(PDO::FETCH_OBJ);
+            $result->execute();
+
+            return $result->fetchAll();
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+
+    public function get_work_ordes()
+    {
+        try {
+            $sql = "SELECT id, work_order, description, order_responsible FROM work_orders";
+            $conexion = $this->db->connect();
+            $result = $conexion->prepare($sql);
+            $result->setFetchMode(PDO::FETCH_OBJ);
+            $result->execute();
+
+            return $result->fetchAll();
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+
+    public function get_projects()
+    {
+        try {
+            $sql = "SELECT 
+                        pr.id,
+                        pr.project,
+                        pr.description,
+                        pm.last_name AS manager_last_name,
+                        pm.name AS manager_name
+                    FROM 
+                        projects pr
+                    JOIN 
+                        projectManager pm ON pr.id_projectManager = pm.id";
+
+            $conexion = $this->db->connect();
+            $result = $conexion->prepare($sql);
+            $result->setFetchMode(PDO::FETCH_OBJ);
+            $result->execute();
+
+            return $result->fetchAll();
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    public function get_tasks()
+    {
+        try {
+            $sql = "SELECT 
+                        ta.id,
+                        ta.task,
+                        ta.description,
+                        pr.project AS project,
+                        pr.description AS project_description
+                    FROM 
+                        tasks ta
+                    JOIN 
+                        projects pr ON ta.id_project = pr.id";
+
+            $conexion = $this->db->connect();
+            $result = $conexion->prepare($sql);
+            $result->setFetchMode(PDO::FETCH_OBJ);
+            $result->execute();
+
+            return $result->fetchAll();
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+
     # Método delete
-    # Permite ejecutar comando DELETE en la tabla clientes
+    # Permite ejecutar comando DELETE en la tabla workingHourss
     public function delete($id)
     {
         try {
 
             $sql = " 
-                   DELETE FROM clientes WHERE id = :id;
+                   DELETE FROM workingHourss WHERE id = :id;
                    ";
 
             $conexion = $this->db->connect();
@@ -127,38 +287,6 @@ class workingHoursModel extends Model
             return $pdoSt;
 
         } catch (PDOException $error) {
-            require_once ("template/partials/errorDB.php");
-            exit();
-        }
-    }
-
-    # Método getCliente
-    # Obtiene los detalles de un cliente a partir del id
-    public function getCliente($id)
-    {
-        try {
-            $sql = " 
-                    SELECT     
-                        id,
-                        apellidos,
-                        nombre,
-                        telefono,
-                        ciudad,
-                        dni,
-                        email
-                    FROM  
-                        clientes  
-                    WHERE
-                        id = :id";
-
-            $conexion = $this->db->connect();
-            $pdoSt = $conexion->prepare($sql);
-            $pdoSt->bindParam(":id", $id, PDO::PARAM_INT);
-            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
-            $pdoSt->execute();
-            return $pdoSt->fetch();
-
-        } catch (PDOException $e) {
             require_once ("template/partials/errorDB.php");
             exit();
         }
@@ -177,7 +305,7 @@ class workingHoursModel extends Model
             dni,
             email
         FROM 
-            clientes
+            workingHourss
         WHERE id =  :id;
                 ";
 
@@ -201,12 +329,12 @@ class workingHoursModel extends Model
     }
 
     # Método update
-    # Actuliza los detalles de un cliente una vez editados en el formuliario
-    public function update(classCliente $cliente, $id)
+    # Actuliza los detalles de un workingHours una vez editados en el formuliario
+    public function update(classworkingHours $workingHours, $id)
     {
         try {
             $sql = " 
-                    UPDATE clientes
+                    UPDATE workingHourss
                     SET
                         apellidos=:apellidos,
                         nombre=:nombre,
@@ -222,12 +350,12 @@ class workingHoursModel extends Model
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
             //Vinculamos los parámetros
-            $pdoSt->bindParam(":nombre", $cliente->nombre, PDO::PARAM_STR, 30);
-            $pdoSt->bindParam(":apellidos", $cliente->apellidos, PDO::PARAM_STR, 50);
-            $pdoSt->bindParam(":email", $cliente->email, PDO::PARAM_STR, 50);
-            $pdoSt->bindParam(":telefono", $cliente->telefono, PDO::PARAM_STR, 9);
-            $pdoSt->bindParam(":ciudad", $cliente->ciudad, PDO::PARAM_STR, 30);
-            $pdoSt->bindParam(":dni", $cliente->dni, PDO::PARAM_STR, 9);
+            $pdoSt->bindParam(":nombre", $workingHours->nombre, PDO::PARAM_STR, 30);
+            $pdoSt->bindParam(":apellidos", $workingHours->apellidos, PDO::PARAM_STR, 50);
+            $pdoSt->bindParam(":email", $workingHours->email, PDO::PARAM_STR, 50);
+            $pdoSt->bindParam(":telefono", $workingHours->telefono, PDO::PARAM_STR, 9);
+            $pdoSt->bindParam(":ciudad", $workingHours->ciudad, PDO::PARAM_STR, 30);
+            $pdoSt->bindParam(":dni", $workingHours->dni, PDO::PARAM_STR, 9);
             $pdoSt->bindParam(":id", $id, PDO::PARAM_INT);
 
             $pdoSt->execute();
@@ -241,7 +369,7 @@ class workingHoursModel extends Model
 
 
     # Método update
-    # Permite ordenar la tabla de cliente por cualquiera de las columnas del main
+    # Permite ordenar la tabla de workingHours por cualquiera de las columnas del main
     # El criterio de ordenación se establec mediante el número de la columna del select
     public function order(int $criterio)
     {
@@ -286,7 +414,7 @@ class workingHoursModel extends Model
     }
 
     # Método filter
-    # Permite filtar la tabla clientes a partir de una expresión de búsqueda
+    # Permite filtar la tabla workingHourss a partir de una expresión de búsqueda
     public function filter($expresion)
     {
         try {
@@ -352,7 +480,7 @@ class workingHoursModel extends Model
         try {
 
             $sql = "
-                SELECT * FROM clientes
+                SELECT * FROM workingHourss
                 WHERE email = :email
             ";
 
@@ -383,7 +511,7 @@ class workingHoursModel extends Model
         try {
 
             $sql = "
-                SELECT * FROM clientes
+                SELECT * FROM workingHourss
                 WHERE dni = :dni
             ";
 

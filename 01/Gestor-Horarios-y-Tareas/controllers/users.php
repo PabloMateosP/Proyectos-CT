@@ -124,7 +124,7 @@ class Users extends Controller
             $_SESSION['mensaje'] = "Usuario No Autentificado";
 
             header("location:" . URL . "login");
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']['nuevo']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
             $_SESSION['mensaje'] = "Operación sin privilegios";
             header('location:' . URL . 'users');
         } else {
@@ -135,7 +135,6 @@ class Users extends Controller
             $nombre = filter_var($_POST['nombre'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $email = filter_var($_POST['email'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $roles = filter_var($_POST['roles'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $id_employee = filter_var($_POST['id'] ??= '', FILTER_SANITIZE_NUMBER_INT);
             $contraseña = filter_var($_POST['contraseña'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $confirmarContraseña = filter_var($_POST['confirmarContraseña'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -145,7 +144,6 @@ class Users extends Controller
                 null,
                 $nombre,
                 $email,
-                $id_employee,
                 $contraseña,
                 $confirmarContraseña
             );
@@ -198,7 +196,7 @@ class Users extends Controller
                 header('location:' . URL . 'users/nuevo/index');
             } else {
                 # Añadimos el registro a la tabla
-                $this->model->create($nombre, $email, $contraseña, $roles, $id_employee);
+                $this->model->create($nombre, $email, $contraseña, $roles);
 
                 $_SESSION['mensaje'] = "Se ha creado el usuario correctamente.";
 
