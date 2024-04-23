@@ -156,3 +156,10 @@ A working hour must be associated with a project
 The main problem now is the relation between the table users and the table employees because when que log up on the app we must only saw the information of his account (employee). --> SOLVE 
 
 Another big problem that we must solve is the addition of workingHours, we must take the employee_id (the user) and insert in the workingHours table but withouth formulary that must be done in the front end. And now we can´t do that because the variable session (id) of the user is different that the employee's id. --> SOLVE (i create a variable id_employee to save the id of the employee active and later we use this variable to add the new working hour )
+
+---------------------------------------------------------------------------------------------------------
+
+## Tasks 
+1. We must do delete and edit for the working hours (only employees) and for the employees (only admin can edit and delete employees)
+
+2. We must add a function that sum the working hours of the employee and show it in the employees table and in a section of sum of working hours. 

@@ -12,7 +12,7 @@ class Employees extends Controller
             $_SESSION['notify'] = "Unauthenticated User";
 
             header("location:" . URL . "login");
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_organiser']))) {
             $_SESSION['mensaje'] = "Unauthenticated User";
             header("location:" . URL . "index");
 

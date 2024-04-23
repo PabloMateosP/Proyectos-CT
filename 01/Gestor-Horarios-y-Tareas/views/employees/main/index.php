@@ -40,9 +40,6 @@
                         <?php foreach ($this->employees as $employee): ?>
                             <tr>
                                 <td>
-                                    <?= $employee->id ?>
-                                </td>
-                                <td>
                                     <?= $employee->employee ?>
                                 </td>
                                 <td>
