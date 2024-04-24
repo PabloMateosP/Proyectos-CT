@@ -276,120 +276,119 @@ class WorkingHours extends Controller
         session_start();
 
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario debe autentificarse";
+            $_SESSION['mensaje'] = "User must be authenticated";
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['edit']))) {
-            $_SESSION['mensaje'] = "Operación sin privilegio";
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['employee']))) {
+            $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "workingHours");
         } else {
 
             #1.Seguridad. Saneamos los datos del formulario
-            $id_time_code = filter_var($_POST['id_time_code'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $id_work_order = filter_var($_POST['id_work_order'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $telefono = filter_var($_POST['telefono'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $ciudad = filter_var($_POST['ciudad'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $dni = filter_var($_POST['dni'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $email = filter_var($_POST['email'] ??= '', FILTER_SANITIZE_EMAIL);
+            $id_time_code = filter_var($_POST['id_time_code'] ??= '', FILTER_SANITIZE_NUMBER_INT);
+            $id_work_order = filter_var($_POST['id_work_order'] ??= '', FILTER_SANITIZE_NUMBER_INT);
+            $id_project = filter_var($_POST['id_project'] ??= '', FILTER_SANITIZE_NUMBER_INT);
+            $id_task = filter_var($_POST['id_task'] ??= '', FILTER_SANITIZE_NUMBER_INT);
+            $description = filter_var($_POST['description'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $duration = filter_var($_POST['duration'] ??= '', FILTER_SANITIZE_NUMBER_INT);
+            $date_worked = filter_var($_POST['date_worked'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
 
             $workingHours = new classworkingHours(
                 null,
+                null,
                 $id_time_code,
                 $id_work_order,
-                $telefono,
-                $ciudad,
-                $dni,
-                $email,
+                $id_project,
+                $id_task,
+                $description,
+                $duration,
+                $date_worked,
                 null,
                 null
             );
+
             $id = $param[0];
 
-            #Obtengo el objeto workingHours original
+            #Take the object workinHours original
             $workingHours_orig = $this->model->read($id);
 
             #3. Validación
-            //Sólo si es necesario
-            //Sólo en caso de modificación del campo
+            //Only if is necessary
+            //Only in case when the field is modified 
 
             $errores = [];
 
-            //id_time_code: obligatorio, maximo 45 caracteres
+            //id_time_code
             if (strcmp($workingHours->id_time_code, $workingHours_orig->id_time_code) !== 0) {
                 if (empty($id_time_code)) {
-                    $errores['id_time_code'] = 'El campo id_time_code es obligatorio';
-                } else if (strlen($id_time_code) > 45) {
-                    $errores['id_time_code'] = 'El campo id_time_code es demasiado largo';
+                    $errores['id_time_code'] = 'The field id_time_code is required';
+                } else if (strlen($id_time_code) > 10) {
+                    $errores['id_time_code'] = 'The field id_time_code is too long';
 
                 }
             }
 
-
-            //id_work_order: obligatorio, maximo 20 caracteres
+            //id_work_order
             if (strcmp($workingHours->id_work_order, $workingHours_orig->id_work_order) !== 0) {
 
                 if (empty($id_work_order)) {
-                    $errores['id_work_order'] = 'El campo id_work_order es obligatorio';
-                } else if (strlen($id_work_order) > 20) {
-                    $errores['id_work_order'] = 'El campo id_work_order es demasiado largo';
+                    $errores['id_work_order'] = 'The field id_work_order is required ';
+                } else if (strlen($id_work_order) > 10) {
+                    $errores['id_work_order'] = 'The field id_work_order is too long';
 
                 }
             }
 
+            //id_project
+            if (strcmp($workingHours->id_project, $workingHours_orig->id_project) !== 0) {
 
-
-            //Teléfono: no obligatorio, 9 caracteres numéricos
-            // if (strcmp($workingHours->telefono, $workingHours_orig->telefono) !== 0) {
-            // $options_tlf=[
-            //     'options_tlf'=> [
-            //         'regexp' => '/^\d{9}$/'
-            //     ]
-            // ];
-            // if(!filter_var($telefono, FILTER_VALIDATE_REGEXP, $options_tlf)){
-            //     $errores['telefono'] = 'El formato introducido es incorrecto';
-            // }
-            // }
-
-            //Ciudad: obligatorio, maximo 20 caracteres
-            if (strcmp($workingHours->ciudad, $workingHours_orig->ciudad) !== 0) {
-
-                if (empty($ciudad)) {
-                    $errores['ciudad'] = 'El campo ciudad es obligatorio';
-                } else if (strlen($ciudad) > 20) {
-                    $errores['ciudad'] = 'El campo ciudad es demasiado largo';
-
+                if (empty($id_project)) {
+                    $errores['id_project'] = 'The field id_project is required ';
+                } else if (strlen($id_project) > 10) {
+                    $errores['id_project'] = 'The field id_project is too long';
                 }
             }
-            //Email: obligatorio, formato válido y clave secundaria
-            if (strcmp($workingHours->email, $workingHours_orig->email) !== 0) {
 
-                if (empty($email)) {
-                    $errores['email'] = 'El campo email es obligatorio';
-                } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    $errores['email'] = 'El formato introducido es incorrecto';
-                } else if (!$this->model->validateUniqueEmail($email)) {
-                    $errores['email'] = 'Email ya registrado';
 
+            //id_task
+            if (strcmp($workingHours->id_task, $workingHours_orig->id_task) !== 0) {
+
+                if (empty($id_task)) {
+                    $errores['id_task'] = 'The field id_task is required';
+                } else if (strlen($id_task) > 10) {
+                    $errores['id_task'] = 'The field id_task is too long';
                 }
             }
-            //Dni: obligatorio, formato válido y clave secundaria
-            if (strcmp($workingHours->dni, $workingHours_orig->dni) !== 0) {
-                $options = [
-                    'options' => [
-                        'regexp' => '/^(\d{8})([A-Z])$/'
-                    ]
-                ];
 
+            //decription
+            if (strcmp($workingHours->description, $workingHours_orig->description) !== 0) {
 
-                if (empty($dni)) {
-                    $errores['dni'] = 'El campo dni es obligatorio';
-                } else if (!filter_var($dni, FILTER_VALIDATE_REGEXP, $options)) {
-                    $errores['dni'] = 'El formato introducido es incorrecto';
-                } else if (!$this->model->validateUniqueDni($dni)) {
-                    $errores['dni'] = 'Dni ya registrado';
+                if (empty($description)) {
+                    $errores['email'] = 'The field description is required';
+                } else if (strlen($description) > 50) {
+                    $errores['description'] = 'The field description is too long';
+                } 
+            }
 
-                }
+            //duration
+            if (strcmp($workingHours->duration, $workingHours_orig->duration) !== 0) {
+
+                if (empty($duration)) {
+                    $errores['duration'] = 'The field duration is required';
+                } else if (strlen($duration) > 50) {
+                    $errores['duration'] = 'The field duration is too long';
+                } 
+            }
+
+            //date_worked
+            if (strcmp($workingHours->date_worked, $workingHours_orig->date_worked) !== 0) {
+
+                if (empty($date_worked)) {
+                    $errores['date_worked'] = 'The field date_worked is required';
+                } else if (strlen($date_worked) > 50) {
+                    $errores['date_worked'] = 'The field date_worked is too long';
+                } 
             }
 
             #4. Comprobar validacion
@@ -401,7 +400,7 @@ class WorkingHours extends Controller
                 $_SESSION['errores'] = $errores;
 
                 # Redirigimos al main de workingHours
-                header('location:' . URL . 'workingHours/editar/' . $id);
+                header('location:' . URL . 'workingHours/edit/' . $id);
             } else {
                 //crear alumno
                 # Añadir registro a la tabla

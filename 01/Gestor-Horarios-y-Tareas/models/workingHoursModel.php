@@ -209,7 +209,7 @@ class workingHoursModel extends Model
     public function get_times_codes()
     {
         try {
-            $sql = "SELECT id, time_code as time_code_, description FROM time_codes";
+            $sql = "SELECT id, time_code, description FROM time_codes";
             $conexion = $this->db->connect();
             $result = $conexion->prepare($sql);
             $result->setFetchMode(PDO::FETCH_OBJ);
