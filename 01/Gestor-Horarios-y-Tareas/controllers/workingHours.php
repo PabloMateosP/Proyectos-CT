@@ -182,6 +182,7 @@ class WorkingHours extends Controller
                 $total_hours = $this->model->getWhoursEmployee();
                 $this->model->sumTHoursWHour($total_hours);
 
+
                 //Create workingHours
                 # Añadir registro a la tabla
                 $this->model->create($workingHours);
