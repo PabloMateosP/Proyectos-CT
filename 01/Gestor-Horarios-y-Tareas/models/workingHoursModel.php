@@ -206,6 +206,41 @@ class workingHoursModel extends Model
         }
     }
 
+    public function getWhoursEmployee()
+    {
+        try {
+
+            $sql = "SELECT id, duration FROM working_hours WHERE id = :id;";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':id', $_SESSION['employee_id']);
+            $pdoSt->execute();
+            $result = $pdoSt->fetch(PDO::FETCH_ASSOC);
+            return $result['duration'];
+
+        } catch (PDOException $e) {
+            require_once ("template/partialS/errorDB.php");
+        }
+    }
+
+    public function sumTHoursWHour($duration)
+    {
+        try {
+
+            $sql = "UPDATE employees SET total_hours = total_hours + :duration WHERE employees.id = :id;";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+
+            $pdoSt->bindParam(":duration", $duration, PDO::PARAM_INT, 2);
+            $pdoSt->bindParam(":id", $_SESSION['employee_id'], PDO::PARAM_INT, 10);
+
+            $pdoSt->execute();
+
+        } catch (PDOException $e) {
+            require_once ("template/partialS/errorDB.php");
+        }
+    }
+
     public function get_times_codes()
     {
         try {
@@ -353,20 +388,21 @@ class workingHoursModel extends Model
 
     }
 
-    # Método update
-    # Actuliza los detalles de un workingHours una vez editados en el formuliario
-    public function update(classworkingHours $workingHours, $id)
+    # Method update
+    # Update the workingHour's data
+    public function update(classWorkingHours $workingHours, $id)
     {
         try {
             $sql = " 
-                    UPDATE workingHourss
+                    UPDATE working_hours
                     SET
-                        apellidos=:apellidos,
-                        nombre=:nombre,
-                        telefono=:telefono,
-                        ciudad=:ciudad,
-                        dni=:dni,
-                        email=:email,
+                        id_time_code=:id_time_code,
+                        id_work_order=:id_work_order,
+                        id_project=:id_project,
+                        id_task=:id_task,
+                        description=:description,
+                        duration=:duration,
+                        date_worked=:date_worked,
                         update_at = now()
                     WHERE
                         id=:id
@@ -374,14 +410,15 @@ class workingHoursModel extends Model
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
-            //Vinculamos los parámetros
-            $pdoSt->bindParam(":nombre", $workingHours->nombre, PDO::PARAM_STR, 30);
-            $pdoSt->bindParam(":apellidos", $workingHours->apellidos, PDO::PARAM_STR, 50);
-            $pdoSt->bindParam(":email", $workingHours->email, PDO::PARAM_STR, 50);
-            $pdoSt->bindParam(":telefono", $workingHours->telefono, PDO::PARAM_STR, 9);
-            $pdoSt->bindParam(":ciudad", $workingHours->ciudad, PDO::PARAM_STR, 30);
-            $pdoSt->bindParam(":dni", $workingHours->dni, PDO::PARAM_STR, 9);
-            $pdoSt->bindParam(":id", $id, PDO::PARAM_INT);
+
+            $pdoSt->bindParam(":id_time_code", $workingHours->id_time_code, PDO::PARAM_INT, 10);
+            $pdoSt->bindParam(":id_work_order", $workingHours->id_work_order, PDO::PARAM_INT, 10);
+            $pdoSt->bindParam(":id_project", $workingHours->id_project, PDO::PARAM_INT, 10);
+            $pdoSt->bindParam(":id_task", $workingHours->id_task, PDO::PARAM_INT, 10);
+            $pdoSt->bindParam(":description", $workingHours->description, PDO::PARAM_STR, 50);
+            $pdoSt->bindParam(":duration", $workingHours->duration, PDO::PARAM_INT, 2);
+            $pdoSt->bindParam(":date_worked", $workingHours->date_worked, PDO::PARAM_STR);
+            $pdoSt->bindParam(":id", $id, PDO::PARAM_STR);
 
             $pdoSt->execute();
 
@@ -391,9 +428,7 @@ class workingHoursModel extends Model
         }
     }
 
-
-
-    # Método update
+    # Method order
     # Permite ordenar la tabla de workingHours por cualquiera de las columnas del main
     # El criterio de ordenación se establec mediante el número de la columna del select
     public function order(int $criterio)

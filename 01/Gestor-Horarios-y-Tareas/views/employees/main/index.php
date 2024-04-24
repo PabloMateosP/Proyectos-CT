@@ -33,7 +33,11 @@
                             <th>Telefono</th>
                             <th>Ciudad</th>
                             <th>Horas Totales</th>
-                            <th>Acciones</th>
+                            <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin'])): ?>
+                                <th>Acciones</th>
+                            <?php else: ?>
+                                <!-- No permitido -->
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -54,10 +58,18 @@
                                 <td>
                                     <?= $employee->total_hours ?>
                                 </td>
-                                <td style="display:flex; justify-content:space-between;">
-                                    <a href="#" title="Mostrar" class="btn btn-warning<?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
-                                        'disabled' : null ?>"> <i class="bi bi-eye"></i> </a>
-                                </td>
+                                <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin'])): ?>   
+                                    <td style="display:flex; gap: 5px;">
+                                        <a href="#" title="Mostrar" class="btn btn-warning<?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
+                                                'disabled' : null ?>"> <i class="bi bi-eye"></i></a>
+                                        <a href="<?= URL ?>employees/delete/<?= $employee->id ?>" title="Delete"
+                                            onclick="return confirm('Confirm employee deletion') " class="btn btn-danger"
+                                            <?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
+                                                'disabled' : null ?>> <i class="bi bi-trash"></i></a>
+                                    </td>
+                                <?php else: ?>
+                                        <!-- No permitido -->     
+                                <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

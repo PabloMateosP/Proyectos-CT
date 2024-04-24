@@ -4,7 +4,7 @@
 <head>
     <!-- head -->
     <?php require_once ("template/partials/head.php"); ?>
-    <title>Horas Trabajadas</title>
+    <title>Working Hours Main</title>
 </head>
 
 <body>

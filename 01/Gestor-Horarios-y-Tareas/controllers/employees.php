@@ -221,17 +221,17 @@ class Employees extends Controller
     {
         session_start();
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario debe autentificarse";
+            $_SESSION['mensaje'] = "User muet be authenticated";
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['employees']['delete']))) {
-            $_SESSION['mensaje'] = "Operación sin privilegio";
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
+            $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "employees");
         } else {
             $id = $param[0];
             $this->model->delete($id);
-            $_SESSION['mensaje'] = 'Alumno eliminado correctamente';
+            $_SESSION['mensaje'] = 'Employee delete correctly';
 
             header("Location:" . URL . "employees");
         }

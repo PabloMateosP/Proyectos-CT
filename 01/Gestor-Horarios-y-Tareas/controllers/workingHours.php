@@ -177,12 +177,17 @@ class WorkingHours extends Controller
                 header('location:' . URL . 'workingHours/new');
 
             } else {
+
+                # Select total_hours from employees where id = $id
+                $total_hours = $this->model->getWhoursEmployee();
+                $this->model->sumTHoursWHour($total_hours);
+
                 //Create workingHours
                 # Añadir registro a la tabla
                 $this->model->create($workingHours);
 
                 #Mensaje
-                $_SESSION['mensaje'] = "Working Hour creado correctamente";
+                $_SESSION['mensaje'] = "Working Hour create correctly";
 
                 # Redirigimos al main de workingHours
                 header('location:' . URL . 'workingHours');
@@ -252,7 +257,7 @@ class WorkingHours extends Controller
                 $this->view->error = $_SESSION['error'];
 
                 // Autorellenamos el formulario
-                $this->view->workingHours = unserialize($_SESSION['workingHours']);
+                $this->view->workingHours = unserialize($_SESSION['employee']);
 
                 // Recupero array de errores específicos
                 $this->view->errores = $_SESSION['errores'];
@@ -260,13 +265,14 @@ class WorkingHours extends Controller
                 // debemos liberar las variables de sesión ya que su cometido ha sido resuelto
                 unset($_SESSION['error']);
                 unset($_SESSION['errores']);
-                unset($_SESSION['workingHours']);
+                unset($_SESSION['employee']);
                 // Si estas variables existen cuando no hay errores, entraremos en los bloques de error en las condicionales
             }
 
             $this->view->render("workingHours/edit/index");
         }
     }
+
     # Método update.
     # Actualiza los detalles de un workingHours a partir de los datos del formulario de edición
     public function update($param = [])
@@ -285,7 +291,7 @@ class WorkingHours extends Controller
             header("location:" . URL . "workingHours");
         } else {
 
-            #1.Seguridad. Saneamos los datos del formulario
+            #1.Security. 
             $id_time_code = filter_var($_POST['id_time_code'] ??= '', FILTER_SANITIZE_NUMBER_INT);
             $id_work_order = filter_var($_POST['id_work_order'] ??= '', FILTER_SANITIZE_NUMBER_INT);
             $id_project = filter_var($_POST['id_project'] ??= '', FILTER_SANITIZE_NUMBER_INT);
@@ -294,7 +300,7 @@ class WorkingHours extends Controller
             $duration = filter_var($_POST['duration'] ??= '', FILTER_SANITIZE_NUMBER_INT);
             $date_worked = filter_var($_POST['date_worked'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
 
-            $workingHours = new classworkingHours(
+            $workingHours = new classWorkingHours(
                 null,
                 null,
                 $id_time_code,
@@ -306,7 +312,9 @@ class WorkingHours extends Controller
                 $date_worked,
                 null,
                 null
-            );
+            ); 
+
+            
 
             $id = $param[0];
 
@@ -402,7 +410,7 @@ class WorkingHours extends Controller
                 # Redirigimos al main de workingHours
                 header('location:' . URL . 'workingHours/edit/' . $id);
             } else {
-                //crear alumno
+
                 # Añadir registro a la tabla
                 $this->model->update($workingHours, $id);
 

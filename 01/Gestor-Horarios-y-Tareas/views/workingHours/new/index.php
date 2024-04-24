@@ -100,7 +100,7 @@
                     <!-- Description -->
                     <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
-                        <input type="text" step="any" class="form-control" name="description">
+                        <input type="text" step="any" class="form-control" id="description" name="description">
                         <!-- Mostrar posible error -->
                         <?php if (isset($this->errores['description'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -112,7 +112,7 @@
                     <!-- Duration -->
                     <div class="mb-3">
                         <label for="duration" class="form-label">Duration</label>
-                        <input type="number" class="form-control" name="duration">
+                        <input type="number" class="form-control" id="duration" name="duration">
                         <!-- Show possible error -->
                         <?php if (isset($this->errores['duration'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -124,7 +124,7 @@
                     <!-- Date Worked -->
                     <div class="mb-3">
                         <label for="date_worked" class="form-label">Date Worked</label>
-                        <input type="date" class="form-control" name="date_worked">
+                        <input type="datetime-local" class="form-control" id="date_worked" name="date_worked">
                         <!-- Show possible error -->
                         <?php if (isset($this->errores['date_worked'])): ?>
                             <span class="form-text text-danger" role="alert">
