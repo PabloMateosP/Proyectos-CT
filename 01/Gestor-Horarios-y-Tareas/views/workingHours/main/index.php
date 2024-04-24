@@ -64,12 +64,10 @@
                                     <?= $workingHour->duration ?>
                                 </td>
                                 <td style="display:flex; justify-content:space-between;">
-                                    <a href="#" title="delete"
-                                        onclick="return confirm('Confirmar eliminación Horas') " class="btn btn-danger"
-                                        <?= (!in_array($_SESSION['id_rol'], $GLOBALS['employee'])) ?
-                                            'disabled' : null ?>> <i class="bi bi-trash"></i> </a>
-                                    <a href="#" title="edit" class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['employee'])) ?
+                                    <a href="<?= URL ?>workingHours/edit/<?= $workingHour->id ?>" title="edit" class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['employee'])) ?
                                             'disabled' : null ?>"> <i class="bi bi-pencil"></i> </a>
+                                    <a href="<?= URL ?>workingHours/delete/<?= $workingHour->id ?>" title="Eliminar" onclick="return confirm('Confirmar eliminación Cuenta') " class="btn btn-danger" <?= (!in_array($_SESSION['id_rol'], $GLOBALS['employee'])) ?
+                                    'disabled' : null ?>> <i class="bi bi-trash"></i></a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

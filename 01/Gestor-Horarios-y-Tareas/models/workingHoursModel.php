@@ -89,6 +89,30 @@ class workingHoursModel extends Model
         }
     }
 
+    public function getEmployeeDetails($id)
+    {
+        try {
+            $sql = "
+            SELECT 
+                id,
+                CONCAT_WS(', ', last_name, name) AS employee_
+            FROM 
+                employees
+            WHERE 
+                id = :id;
+        ";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':id', $id);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+            return $pdoSt;
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
 
 
     # Method get_userEmailById
@@ -185,7 +209,7 @@ class workingHoursModel extends Model
     public function get_times_codes()
     {
         try {
-            $sql = "SELECT id, time_code, description FROM time_codes";
+            $sql = "SELECT id, time_code as time_code_, description FROM time_codes";
             $conexion = $this->db->connect();
             $result = $conexion->prepare($sql);
             $result->setFetchMode(PDO::FETCH_OBJ);
@@ -273,15 +297,13 @@ class workingHoursModel extends Model
     }
 
 
-    # Método delete
-    # Permite ejecutar comando DELETE en la tabla workingHourss
+    # Method delete
+    # Permit execute command DELETE at the table workingHours
     public function delete($id)
     {
         try {
 
-            $sql = " 
-                   DELETE FROM workingHourss WHERE id = :id;
-                   ";
+            $sql = "DELETE FROM working_hours WHERE id = :id;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
@@ -289,7 +311,7 @@ class workingHoursModel extends Model
             $pdoSt->execute();
             return $pdoSt;
 
-        } catch (PDOException $error) {
+        } catch (PDOException $e) {
             require_once ("template/partials/errorDB.php");
             exit();
         }
@@ -301,20 +323,20 @@ class workingHoursModel extends Model
         try {
             $sql = " SELECT
             id,
-            apellidos, 
-            nombre,
-            telefono,
-            ciudad,
-            dni,
-            email
+            id_employee, 
+            id_time_code,
+            id_work_order,
+            id_project,
+            id_task,
+            description,
+            duration,
+            date_worked
         FROM 
-            workingHourss
-        WHERE id =  :id;
-                ";
+            working_hours
+        WHERE id =  :id;";
 
-            # Conectar con la base de datos
+            # Connect with the database
             $conexion = $this->db->connect();
-
 
             $pdoSt = $conexion->prepare($sql);
 
