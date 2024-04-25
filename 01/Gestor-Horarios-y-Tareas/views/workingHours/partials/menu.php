@@ -8,7 +8,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['coordinador_empleado'])): ?>
+                    <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['empleado'])): ?>
                         <a class="nav-link active" href="<?= URL ?>workingHours/new">New</a>
                     <?php else: ?>
                         <!-- No tienes los permisos necesarios para ver este enlace -->

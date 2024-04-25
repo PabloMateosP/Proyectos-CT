@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <div class="container" style="margin-top: 5%;">
+    <div class="container" style="margin-top: 5%; margin-bottom: 5%;">
         <!-- menu fijo superior -->
         <?php require_once "template/partials/menuAut.php"; ?>
         <div class="card">
@@ -17,12 +17,12 @@
                 <?php include "views/users/partials/header.php" ?>
             </div>
             <div class="card-header">
-                
+
                 <!-- Menu principal -->
                 <?php require_once "views/users/partials/menu.php" ?>
             </div>
             <div class="card-body">
-                
+
                 <!-- Mensaje -->
                 <?php require_once "template/partials/mensaje.php" ?>
                 <table class="table">

@@ -10,7 +10,7 @@
     <!-- Top fixed menu -->
     <?php require_once "template/partials/menuAut.php"; ?>
     <!-- capa principal -->
-    <div class="container" style="margin-top: 5%;">
+    <div class="container" style="margin-top: 5%; margin-bottom: 5%;">
         <!-- card that contains the form -->
         <div class="card">
             <div class="card-header">

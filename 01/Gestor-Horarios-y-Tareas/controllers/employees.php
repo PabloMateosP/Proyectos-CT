@@ -42,7 +42,7 @@ class Employees extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_organiser']))) {
             $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "employees");
         } else {
@@ -86,7 +86,7 @@ class Employees extends Controller
 
             header("location:" . URL . "login");
 
-        } else if (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) {
+        } else if (!in_array($_SESSION['id_rol'], $GLOBALS['admin_organiser'])) {
 
             $_SESSION['message'] = "Operation without privileges";
             header("location:" . URL . "employees");

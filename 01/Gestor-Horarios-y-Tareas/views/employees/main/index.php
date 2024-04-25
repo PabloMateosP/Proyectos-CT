@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <div class="container" style="margin-top: 5%;">
+    <div class="container" style="margin-top: 5%; margin-bottom: 5%;">
         <!-- menu fijo superior -->
         <?php require_once "template/partials/menuAut.php"; ?>
         <div class="card">

@@ -207,22 +207,22 @@ class Users extends Controller
     }
 
 
-    # Método eliminar. Eliminamos el usuario elegido 
+    # Method delete: we can delete an user.
     public function delete($param = [])
     {
         session_start();
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario debe autentificarse";
+            $_SESSION['mensaje'] = "User must authenticated";
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']['delete']))) {
-            $_SESSION['mensaje'] = "Operación sin privilegio";
-            header("location:" . URL . "clientes");
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
+            $_SESSION['mensaje'] = "Unprivileged operation";
+            header("location:" . URL . "users");
         } else {
             $id = $param[0];
             $this->model->delete($id);
-            $_SESSION['mensaje'] = 'Usuario eliminado correctamente';
+            $_SESSION['mensaje'] = 'User delete correctly';
 
             header("Location:" . URL . "users");
         }

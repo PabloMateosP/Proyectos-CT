@@ -3,8 +3,8 @@
 class workingHoursModel extends Model
 {
 
-    # Método get
-    # Consulta SELECT a la tabla workingHours
+    # Method get 
+    # Select form table working hours for the admin view
     public function get()
     {
         try {
@@ -45,6 +45,9 @@ class workingHoursModel extends Model
         }
     }
 
+    # Method get employee hours
+    # Select from table working hours where the email is same that the user email
+    # For employee table 
     public function get_employeeHours($user_email)
     {
         try {
@@ -88,6 +91,24 @@ class workingHoursModel extends Model
             exit();
         }
     }
+
+    public function getTotalHours() {
+        try {
+            $sql = "SELECT id, total_hours FROM employees where id = :employee_id";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':employee_id', $_SESSION['employee_id']);
+            $pdoSt->execute();
+            $result = $pdoSt->fetch(PDO::FETCH_ASSOC);
+            return $result['total_hours'];
+
+        } catch(PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+
+    }
+
 
     public function getEmployeeDetails($id)
     {
@@ -194,7 +215,7 @@ class workingHoursModel extends Model
             $pdoSt->bindParam(":id_project", $workingHours->id_project, PDO::PARAM_STR, 10);
             $pdoSt->bindParam(":id_task", $workingHours->id_task, PDO::PARAM_STR, 10);
             $pdoSt->bindParam(":description_", $workingHours->description, PDO::PARAM_STR, 50);
-            $pdoSt->bindParam(":duration", $workingHours->duration, PDO::PARAM_STR, 2);
+            $pdoSt->bindParam(":duration", $workingHours->duration, PDO::PARAM_INT, 2);
             $pdoSt->bindParam(":date_worked", $workingHours->date_worked, PDO::PARAM_STR, 20);
 
             // execute
@@ -206,36 +227,38 @@ class workingHoursModel extends Model
         }
     }
 
-    public function getWhoursEmployee()
+    // public function getWhoursEmployee()
+    // {
+    //     try {
+
+    //         $sql = "SELECT id, duration FROM working_hours WHERE id = :id;";
+    //         $conexion = $this->db->connect();
+    //         $pdoSt = $conexion->prepare($sql);
+    //         $pdoSt->bindParam(':id', $_SESSION['employee_id']);
+    //         $pdoSt->execute();
+    //         $result = $pdoSt->fetch(PDO::FETCH_ASSOC);
+    //         return $result['duration'];
+
+    //     } catch (PDOException $e) {
+    //         require_once ("template/partialS/errorDB.php");
+    //     }
+    // }
+
+    public function sumTHoursWHour($duration, $employee_id)
     {
         try {
+            // Consulta SQL para actualizar las total_hours del empleado sumando la duración de la nueva working hour
+            $sql = "UPDATE employees SET total_hours = total_hours + :duration WHERE id = :employee_id";
 
-            $sql = "SELECT id, duration FROM working_hours WHERE id = :id;";
-            $conexion = $this->db->connect();
-            $pdoSt = $conexion->prepare($sql);
-            $pdoSt->bindParam(':id', $_SESSION['employee_id']);
+            // Preparar la consulta
+            $pdoSt = $this->db->connect()->prepare($sql);
+
+            // Vincular los parámetros
+            $pdoSt->bindParam(":duration", $duration, PDO::PARAM_INT);
+            $pdoSt->bindParam(":employee_id", $employee_id, PDO::PARAM_INT);
+
+            // Ejecutar la consulta
             $pdoSt->execute();
-            $result = $pdoSt->fetch(PDO::FETCH_ASSOC);
-            return $result['duration'];
-
-        } catch (PDOException $e) {
-            require_once ("template/partialS/errorDB.php");
-        }
-    }
-
-    public function sumTHoursWHour($duration)
-    {
-        try {
-
-            $sql = "UPDATE employees SET total_hours = total_hours + :duration WHERE employees.id = :id;";
-            $conexion = $this->db->connect();
-            $pdoSt = $conexion->prepare($sql);
-
-            $pdoSt->bindParam(":duration", $duration, PDO::PARAM_INT, 2);
-            $pdoSt->bindParam(":id", $_SESSION['employee_id'], PDO::PARAM_INT, 10);
-
-            $pdoSt->execute();
-
         } catch (PDOException $e) {
             require_once ("template/partialS/errorDB.php");
         }

@@ -31,10 +31,11 @@ class WorkingHours extends Controller
             } elseif (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['empleado'])) {
                 $email = $this->view->email_account = $this->model->get_userEmailById($_SESSION['id']);
                 $this->view->workingHours = $this->model->get_employeeHours($email);
+                $this->view->total_hours = $this->model->getTotalHours();
             } else {
                 // You can't look that 
             }
-
+            
             $this->view->render("workingHours/main/index");
         }
     }
@@ -110,8 +111,8 @@ class WorkingHours extends Controller
             $id_project = filter_var($_POST['id_project'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $id_task = filter_var($_POST['id_task'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $description = filter_var($_POST['description'] ??= '', FILTER_SANITIZE_EMAIL);
-            $duration = filter_var($_POST['duration'] ??= '', FILTER_SANITIZE_EMAIL);
-            $date_worked = filter_var($_POST['date_worked'] ??= '', FILTER_SANITIZE_EMAIL);
+            $duration = filter_var($_POST['duration'] ??= '', FILTER_SANITIZE_NUMBER_INT);
+            $date_worked = filter_var($_POST['date_worked'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
 
             #2. Creamos workingHours con los datos saneados
             $workingHours = new classWorkingHours(
@@ -156,14 +157,21 @@ class WorkingHours extends Controller
             if (empty($id_task)) {
                 $errores['id_task'] = 'The field task is required';
             } else if (strlen($id_task) > 10) {
-                $errores['email'] = 'Email ya registrado';
+                $errores['id_task'] = 'Field task too long';
             }
 
             // Description
             if (empty($description)) {
-                $errores['dni'] = 'The field description is required';
-            } else if (strlen($description) > 10) {
-                $errores['dni'] = 'Dni ya registrado';
+                $errores['description'] = 'The field description is required';
+            } else if (strlen($description) > 50) {
+                $errores['description'] = 'Description too long';
+            }
+
+            // Date Worked
+            if (empty($date_worked)) {
+                $errores['date_worked'] = 'The field date_worked is required';
+            } else if (strlen($date_worked) > 20) {
+                $errores['date_worked'] = 'Date worked too long';
             }
 
             #4. Verify Validation
@@ -178,10 +186,8 @@ class WorkingHours extends Controller
 
             } else {
 
-                # Select total_hours from employees where id = $id
-                $total_hours = $this->model->getWhoursEmployee();
-                $this->model->sumTHoursWHour($total_hours);
-
+                # Suma de horas totales desde la tabla employees + nuevas horas trabajadas
+                $this->model->sumTHoursWHour($duration, $_SESSION['employee_id']);
 
                 //Create workingHours
                 # Añadir registro a la tabla
@@ -313,9 +319,9 @@ class WorkingHours extends Controller
                 $date_worked,
                 null,
                 null
-            ); 
+            );
 
-            
+
 
             $id = $param[0];
 
@@ -377,7 +383,7 @@ class WorkingHours extends Controller
                     $errores['email'] = 'The field description is required';
                 } else if (strlen($description) > 50) {
                     $errores['description'] = 'The field description is too long';
-                } 
+                }
             }
 
             //duration
@@ -387,7 +393,7 @@ class WorkingHours extends Controller
                     $errores['duration'] = 'The field duration is required';
                 } else if (strlen($duration) > 50) {
                     $errores['duration'] = 'The field duration is too long';
-                } 
+                }
             }
 
             //date_worked
@@ -397,7 +403,7 @@ class WorkingHours extends Controller
                     $errores['date_worked'] = 'The field date_worked is required';
                 } else if (strlen($date_worked) > 50) {
                     $errores['date_worked'] = 'The field date_worked is too long';
-                } 
+                }
             }
 
             #4. Comprobar validacion

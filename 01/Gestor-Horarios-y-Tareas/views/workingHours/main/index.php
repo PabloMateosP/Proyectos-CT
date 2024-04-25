@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <div class="container" style="margin-top: 5%;">
+    <div class="container" style="margin-top: 5%; margin-bottom: 5%;">
         <!-- menu fijo superior -->
         <?php require_once "template/partials/menuAut.php"; ?>
 
@@ -63,20 +63,27 @@
                                 <td>
                                     <?= $workingHour->duration ?>
                                 </td>
-                                <td style="display:flex; justify-content:space-between;">
+                                <td style="display:flex; gap: 10px;">
                                     <a href="<?= URL ?>workingHours/edit/<?= $workingHour->id ?>" title="edit" class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['employee'])) ?
                                             'disabled' : null ?>"> <i class="bi bi-pencil"></i> </a>
                                     <a href="<?= URL ?>workingHours/delete/<?= $workingHour->id ?>" title="Eliminar" onclick="return confirm('Confirmar eliminación Cuenta') " class="btn btn-danger" <?= (!in_array($_SESSION['id_rol'], $GLOBALS['employee'])) ?
-                                    'disabled' : null ?>> <i class="bi bi-trash"></i></a>
+                                        'disabled' : null ?>> <i class="bi bi-trash"></i></a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="8">Nº Registros:
-                                <?= $this->workingHours->rowCount() ?>
-                            </td>
+                            
+                            <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['employee'])): ?>
+                                <td colspan="2"> Total Hours:
+                                    <strong><?= $this->total_hours ?></strong>
+                                </td>
+                            <?php else: ?>
+                                <td colspan="8">Nº record:
+                                    <?= $this->workingHours->rowCount() ?>
+                                </td>
+                            <?php endif; ?>
                         </tr>
                     </tfoot>
                 </table>
