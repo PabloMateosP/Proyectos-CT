@@ -64,7 +64,7 @@
                                 <td>
                                     <?= $workingHour->date_worked ?>
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <?= $workingHour->duration ?>
                                 </td>
                                 <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['employee'])): ?>   
@@ -84,7 +84,10 @@
                         <tr>
                             
                             <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['employee'])): ?>
-                                <td colspan="2"> Total Hours:
+                                <td colspan="6">Nº:
+                                    <?= $this->workingHours->rowCount() ?>
+                                </td>
+                                <td colspan="2"> Total:
                                     <strong><?= $this->total_hours ?></strong>
                                 </td>
                             <?php else: ?>

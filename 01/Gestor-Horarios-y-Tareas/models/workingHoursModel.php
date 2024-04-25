@@ -3,6 +3,7 @@
 class workingHoursModel extends Model
 {
 
+    # ---------------------------------------------------------------------------------
     # Method get 
     # Select form table working hours for the admin view
     public function get()
@@ -45,6 +46,7 @@ class workingHoursModel extends Model
         }
     }
 
+    # ---------------------------------------------------------------------------------
     # Method get employee hours
     # Select from table working hours where the email is same that the user email
     # For employee table 
@@ -92,7 +94,9 @@ class workingHoursModel extends Model
         }
     }
 
-    public function getTotalHours() {
+    # ---------------------------------------------------------------------------------
+    public function getTotalHours()
+    {
         try {
             $sql = "SELECT id, total_hours FROM employees where id = :employee_id";
             $conexion = $this->db->connect();
@@ -102,14 +106,14 @@ class workingHoursModel extends Model
             $result = $pdoSt->fetch(PDO::FETCH_ASSOC);
             return $result['total_hours'];
 
-        } catch(PDOException $e) {
+        } catch (PDOException $e) {
             require_once ("template/partials/errorDB.php");
             exit();
         }
 
     }
 
-
+    # ---------------------------------------------------------------------------------
     public function getEmployeeDetails($id)
     {
         try {
@@ -135,7 +139,7 @@ class workingHoursModel extends Model
         }
     }
 
-
+    # ---------------------------------------------------------------------------------
     # Method get_userEmailById
     # With that method we can take the email of a user by his id
     public function get_userEmailById($user_id)
@@ -155,6 +159,7 @@ class workingHoursModel extends Model
         }
     }
 
+    # ---------------------------------------------------------------------------------
     # Método update para las horas totales del usuario
     # Permite actualizar las horas totales de un usuario mediante la suma de la duración de las horas laborales 
     #
@@ -175,6 +180,7 @@ class workingHoursModel extends Model
         }
     }
 
+    # ---------------------------------------------------------------------------------
     # Method create
     # Allow to create a new working hour
     public function create(classWorkingHours $workingHours)
@@ -227,23 +233,9 @@ class workingHoursModel extends Model
         }
     }
 
-    // public function getWhoursEmployee()
-    // {
-    //     try {
-
-    //         $sql = "SELECT id, duration FROM working_hours WHERE id = :id;";
-    //         $conexion = $this->db->connect();
-    //         $pdoSt = $conexion->prepare($sql);
-    //         $pdoSt->bindParam(':id', $_SESSION['employee_id']);
-    //         $pdoSt->execute();
-    //         $result = $pdoSt->fetch(PDO::FETCH_ASSOC);
-    //         return $result['duration'];
-
-    //     } catch (PDOException $e) {
-    //         require_once ("template/partialS/errorDB.php");
-    //     }
-    // }
-
+    # ---------------------------------------------------------------------------------
+    # sumTHoursWHours
+    # Sum the new working hour plus the total hours 
     public function sumTHoursWHour($duration, $employee_id)
     {
         try {
@@ -264,6 +256,30 @@ class workingHoursModel extends Model
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    # getWHour
+    # Select total hours from the user with the id
+    public function getWHours($id)
+    {
+        try {
+            $sql = "SELECT id, total_hours FROM users WHERE id = :user_id";
+            
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':user_id', $id);
+            $pdoSt->execute();
+            $result = $pdoSt->fetch(PDO::FETCH_ASSOC);
+            return $result['total_hours'];
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    # get_times_codes
+    # Select from the time_code from the time_code
     public function get_times_codes()
     {
         try {
@@ -281,7 +297,9 @@ class workingHoursModel extends Model
         }
     }
 
-
+    # ---------------------------------------------------------------------------------
+    # get_work_ordes
+    # Select the work_ordes from the order_works 
     public function get_work_ordes()
     {
         try {
@@ -298,7 +316,6 @@ class workingHoursModel extends Model
             exit();
         }
     }
-
 
     public function get_projects()
     {
@@ -374,6 +391,29 @@ class workingHoursModel extends Model
             exit();
         }
     }
+
+    # Method subtractTH
+    # Method to subtract the working hour delete in the total hours
+    public function subtractTH($duration, $employee_id)
+    {
+        try {
+            // Consulta SQL para actualizar las total_hours del empleado sumando la duración de la nueva working hour
+            $sql = "UPDATE employees SET total_hours = total_hours - :duration WHERE id = :employee_id";
+
+            // Preparar la consulta
+            $pdoSt = $this->db->connect()->prepare($sql);
+
+            // Vincular los parámetros
+            $pdoSt->bindParam(":duration", $duration, PDO::PARAM_INT);
+            $pdoSt->bindParam(":employee_id", $employee_id, PDO::PARAM_INT);
+
+            // Ejecutar la consulta
+            $pdoSt->execute();
+        } catch (PDOException $e) {
+            require_once ("template/partialS/errorDB.php");
+        }
+    }
+
 
     public function read($id)
     {

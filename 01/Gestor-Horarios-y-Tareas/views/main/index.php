@@ -1,20 +1,17 @@
-
 <!doctype html>
-<html lang="es"> 
+<html lang="es">
 
-<?php require_once("template/partials/head.php") ?>
+<?php require_once ("template/partials/head.php") ?>
 
 <body>
-    <?php require_once("template/partials/menuBar.php") ?>
-    
-    <!-- Page Content -->
-    <div class="container">
-	<br><br><br><br>
+	<?php require_once ("template/partials/menuBar.php") ?>
 
-		<?php require_once("template/partials/mensaje.php") ?>
-		
+	<!-- Page Content -->
+	<div class="container" style="margin-top: 5%; margin-bottom: 5%;">
 
-		<!-- Estilo card de bootstrap -->
+
+		<?php require_once ("template/partials/mensaje.php") ?>
+
 		<div class="card">
 			<div class="card-header">
 				<strong>
@@ -22,20 +19,20 @@
 				</strong>
 			</div>
 			<div class="card-body">
-				
-                <?php require_once("template/partials/header.php") ?>
+
+				<?php require_once ("template/partials/header.php") ?>
 
 			</div>
 		</div>
 
 
-    </div>
+	</div>
 
-    <!-- /.container -->
-    
-    <?php require_once("template/partials/footer.php") ?>
-	<?php require_once("template/partials/javascript.php") ?>
-	
+	<!-- /.container -->
+
+	<?php require_once ("template/partials/footer.php") ?>
+	<?php require_once ("template/partials/javascript.php") ?>
+
 </body>
 
 </html>

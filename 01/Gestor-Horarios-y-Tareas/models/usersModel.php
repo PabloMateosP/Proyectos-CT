@@ -191,7 +191,6 @@ class usersModel extends Model
             require_once("template/partials/errorDB.php");
             exit();
         }
-
     }
 
     # Método getUser

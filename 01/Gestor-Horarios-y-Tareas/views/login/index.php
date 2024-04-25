@@ -7,10 +7,7 @@
 <body>
     <?php require_once("template/partials/menuBar.php") ?>
     <!-- Page Content -->
-    <div class="container">
-        <br>
-        <br>
-        <br>
+    <div class="container" style="margin-top: 5%; margin-bottom: 5%;">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <?php require_once("template/partials/mensaje.php") ?>

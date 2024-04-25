@@ -113,11 +113,11 @@ class Login extends Controller
             if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_organiser']))) {
                 # Si el usuario es admin, redirigir a la página de employees
                 $_SESSION['mensaje'] = "Usuario " . $user->name . " ha iniciado sesión";
-                header("location:" . URL . "workingHours");
+                header("location:" . URL . "workingHours/");
             } elseif ((!in_array($_SESSION['id_rol'], $GLOBALS['employee']))) {
                 # Si el usuario no es admin, redirigir a la página de workingHours
                 $_SESSION['mensaje'] = "Usuario " . $user->name . " ha iniciado sesión";
-                header("location:" . URL . "employees");
+                header("location:" . URL . "employees/");
             }
         }
 

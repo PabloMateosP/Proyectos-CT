@@ -50,23 +50,23 @@ class Employees extends Controller
             # Create and instance of classEmployee
             $this->view->employee = new classEmployee();
 
-            // Check if there are errors -> this variable is created when a validation error occurs
+            # Check if there are errors -> this variable is created when a validation error occurs
             if (isset($_SESSION['error'])) {
-                // Let's retrieve the message
+                # Let's retrieve the message
                 $this->view->error = $_SESSION['error'];
 
-                // Autopopulate the form
+                # Autopopulate the form
                 $this->view->employee = unserialize($_SESSION['employee']);
 
-                // Retrieve array of specific errors
+                # Retrieve array of specific errors
                 $this->view->errors = $_SESSION['errors'];
 
-                // We must unset the session variables as their purpose has been resolved
+                # We must unset the session variables as their purpose has been resolved
                 unset($_SESSION['error']);
                 unset($_SESSION['errors']);
                 unset($_SESSION['employees']);
 
-                // If these variables exist when there are no errors, we will enter the error blocks in the conditionals
+                # If these variables exist when there are no errors, we will enter the error blocks in the conditionals
             }
 
             $this->view->title = "Form new employee";
@@ -128,7 +128,7 @@ class Employees extends Controller
 
             $errors = [];
 
-            // last_name: max 45 characters
+            # last_name: max 45 characters
             if (empty($last_name)) {
                 $errors['last_name'] = 'The Last Name field is required';
             } else if (strlen($last_name) > 45) {
@@ -136,21 +136,21 @@ class Employees extends Controller
 
             }
 
-            // name: max 20 characters
+            # name: max 20 characters
             if (empty($name)) {
                 $errors['name'] = 'The name field is required';
             } else if (strlen($name) > 20) {
                 $errors['name'] = 'The name field is too long';
             }
 
-            // phone: max 9 characters
+            # phone: max 9 characters
             if (empty($phone)) {
                 $errors['phone'] = 'The phone field is required';
             } else if (strlen($phone) > 9) {
                 $errors['phone'] = 'The phone field is too long';
             }
 
-            // City: max 20 characters
+            # City: max 20 characters
             if (empty($city)) {
                 $errors['city'] = 'The city field is required';
             } else if (strlen($city) > 20) {
@@ -158,7 +158,7 @@ class Employees extends Controller
 
             }
 
-            // Email: must be validated and unique
+            # Email: must be validated and unique
             if (empty($email)) {
                 $errors['email'] = 'The email field is required';
             } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -168,7 +168,7 @@ class Employees extends Controller
 
             }
 
-            // Dni: must be validated and unique
+            # Dni: must be validated and unique
             $options = [
                 'options' => [
                     'regexp' => '/^(\d{8})([A-Z])$/'
@@ -190,7 +190,7 @@ class Employees extends Controller
 
             if (!empty($errors)) {
 
-                // Validation errors 
+                # Validation errors 
                 $_SESSION['employee'] = serialize($employee);
                 $_SESSION['error'] = 'Invalid form';
                 $_SESSION['errors'] = $errors;
@@ -199,7 +199,7 @@ class Employees extends Controller
 
             } else {
 
-                // Create employee
+                # Create employee
 
                 # Add employee
                 $this->model->create($employee);
@@ -214,19 +214,18 @@ class Employees extends Controller
         }
     }
 
-
-    # Método delete. 
-    # Permite la eliminación de un employee
+    # Method delet. 
+    # Allow the elimination of an employee
     public function delete($param = [])
     {
         session_start();
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "User muet be authenticated";
+            $_SESSION['mensaje'] = "User must be authenticated";
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
-            $_SESSION['mensaje'] = "Operation without privileges";
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_organiser']))) {
+            $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "employees");
         } else {
             $id = $param[0];
@@ -237,153 +236,152 @@ class Employees extends Controller
         }
     }
 
-    # Método editar. 
-    # Muestra un formulario que permita editar los detalles de un employee
+    # Method edit. 
+    # Show an form that allow to change the data of an employee
     public function editar($param = [])
     {
         session_start();
 
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario debe autentificarse";
+            $_SESSION['mensaje'] = "User must authenticated";
 
             header("location:" . URL . "login");
 
         } else if (!in_array($_SESSION['id_rol'], $GLOBALS['employees']['edit'])) {
-            $_SESSION['mensaje'] = "Operación sin privilegios";
+            $_SESSION['mensaje'] = "unprivileged operation";
 
             header('location:' . URL . 'employees');
 
         } else {
 
-            # obtengo el id del employee que voy a editar
-
+            # Taking the id of the employee that we are going to change
             $id = $param[0];
 
             $this->view->id = $id;
-            $this->view->title = "Formulario  editar employee";
+            $this->view->title = "Form edit employee";
             $this->view->employee = $this->model->read($id);
 
             $this->view->employee = $this->model->getemployee($this->view->id);
 
-            # Creamos un objeto vacio
-            // $this->view->employee = new classemployee();
+            # We check for errors -> this variable is created when throwing a validation error
 
-            # Comprobamos si hay errores -> esta variable se crea al lanzar un error de validacion
             if (isset($_SESSION['error'])) {
-                // rescatemos el mensaje
+
+                # we rescue the message
                 $this->view->error = $_SESSION['error'];
 
-                // Autorellenamos el formulario
+                # Autofill the form
                 $this->view->employee = unserialize($_SESSION['employee']);
 
-                // Recupero array de errores específicos
+                # Recover the errors array
                 $this->view->errores = $_SESSION['errores'];
 
-                // debemos liberar las variables de sesión ya que su cometido ha sido resuelto
+                # We must liberate the variables
                 unset($_SESSION['error']);
                 unset($_SESSION['errores']);
                 unset($_SESSION['employees']);
-                // Si estas variables existen cuando no hay errores, entraremos en los bloques de error en las condicionales
+
             }
 
             $this->view->render("employees/editar/index");
         }
     }
-    # Método update.
-    # Actualiza los detalles de un employee a partir de los datos del formulario de edición
+
+    # Method update.
+    # Update the data of an employee
     public function update($param = [])
     {
 
-        #Iniciar Sesión
+        #Session start or continue
         session_start();
 
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario debe autentificarse";
+            $_SESSION['mensaje'] = "User must authenticated";
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['employees']['edit']))) {
-            $_SESSION['mensaje'] = "Operación sin privilegio";
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_organiser']))) {
+            $_SESSION['mensaje'] = "unprivileged operation";
             header("location:" . URL . "employees");
         } else {
 
-            #1.Seguridad. Saneamos los datos del formulario
+            #1. Security. Sanitize the data
             $last_name = filter_var($_POST['last_name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $name = filter_var($_POST['name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $telefono = filter_var($_POST['telefono'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $ciudad = filter_var($_POST['ciudad'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $phone = filter_var($_POST['phone'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $city = filter_var($_POST['city'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $dni = filter_var($_POST['dni'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $email = filter_var($_POST['email'] ??= '', FILTER_SANITIZE_EMAIL);
+            $total_hours = filter_var($_POST['total_hours'] ??= '', FILTER_SANITIZE_NUMBER_INT);
 
             $employee = new classemployee(
                 null,
                 $last_name,
                 $name,
-                $telefono,
-                $ciudad,
+                $phone,
+                $city,
                 $dni,
                 $email,
+                $total_hours,
                 null,
                 null
             );
+
             $id = $param[0];
 
-            #Obtengo el objeto employee original
+            # We take the original employee
             $employee_orig = $this->model->read($id);
 
-            #3. Validación
-            //Sólo si es necesario
-            //Sólo en caso de modificación del campo
+            #3. Validation
+            # Only if is necessary 
+            # Only in case of modify some field
 
             $errores = [];
 
-            //last_name: obligatorio, maximo 45 caracteres
+            # last_name
             if (strcmp($employee->last_name, $employee_orig->last_name) !== 0) {
                 if (empty($last_name)) {
-                    $errores['last_name'] = 'El campo last_name es obligatorio';
+                    $errores['last_name'] = 'The field last_name is required';
                 } else if (strlen($last_name) > 45) {
-                    $errores['last_name'] = 'El campo last_name es demasiado largo';
-
+                    $errores['last_name'] = 'The field last_name is too long ';
                 }
             }
 
-
-            //name: obligatorio, maximo 20 caracteres
+            # name
             if (strcmp($employee->name, $employee_orig->name) !== 0) {
 
                 if (empty($name)) {
-                    $errores['name'] = 'El campo name es obligatorio';
+                    $errores['name'] = 'The field name is required';
                 } else if (strlen($name) > 20) {
-                    $errores['name'] = 'El campo name es demasiado largo';
-
+                    $errores['name'] = 'The field name is too long';
                 }
             }
 
 
+            # Phone: we validate 9 numbers phone and unique 
+            if (strcmp($employee->phone, $employee_orig->phone) !== 0) {
+                $options_tlf = [
+                    'options_tlf' => [
+                        'regexp' => '/^\d{9}$/'
+                    ]
+                ];
+                if (!filter_var($phone, FILTER_VALIDATE_REGEXP, $options_tlf)) {
+                    $errores['telefono'] = 'El formato introducido es incorrecto';
+                }
+            }
 
-            //Teléfono: no obligatorio, 9 caracteres numéricos
-            // if (strcmp($employee->telefono, $employee_orig->telefono) !== 0) {
-            // $options_tlf=[
-            //     'options_tlf'=> [
-            //         'regexp' => '/^\d{9}$/'
-            //     ]
-            // ];
-            // if(!filter_var($telefono, FILTER_VALIDATE_REGEXP, $options_tlf)){
-            //     $errores['telefono'] = 'El formato introducido es incorrecto';
-            // }
-            // }
+            # City
+            if (strcmp($employee->city, $employee_orig->city) !== 0) {
 
-            //Ciudad: obligatorio, maximo 20 caracteres
-            if (strcmp($employee->ciudad, $employee_orig->ciudad) !== 0) {
-
-                if (empty($ciudad)) {
-                    $errores['ciudad'] = 'El campo ciudad es obligatorio';
-                } else if (strlen($ciudad) > 20) {
-                    $errores['ciudad'] = 'El campo ciudad es demasiado largo';
+                if (empty($city)) {
+                    $errores['city'] = 'The field city is required';
+                } else if (strlen($city) > 20) {
+                    $errores['ciudad'] = 'The field city is too long';
 
                 }
             }
-            //Email: obligatorio, formato válido y clave secundaria
+
+            # Email: we validate and unique email 
             if (strcmp($employee->email, $employee_orig->email) !== 0) {
 
                 if (empty($email)) {
@@ -395,14 +393,14 @@ class Employees extends Controller
 
                 }
             }
-            //Dni: obligatorio, formato válido y clave secundaria
+
+            # Dni: we validate a correct DNI and unique 
             if (strcmp($employee->dni, $employee_orig->dni) !== 0) {
                 $options = [
                     'options' => [
                         'regexp' => '/^(\d{8})([A-Z])$/'
                     ]
                 ];
-
 
                 if (empty($dni)) {
                     $errores['dni'] = 'El campo dni es obligatorio';
@@ -414,26 +412,29 @@ class Employees extends Controller
                 }
             }
 
-            #4. Comprobar validacion
+            #4. Checking Validation
 
             if (!empty($errores)) {
-                //errores de validacion
+
+                # Validation errors
                 $_SESSION['employee'] = serialize($employee);
                 $_SESSION['error'] = 'Formulario no validado';
                 $_SESSION['errores'] = $errores;
 
-                # Redirigimos al main de employees
+                # Redirect to the page edit 
                 header('location:' . URL . 'employees/editar/' . $id);
+
             } else {
-                //crear alumno
-                # Añadir registro a la tabla
+
+                # Update employee
                 $this->model->update($employee, $id);
 
-                #Mensaje
-                $_SESSION['mensaje'] = "employee actualizado correctamente";
+                # Message
+                $_SESSION['mensaje'] = "Employee Correctly Update";
 
-                # Redirigimos al main de alumnos
+                # Redirect to the main page 
                 header('location:' . URL . 'employees');
+                
             }
         }
     }
@@ -445,12 +446,12 @@ class Employees extends Controller
     {
         session_start();
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario debe autentificarse";
+            $_SESSION['mensaje'] = "User must authenticated";
 
             header("location:" . URL . "login");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['employees']['show']))) {
-            $_SESSION['mensaje'] = "Operación sin privilegio";
+            $_SESSION['mensaje'] = "unprivileged operation";
             header("location:" . URL . "employees");
         } else {
             $id = $param[0];
@@ -466,12 +467,12 @@ class Employees extends Controller
     {
         session_start();
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario debe autentificarse";
+            $_SESSION['mensaje'] = "User must authenticated";
 
             header("location:" . URL . "login");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['employees']['order']))) {
-            $_SESSION['mensaje'] = "Operación sin privilegio";
+            $_SESSION['mensaje'] = "unprivileged operation";
             header("location:" . URL . "employees");
         } else {
             $criterio = $param[0];
@@ -489,12 +490,12 @@ class Employees extends Controller
     {
         session_start();
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario debe autentificarse";
+            $_SESSION['mensaje'] = "User must authenticated";
 
             header("location:" . URL . "login");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['employees']['filter']))) {
-            $_SESSION['mensaje'] = "Operación sin privilegio";
+            $_SESSION['mensaje'] = "unprivileged operation";
             header("location:" . URL . "employees");
         } else {
             $expresion = $_GET["expresion"];
@@ -506,40 +507,40 @@ class Employees extends Controller
 
     public function exportar($param = [])
     {
-        // Validar la sesión del usuario
+        # Validar la sesión del usuario
         session_start();
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario debe autentificarse";
+            $_SESSION['mensaje'] = "User must authenticated";
             header("location:" . URL . "login");
-            exit();  // Terminar la ejecución para evitar procesar la exportación sin autenticación
+            exit();  # Terminar la ejecución para evitar procesar la exportación sin autenticación
         } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['employees']['export'])) {
-            $_SESSION['mensaje'] = "Operación sin privilegio";
+            $_SESSION['mensaje'] = "unprivileged operation";
             header("location:" . URL . "employees");
-            exit();  // Terminar la ejecución para evitar procesar la exportación sin privilegios
+            exit();  # Terminar la ejecución para evitar procesar la exportación sin privilegios
         }
 
-        // Obtener datos de employees
+        # Obtener datos de employees
         $employees = $this->model->get()->fetchAll(PDO::FETCH_ASSOC);
 
-        // name del archivo CSV
+        # name del archivo CSV
         $csvExportado = 'export_employees.csv';
 
-        // Establecer las cabeceras para la descarga del archivo
+        # Establecer las cabeceras para la descarga del archivo
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="' . $csvExportado . '"');
 
-        // Abrir el puntero al archivo de salida
-        $archivo = fopen('php://output', 'w');
+        # Abrir el puntero al archivo de salida
+        $archivo = fopen('php:#output', 'w');
 
-        // Escribir la primera fila con los encabezados
+        # Escribir la primera fila con los encabezados
         fputcsv($archivo, ['last_name', 'name', 'telefono', 'ciudad', 'dni', 'email', 'create_at', 'update_at'], ';');
 
-        // Iterar sobre los employees y escribir cada fila en el archivo
+        # Iterar sobre los employees y escribir cada fila en el archivo
         foreach ($employees as $employee) {
-            // Separar el campo "employee" en "last_name" y "name"
+            # Separar el campo "employee" en "last_name" y "name"
             list($last_name, $name) = explode(', ', $employee['employee']);
 
-            // Construir el array del employee con los datos necesarios
+            # Construir el array del employee con los datos necesarios
             $employeeData = [
                 'last_name' => $last_name,
                 'name' => $name,
@@ -551,55 +552,55 @@ class Employees extends Controller
                 'update_at' => null
             ];
 
-            // Escribir la fila en el archivo
+            # Escribir la fila en el archivo
             fputcsv($archivo, $employeeData, ';');
         }
 
-        // Cerramos el archivo
+        # Cerramos el archivo
         fclose($archivo);
 
-        // Enviar el contenido del archivo al navegador
-        readfile('php://output');
+        # Enviar el contenido del archivo al navegador
+        readfile('php:#output');
     }
 
     public function importar($param = [])
     {
-        // Validar la sesión del usuario
+        # Validar la sesión del usuario
         session_start();
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario debe autentificarse";
+            $_SESSION['mensaje'] = "User must authenticated";
             header("location:" . URL . "login");
             exit();
         } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['employees']['import'])) {
-            $_SESSION['mensaje'] = "Operación sin privilegio";
+            $_SESSION['mensaje'] = "unprivileged operation";
             header("location:" . URL . "employees");
             exit();
         }
 
 
-        // Validar si se ha subido un archivo
+        # Validar si se ha subido un archivo
         if (!isset($_FILES['archivos']) || $_FILES['archivos']['error'] != UPLOAD_ERR_OK) {
             $_SESSION['mensaje'] = "Error al subir el archivo CSV. ";
             header("location:" . URL . "employees");
             exit();
         }
 
-        // Obtener el name del archivo temporal
+        # Obtener el name del archivo temporal
         $archivo_temporal = $_FILES['archivos']['tmp_name'];
 
-        // Abrir el archivo temporal
+        # Abrir el archivo temporal
         $archivo = fopen($archivo_temporal, 'r');
 
-        // Validar que se pudo abrir el archivo
+        # Validar que se pudo abrir el archivo
         if (!$archivo) {
             $_SESSION['mensaje'] = "Error al abrir el archivo CSV.";
             header("location:" . URL . "employees");
             exit();
         }
 
-        // Iterar sobre las filas del archivo CSV
+        # Iterar sobre las filas del archivo CSV
         while (($fila = fgetcsv($archivo, 150, ';')) !== false) {
-            // Crear un array asociativo con los datos de la fila
+            # Crear un array asociativo con los datos de la fila
             $employee = new classemployee();
 
             $employee->name = $fila[1];
@@ -613,10 +614,10 @@ class Employees extends Controller
 
         }
 
-        // Cerrar el archivo
+        # Cerrar el archivo
         fclose($archivo);
 
-        // Redirigir después de importar
+        # Redirigir después de importar
         $_SESSION['mensaje'] = "Datos importados correctamente.";
         header("location:" . URL . "employees");
         exit();
@@ -624,14 +625,14 @@ class Employees extends Controller
 
     function pdf($param = [])
     {
-        // Validar la sesión del usuario
+        # Validar la sesión del usuario
         session_start();
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario debe autentificarse";
+            $_SESSION['mensaje'] = "User must authenticated";
             header("location:" . URL . "login");
             exit();
         } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['employees']['export'])) {
-            $_SESSION['mensaje'] = "Operación sin privilegio";
+            $_SESSION['mensaje'] = "unprivileged operation";
             header("location:" . URL . "cuentas");
             exit();
         }

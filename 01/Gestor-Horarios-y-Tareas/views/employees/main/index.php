@@ -35,6 +35,8 @@
                             <th>Horas Totales</th>
                             <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin'])): ?>
                                 <th>Acciones</th>
+                            <?php elseif ((isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['organiser']))): ?>
+                                <th>Acciones</th>
                             <?php else: ?>
                                 <!-- No permitido -->
                             <?php endif; ?>
@@ -58,17 +60,24 @@
                                 <td>
                                     <?= $employee->total_hours ?>
                                 </td>
-                                <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin'])): ?>   
+                                <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin'])): ?>
                                     <td style="display:flex; gap: 5px;">
                                         <a href="#" title="Mostrar" class="btn btn-warning<?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
-                                                'disabled' : null ?>"> <i class="bi bi-eye"></i></a>
+                                            'disabled' : null ?>"> <i class="bi bi-eye"></i></a>
                                         <a href="<?= URL ?>employees/delete/<?= $employee->id ?>" title="Delete"
                                             onclick="return confirm('Confirm employee deletion') " class="btn btn-danger"
                                             <?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
                                                 'disabled' : null ?>> <i class="bi bi-trash"></i></a>
                                     </td>
+                                <?php elseif ((isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['organiser']))): ?>
+                                    <td>
+                                        <a href="<?= URL ?>employees/delete/<?= $employee->id ?>" title="Delete"
+                                            onclick="return confirm('Confirm employee deletion') " class="btn btn-danger"
+                                            <?= (!in_array($_SESSION['id_rol'], $GLOBALS['organiser'])) ?
+                                                'disabled' : null ?>> <i class="bi bi-trash"></i></a>
+                                    </td>
                                 <?php else: ?>
-                                        <!-- No permitido -->     
+                                    <!-- No permitido -->
                                 <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>

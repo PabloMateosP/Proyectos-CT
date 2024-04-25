@@ -159,13 +159,19 @@ Another big problem that we must solve is the addition of workingHours, we must 
 
 Another problem when i try to sum the new working hours to the total_hours in the table employee is that it delete the total_hours and can't solve it, tomorrow i will try again --> SOLVE 
 
+I really don't know how to solve the organization of the privileges of the user, organiser and admin. I say what they need to think, do and everything. 
+
 ---------------------------------------------------------------------------------------------------------
 
 ## Tasks 
 1. We must do delete and edit for the working hours (only employees) and for the employees (only admin can edit and delete employees)
 
-2. We must add a function that sum the working hours of the employee and show it in the employees table and in a section of sum of working hours, and it must be shown in the working hours table.
+2. We must add a function that sum the working hours of the employee and show it in the employees table and in a section of sum of working hours, and it must be shown in the working hours table. -> Done 
 
 3. We must reset the hours of the employee and the table working hours each sunday
 
-4. In the function export to csv we must solve the problem creating a new variable to save the email of the employee 
+4. In the function export to csv we must solve the problem creating a new variable to save the email of the employee -> Done
+
+5. We must think perfectly how to organised the privileges of the differents users in the app. 
+
+6. We must planifing the security copies of the database. 
