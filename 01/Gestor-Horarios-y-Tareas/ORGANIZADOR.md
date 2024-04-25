@@ -157,7 +157,7 @@ The main problem now is the relation between the table users and the table emplo
 
 Another big problem that we must solve is the addition of workingHours, we must take the employee_id (the user) and insert in the workingHours table but withouth formulary that must be done in the front end. And now we can´t do that because the variable session (id) of the user is different that the employee's id. --> SOLVE (i create a variable id_employee to save the id of the employee active and later we use this variable to add the new working hour )
 
-Another problem when i try to sum the new working hours to the total_hours in the table employee is that it delete the total_hours and can't solve it, tomorrow i will try again 
+Another problem when i try to sum the new working hours to the total_hours in the table employee is that it delete the total_hours and can't solve it, tomorrow i will try again --> SOLVE 
 
 ---------------------------------------------------------------------------------------------------------
 

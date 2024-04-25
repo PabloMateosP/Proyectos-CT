@@ -36,7 +36,11 @@
                             <th>Description (Task)</th>
                             <th>Date Worked</th>
                             <th>Duration</th>
-                            <th>Acciones</th>
+                            <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['employee'])): ?>
+                                <th>Acciones</th>
+                            <?php else: ?>
+                                <!-- No permitido -->     
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -63,12 +67,16 @@
                                 <td>
                                     <?= $workingHour->duration ?>
                                 </td>
-                                <td style="display:flex; gap: 10px;">
-                                    <a href="<?= URL ?>workingHours/edit/<?= $workingHour->id ?>" title="edit" class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['employee'])) ?
+                                <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['employee'])): ?>   
+                                    <td style="display:flex; gap: 5px;">
+                                       <a href="<?= URL ?>workingHours/edit/<?= $workingHour->id ?>" title="edit" class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['employee'])) ?
                                             'disabled' : null ?>"> <i class="bi bi-pencil"></i> </a>
-                                    <a href="<?= URL ?>workingHours/delete/<?= $workingHour->id ?>" title="Eliminar" onclick="return confirm('Confirmar eliminación Cuenta') " class="btn btn-danger" <?= (!in_array($_SESSION['id_rol'], $GLOBALS['employee'])) ?
-                                        'disabled' : null ?>> <i class="bi bi-trash"></i></a>
-                                </td>
+                                        <a href="<?= URL ?>workingHours/delete/<?= $workingHour->id ?>" title="Eliminar" onclick="return confirm('Confirmar eliminación Cuenta') " class="btn btn-danger" <?= (!in_array($_SESSION['id_rol'], $GLOBALS['employee'])) ?
+                                            'disabled' : null ?>> <i class="bi bi-trash"></i></a> 
+                                    </td>
+                                <?php else: ?>
+                                        <!-- No permitido -->     
+                                <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
