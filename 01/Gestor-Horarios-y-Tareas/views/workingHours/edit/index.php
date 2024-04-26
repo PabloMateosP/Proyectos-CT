@@ -133,7 +133,7 @@
 
                     <!-- botones de acción -->
                     <div class="mb-3">
-                        <a name="" id="" class="btn btn-secondary" href="<?= URL ?>workingHours"
+                        <a name="" id="" class="btn btn-secondary" href="<?= URL ?>workingHours/"
                             role="button">Cancel</a>
                         <button type="button" class="btn btn-danger">Clean</button>
                         <button type="submit" class="btn btn-primary">Update</button>

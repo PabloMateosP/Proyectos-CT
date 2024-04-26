@@ -201,7 +201,7 @@ class Users extends Controller
                 $_SESSION['mensaje'] = "Se ha creado el usuario correctamente.";
 
                 // Redireccionamos a la vista users
-                header("Location:" . URL . "users//");
+                header("Location:" . URL . "users/");
             }
         }
     }

@@ -92,7 +92,15 @@ class WorkingHours extends Controller
             $this->view->render("workingHours/new/index");
         }
     }
-
+    # ---------------------------------------------------------------------------------
+    #    _____  _____   ______         _______  ______ 
+    #   / ____||  __ \ |  ____|    /\ |__   __||  ____|
+    #  | |     | |__) || |__      /  \   | |   | |__   
+    #  | |     |  _  / |  __|    / /\ \  | |   |  __|  
+    #  | |____ | | \ \ | |____  / ____ \ | |   | |____ 
+    #   \_____||_|  \_\|______|/_/    \_\|_|   |______|
+    #
+    # ---------------------------------------------------------------------------------
     # Method create. 
     # Allow to add a new working hour
     public function create($param = [])
@@ -210,6 +218,14 @@ class WorkingHours extends Controller
         }
     }
 
+    # ---------------------------------------------------------------------------------   
+    #     _____         _        _        
+    #    |  __ \       | |      | |       
+    #    | |  | |  ___ | |  ___ | |_  ___ 
+    #    | |  | | / _ \| | / _ \| __|/ _ \
+    #    | |__| ||  __/| ||  __/| |_|  __/
+    #    |_____/  \___||_| \___| \__|\___|
+    #                               
     # ---------------------------------------------------------------------------------
     # Method delete. 
     # Allow to delete the working hour
@@ -238,10 +254,18 @@ class WorkingHours extends Controller
 
             $_SESSION['mensaje'] = 'Working hour delete correctly';
 
-            header("Location:" . URL . "workingHours");
+            header("Location:" . URL . "workingHours/");
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #  ______  _____  _____  _______ 
+    #  |  ____||  __ \|_   _||__   __|
+    #  | |__   | |  | | | |     | |   
+    #  |  __|  | |  | | | |     | |   
+    #  | |____ | |__| |_| |_    | |   
+    #  |______||_____/|_____|   |_|
+    #
     # ---------------------------------------------------------------------------------
     # Method edit. 
     # Show a form to edit a workingHours
@@ -298,7 +322,15 @@ class WorkingHours extends Controller
             $this->view->render("workingHours/edit/index");
         }
     }
-
+    # ---------------------------------------------------------------------------------
+    #
+    #   _    _  _____   _____         _______  ______ 
+    #  | |  | ||  __ \ |  __ \    /\ |__   __||  ____|
+    #  | |  | || |__) || |  | |  /  \   | |   | |__   
+    #  | |  | ||  ___/ | |  | | / /\ \  | |   |  __|  
+    #  | |__| || |     | |__| |/ ____ \ | |   | |____ 
+    #   \____/ |_|     |_____//_/    \_\|_|   |______|
+    #                                               
     # ---------------------------------------------------------------------------------
     # Método update.
     # Update the table of the table workinhours 
@@ -475,6 +507,14 @@ class WorkingHours extends Controller
     }
 
     # ---------------------------------------------------------------------------------
+    #    ____   _____   _____   ______  _____  
+    #   / __ \ |  __ \ |  __ \ |  ____||  __ \ 
+    #  | |  | || |__) || |  | || |__   | |__) |
+    #  | |  | ||  _  / | |  | ||  __|  |  _  / 
+    #  | |__| || | \ \ | |__| || |____ | | \ \ 
+    #   \____/ |_|  \_\|_____/ |______||_|  \_\
+    #
+    # ---------------------------------------------------------------------------------
     # Método ordenar
     # Permite ordenar la tabla de workingHours por cualquiera de las columnas de la tabla
     public function ordenar($param = [])
@@ -498,6 +538,15 @@ class WorkingHours extends Controller
     }
 
     # ---------------------------------------------------------------------------------
+    #
+    #    _____  ______            _____    _____  _    _ 
+    #    / ____||  ____|    /\    |  __ \  / ____|| |  | |
+    #   | (___  | |__      /  \   | |__) || |     | |__| |
+    #    \___ \ |  __|    / /\ \  |  _  / | |     |  __  |
+    #    ____) || |____  / ____ \ | | \ \ | |____ | |  | |
+    #   |_____/ |______|/_/    \_\|_|  \_\ \_____||_|  |_|
+    #
+    # ---------------------------------------------------------------------------------
     # Método buscar
     # Permite buscar los registros de workingHours que cumplan con el patrón especificado en la expresión
     # de búsqueda
@@ -519,9 +568,19 @@ class WorkingHours extends Controller
             $this->view->render("workingHours/main/index");
         }
     }
-
-
+    
     # ---------------------------------------------------------------------------------
+    #
+    #   ______ __   __ _____    ____   _____  _______ 
+    #  |  ____|\ \ / /|  __ \  / __ \ |  __ \|__   __|
+    #  | |__    \ V / | |__) || |  | || |__) |  | |   
+    #  |  __|    > <  |  ___/ | |  | ||  _  /   | |   
+    #  | |____  / . \ | |     | |__| || | \ \   | |   
+    #  |______|/_/ \_\|_|      \____/ |_|  \_\  |_|   
+    #
+    # ---------------------------------------------------------------------------------
+    # Método exportar
+    # Permite exportar los registros de workingHours a un archivo CSV
     public function exportar($param = [])
     {
         # Validar la sesión del usuario
@@ -554,21 +613,23 @@ class WorkingHours extends Controller
 
             # Obtener el correo electrónico del empleado actual
             $employee_email = $_SESSION['email'];
-            
+
             # Obtener las horas trabajadas del empleado actual
             $workingHoursEmployee = $this->model->get_employeeHours($employee_email)->fetchAll(PDO::FETCH_ASSOC);
 
-            # Escribir la fila en el archivo
-            fputcsv($archivo, [
-                $workingHoursEmployee['id'],
-                $workingHoursEmployee['employee_name'],
-                $workingHoursEmployee['time_code'],
-                $workingHoursEmployee['project_name'],
-                $workingHoursEmployee['task_description'],
-                $workingHoursEmployee['work_order_description'],
-                $workingHoursEmployee['date_worked'],
-                $workingHoursEmployee['duration']
-            ], ';');
+            # Iterar sobre las horas trabajadas del empleado y escribir cada fila en el archivo
+            foreach ($workingHoursEmployee as $workingHour) {
+                fputcsv($archivo, [
+                    $workingHour['id'],
+                    $workingHour['employee_name'],
+                    $workingHour['time_code'],
+                    $workingHour['project_name'],
+                    $workingHour['task_description'],
+                    $workingHour['work_order_description'],
+                    $workingHour['date_worked'],
+                    $workingHour['duration']
+                ], ';');
+            }
 
         } else if ((in_array($_SESSION['id_rol'], $GLOBALS['admin'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['manager'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['organiser']))) {
 

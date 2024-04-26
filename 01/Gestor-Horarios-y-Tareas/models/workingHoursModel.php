@@ -258,11 +258,11 @@ class workingHoursModel extends Model
 
     # ---------------------------------------------------------------------------------
     # getWHour
-    # Select total hours from the user with the id
+    # Select total hours from the employee with the id
     public function getWHours($id)
     {
         try {
-            $sql = "SELECT id, total_hours FROM users WHERE id = :user_id";
+            $sql = "SELECT id, total_hours FROM employees WHERE id = :user_id";
             
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);

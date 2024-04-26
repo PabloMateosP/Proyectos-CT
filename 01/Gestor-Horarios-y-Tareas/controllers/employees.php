@@ -43,8 +43,10 @@ class Employees extends Controller
             header("location:" . URL . "login");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
+            
             $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "employees");
+
         } else {
 
             # Create and instance of classEmployee

@@ -64,8 +64,8 @@
                                             'disabled' : null ?>>
                                         <i class="bi bi-trash"></i> </a>
                                     <a href="<?= URL ?>users/editar/<?= $user->id ?>" title="Editar" class="btn btn-primary
-                            <?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
-                                'disabled' : null ?>"> <i class="bi bi-pencil"></i> </a>
+                                        <?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
+                                            'disabled' : null ?>"> <i class="bi bi-pencil"></i> </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

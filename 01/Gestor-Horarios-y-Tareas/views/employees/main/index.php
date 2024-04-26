@@ -60,21 +60,14 @@
                                 <td>
                                     <?= $employee->total_hours ?>
                                 </td>
-                                <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin'])): ?>
+                                <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])): ?>
                                     <td style="display:flex; gap: 5px;">
-                                        <a href="#" title="Mostrar" class="btn btn-warning<?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
-                                            'disabled' : null ?>"> <i class="bi bi-eye"></i></a>
+                                        <a href="#" title="Mostrar" class="btn btn-warning"> <i class="bi bi-eye"></i></a>
                                         <a href="<?= URL ?>employees/delete/<?= $employee->id ?>" title="Delete"
-                                            onclick="return confirm('Confirm employee deletion') " class="btn btn-danger"
-                                            <?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
-                                                'disabled' : null ?>> <i class="bi bi-trash"></i></a>
-                                    </td>
-                                <?php elseif ((isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['organiser']))): ?>
-                                    <td>
-                                        <a href="<?= URL ?>employees/delete/<?= $employee->id ?>" title="Delete"
-                                            onclick="return confirm('Confirm employee deletion') " class="btn btn-danger"
-                                            <?= (!in_array($_SESSION['id_rol'], $GLOBALS['organiser'])) ?
-                                                'disabled' : null ?>> <i class="bi bi-trash"></i></a>
+                                            onclick="return confirm('Confirm employee deletion') " class="btn btn-danger"> <i
+                                                class="bi bi-trash"></i></a>
+                                        <a href="<?= URL ?>employees/edit/<?= $employee->id ?>" title="Mostrar"
+                                            class="btn btn-success"> <i class="bi bi-eye"></i></a>
                                     </td>
                                 <?php else: ?>
                                     <!-- No permitido -->
