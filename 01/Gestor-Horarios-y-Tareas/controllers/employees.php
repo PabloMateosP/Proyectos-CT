@@ -12,7 +12,7 @@ class Employees extends Controller
             $_SESSION['notify'] = "Unauthenticated User";
 
             header("location:" . URL . "login");
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_organiser']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
             $_SESSION['mensaje'] = "Unauthenticated User";
             header("location:" . URL . "index");
 
@@ -42,7 +42,7 @@ class Employees extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_organiser']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
             $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "employees");
         } else {
@@ -59,11 +59,11 @@ class Employees extends Controller
                 $this->view->employee = unserialize($_SESSION['employee']);
 
                 # Retrieve array of specific errors
-                $this->view->errors = $_SESSION['errors'];
+                $this->view->errores = $_SESSION['errores'];
 
                 # We must unset the session variables as their purpose has been resolved
                 unset($_SESSION['error']);
-                unset($_SESSION['errors']);
+                unset($_SESSION['errores']);
                 unset($_SESSION['employees']);
 
                 # If these variables exist when there are no errors, we will enter the error blocks in the conditionals
@@ -86,7 +86,7 @@ class Employees extends Controller
 
             header("location:" . URL . "login");
 
-        } else if (!in_array($_SESSION['id_rol'], $GLOBALS['admin_organiser'])) {
+        } else if (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])) {
 
             $_SESSION['message'] = "Operation without privileges";
             header("location:" . URL . "employees");
@@ -94,7 +94,7 @@ class Employees extends Controller
         } else {
 
             # --
-            #1. Security. Sanitize form data
+            # 1. Security. Sanitize form data
             # --
 
             $last_name = filter_var($_POST['last_name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -106,7 +106,7 @@ class Employees extends Controller
             $total_hours = filter_var($_POST['total_hours'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
 
             # --
-            #2. Create employee with sanitized data
+            # 2. Create employee with sanitized data
             # --
 
             $employee = new classEmployee(
@@ -123,49 +123,48 @@ class Employees extends Controller
             );
 
             # --
-            #3. Validation
+            # 3. Validation
             # --
 
-            $errors = [];
-
-            # last_name: max 45 characters
-            if (empty($last_name)) {
-                $errors['last_name'] = 'The Last Name field is required';
-            } else if (strlen($last_name) > 45) {
-                $errors['last_name'] = 'The Last Name field is too long';
-
-            }
+            $errores = array();
 
             # name: max 20 characters
             if (empty($name)) {
-                $errors['name'] = 'The name field is required';
+                $errores['name'] = 'The name field is required';
             } else if (strlen($name) > 20) {
-                $errors['name'] = 'The name field is too long';
+                $errores['name'] = 'The name field is too long';
             }
 
-            # phone: max 9 characters
-            if (empty($phone)) {
-                $errors['phone'] = 'The phone field is required';
-            } else if (strlen($phone) > 9) {
-                $errors['phone'] = 'The phone field is too long';
+            # last_name: max 45 characters
+            if (empty($last_name)) {
+                $errores['last_name'] = 'The Last Name field is required';
+            } else if (strlen($last_name) > 45) {
+                $errores['last_name'] = 'The Last Name field is too long';
             }
 
             # City: max 20 characters
             if (empty($city)) {
-                $errors['city'] = 'The city field is required';
+                $errores['city'] = 'The city field is required';
             } else if (strlen($city) > 20) {
-                $errors['city'] = 'The city field is too long';
-
+                $errores['city'] = 'The city field is too long';
             }
 
             # Email: must be validated and unique
             if (empty($email)) {
-                $errors['email'] = 'The email field is required';
+                $errores['email'] = 'The email field is required';
             } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errors['email'] = 'The format entered is incorrect';
+                $errores['email'] = 'The format entered is incorrect';
             } else if (!$this->model->validateUniqueEmail($email)) {
-                $errors['email'] = 'The email is already registered';
+                $errores['email'] = 'The email is already registered';
+            }
 
+            # phone: max 9 characters
+            if (empty($phone)) {
+                $errores['phone'] = 'The phone field is required';
+            } else if (strlen($phone) > 9) {
+                $errores['phone'] = 'The phone field is too long';
+            } else if (!$this->model->validateUniquePhone($phone)) {
+                $errores['phone'] = 'The phone is already registered';
             }
 
             # Dni: must be validated and unique
@@ -176,11 +175,11 @@ class Employees extends Controller
             ];
 
             if (empty($dni)) {
-                $errors['dni'] = 'The dni field is required';
+                $errores['dni'] = 'The dni field is required';
             } else if (!filter_var($dni, FILTER_VALIDATE_REGEXP, $options)) {
-                $errors['dni'] = 'Wrong format entered';
+                $errores['dni'] = 'Wrong format entered';
             } else if (!$this->model->validateUniqueDni($dni)) {
-                $errors['dni'] = 'DNI already registered';
+                $errores['dni'] = 'DNI already registered';
 
             }
 
@@ -188,12 +187,12 @@ class Employees extends Controller
             # 4. Check Validation
             # --
 
-            if (!empty($errors)) {
+            if (!empty($errores)) {
 
                 # Validation errors 
                 $_SESSION['employee'] = serialize($employee);
                 $_SESSION['error'] = 'Invalid form';
-                $_SESSION['errors'] = $errors;
+                $_SESSION['errores'] = $errores;
 
                 header('location:' . URL . 'employees/new');
 
@@ -224,7 +223,7 @@ class Employees extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_organiser']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
             $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "employees");
         } else {
@@ -247,7 +246,7 @@ class Employees extends Controller
 
             header("location:" . URL . "login");
 
-        } else if (!in_array($_SESSION['id_rol'], $GLOBALS['employees']['edit'])) {
+        } else if (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])) {
             $_SESSION['mensaje'] = "unprivileged operation";
 
             header('location:' . URL . 'employees');
@@ -300,7 +299,7 @@ class Employees extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_organiser']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
             $_SESSION['mensaje'] = "unprivileged operation";
             header("location:" . URL . "employees");
         } else {
@@ -366,7 +365,7 @@ class Employees extends Controller
                     ]
                 ];
                 if (!filter_var($phone, FILTER_VALIDATE_REGEXP, $options_tlf)) {
-                    $errores['telefono'] = 'El formato introducido es incorrecto';
+                    $errores['telefono'] = 'The format entered is incorrect';
                 }
             }
 
@@ -434,7 +433,7 @@ class Employees extends Controller
 
                 # Redirect to the main page 
                 header('location:' . URL . 'employees');
-                
+
             }
         }
     }
@@ -513,11 +512,7 @@ class Employees extends Controller
             $_SESSION['mensaje'] = "User must authenticated";
             header("location:" . URL . "login");
             exit();  # Terminar la ejecución para evitar procesar la exportación sin autenticación
-        } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['employees']['export'])) {
-            $_SESSION['mensaje'] = "unprivileged operation";
-            header("location:" . URL . "employees");
-            exit();  # Terminar la ejecución para evitar procesar la exportación sin privilegios
-        }
+        } 
 
         # Obtener datos de employees
         $employees = $this->model->get()->fetchAll(PDO::FETCH_ASSOC);

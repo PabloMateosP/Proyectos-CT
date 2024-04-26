@@ -339,6 +339,37 @@ class employeesModel extends Model
         }
     }
 
+    public function validateUniquePhone($phone)
+    {
+        try {
+
+            $sql = "
+                SELECT * FROM employees
+                WHERE phone = :phone
+            ";
+
+            # Conectar con la base de datos
+            $conexion = $this->db->connect();
+
+            $pdostmt = $conexion->prepare($sql);
+
+            $pdostmt->bindParam(':phone', $phone, PDO::PARAM_INT, 9);
+            $pdostmt->execute();
+
+            if ($pdostmt->rowCount() != 0) {
+                return FALSE;
+            }
+
+            return TRUE;
+
+        } catch (PDOException $e) {
+
+            include_once ('template/partials/errorDB.php');
+            exit();
+
+        }
+    }
+
     public function validateUniqueEmail($email)
     {
         try {

@@ -193,7 +193,7 @@ class Users extends Controller
                 $_SESSION['roles'] = $roles;
 
                 //Redireccionamos de nuevo al formulario
-                header('location:' . URL . 'users/nuevo/index');
+                header('location:' . URL . 'users/nuevo/index/');
             } else {
                 # Añadimos el registro a la tabla
                 $this->model->create($nombre, $email, $contraseña, $roles);
@@ -201,7 +201,7 @@ class Users extends Controller
                 $_SESSION['mensaje'] = "Se ha creado el usuario correctamente.";
 
                 // Redireccionamos a la vista users
-                header("Location:" . URL . "users");
+                header("Location:" . URL . "users//");
             }
         }
     }
@@ -214,17 +214,17 @@ class Users extends Controller
         if (!isset($_SESSION['id'])) {
             $_SESSION['mensaje'] = "User must authenticated";
 
-            header("location:" . URL . "login");
+            header("location:" . URL . "login/");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
             $_SESSION['mensaje'] = "Unprivileged operation";
-            header("location:" . URL . "users");
+            header("location:" . URL . "users/");
         } else {
             $id = $param[0];
             $this->model->delete($id);
             $_SESSION['mensaje'] = 'User delete correctly';
 
-            header("Location:" . URL . "users");
+            header("Location:" . URL . "users/");
         }
     }
 

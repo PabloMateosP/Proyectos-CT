@@ -12,7 +12,7 @@ class WorkingHours extends Controller
             $_SESSION['notify'] = "Usuario sin autentificar";
 
             header("location:" . URL . "login");
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['coordinador_empleado']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
             $_SESSION['mensaje'] = "Usuario sin autentificar";
             header("location:" . URL . "index");
 
@@ -26,18 +26,16 @@ class WorkingHours extends Controller
 
             $this->view->title = "Working Hours";
 
-            if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['coordinador'])) {
-                
-                $this->view->workingHours = $this->model->get();
-            
-            } elseif (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['empleado'])) {
-                
+            if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['employee'])) {
+
                 $email = $this->view->email_account = $this->model->get_userEmailById($_SESSION['id']);
                 $this->view->workingHours = $this->model->get_employeeHours($email);
                 $this->view->total_hours = $this->model->getTotalHours();
-           
+
             } else {
-                # You can't look that 
+
+                $this->view->workingHours = $this->model->get();
+
             }
 
             $this->view->render("workingHours/main/index");
@@ -57,7 +55,7 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['coordinador_empleado']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
             $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "workingHours");
         } else {
@@ -107,7 +105,7 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if (!in_array($_SESSION['id_rol'], $GLOBALS['coordinador_empleado'])) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
 
             $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "workingHours");
@@ -223,7 +221,7 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['employee']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
             $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "workingHours");
         } else {
@@ -256,7 +254,7 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if (!in_array($_SESSION['id_rol'], $GLOBALS['employee'])) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
             $_SESSION['mensaje'] = "Operation without privileges";
 
             header('location:' . URL . 'workingHours');
@@ -315,7 +313,7 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['employee']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
             $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "workingHours");
         } else {
@@ -465,7 +463,7 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
             $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "workingHours");
         } else {
@@ -487,7 +485,7 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['order']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
             $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "workingHours");
         } else {
@@ -511,7 +509,7 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
             $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "workingHours");
         } else {
@@ -532,14 +530,11 @@ class WorkingHours extends Controller
             $_SESSION['mensaje'] = "User must be authenticated";
             header("location:" . URL . "login");
             exit();  # Terminar la ejecución para evitar procesar la exportación sin autenticación
-        } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
             $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "workingHours");
             exit();  # Terminar la ejecución para evitar procesar la exportación sin privilegios
         }
-
-        # Obtener datos de workingHours
-        $workingHours = $this->model->get()->fetchAll(PDO::FETCH_ASSOC);
 
         # Nombre del archivo CSV exportado
         $csvExportado = 'export_workingHours.csv';
@@ -554,19 +549,45 @@ class WorkingHours extends Controller
         # Escribir la primera fila con los encabezados
         fputcsv($archivo, ['ID', 'Nombre Empleado', 'Código de Tiempo', 'Orden de Trabajo', 'Proyecto', 'Tarea', 'Fecha Trabajada', 'Duración'], ';');
 
-        # Iterar sobre los workingHours y escribir cada fila en el archivo
-        foreach ($workingHours as $workingHour) {
+        # Take all the working hours for the admin privileges, manager and organiser
+        if ((in_array($_SESSION['id_rol'], $GLOBALS['employee']))) {
+
+            # Obtener el correo electrónico del empleado actual
+            $employee_email = $_SESSION['email'];
+            
+            # Obtener las horas trabajadas del empleado actual
+            $workingHoursEmployee = $this->model->get_employeeHours($employee_email)->fetchAll(PDO::FETCH_ASSOC);
+
             # Escribir la fila en el archivo
             fputcsv($archivo, [
-                $workingHour['id'],
-                $workingHour['employee_name'],
-                $workingHour['time_code'],
-                $workingHour['project_name'],
-                $workingHour['task_description'],
-                $workingHour['work_order_description'],
-                $workingHour['date_worked'],
-                $workingHour['duration']
+                $workingHoursEmployee['id'],
+                $workingHoursEmployee['employee_name'],
+                $workingHoursEmployee['time_code'],
+                $workingHoursEmployee['project_name'],
+                $workingHoursEmployee['task_description'],
+                $workingHoursEmployee['work_order_description'],
+                $workingHoursEmployee['date_worked'],
+                $workingHoursEmployee['duration']
             ], ';');
+
+        } else if ((in_array($_SESSION['id_rol'], $GLOBALS['admin'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['manager'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['organiser']))) {
+
+            $workingHours = $this->model->get()->fetchAll(PDO::FETCH_ASSOC);
+
+            # Iterar sobre los workingHours y escribir cada fila en el archivo
+            foreach ($workingHours as $workingHour) {
+                # Escribir la fila en el archivo
+                fputcsv($archivo, [
+                    $workingHour['id'],
+                    $workingHour['employee_name'],
+                    $workingHour['time_code'],
+                    $workingHour['project_name'],
+                    $workingHour['task_description'],
+                    $workingHour['work_order_description'],
+                    $workingHour['date_worked'],
+                    $workingHour['duration']
+                ], ';');
+            }
         }
 
         # Cerramos el archivo

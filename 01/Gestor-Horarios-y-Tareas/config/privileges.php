@@ -4,17 +4,22 @@
 $GLOBALS['admin'] = [1];
 
 // Variables para uso de administrador y coordinador
-$GLOBALS['admin_coordinador'] = [1,2];
-$GLOBALS['admin_organiser'] = [1,2];
+$GLOBALS['admin_manager'] = [1,2];
 
 // Variables para uso de coordinador 
-$GLOBALS['coordinador'] = [2];
-$GLOBALS['organiser'] = [2];
+$GLOBALS['manager'] = [2];
 
-// Variables para uso de coordinador y empleado 
-$GLOBALS['coordinador_empleado'] = [2, 3];
-$GLOBALS['organiser_employee'] = [2,3];
+// Variable for manager and organiser use
+$GLOBALS['manager_organiser'] = [2,3];
 
-// Variables para uso de empleado 
-$GLOBALS['empleado'] = [3];
-$GLOBALS['employee'] = [3];
+// Variable for organiser use
+$GLOBALS['organiser'] = [3];
+
+// Variable for organiser and employee use
+$GLOBALS['organiser_employee'] = [3,4];
+
+// Variable for employee use
+$GLOBALS['employee'] = [4];
+
+// Variable for all 
+$GLOBALS['all'] = [1,2,3,4];

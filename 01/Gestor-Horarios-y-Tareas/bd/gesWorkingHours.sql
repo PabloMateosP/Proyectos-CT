@@ -456,22 +456,29 @@ INSERT INTO
 VALUES
     (
         1,
-        'Administrador',
-        'Todos los privilegios de la aplicación',
+        'Admin',
+        'All the privileges fromt the app (Can create, delete and edit all in the app)',
         default,
         default
     ),
     (
         2,
-        'Editor',
-        'Sólo podrá consultar, modificar y añadir información. No podrá eliminar',
+        'Manager',
+        'Can create tasks, projects, workingHours and employee',
         default,
         default
     ),
     (
         3,
-        'Registrado',
-        'Sólo podrá realizar consultas',
+        'Organiser',
+        'Can create tasks, projects and workingHours.',
+        default,
+        default
+    ),
+    (
+        4, 
+        'Employee',
+        'Can create workingHours.',
         default,
         default
     );
