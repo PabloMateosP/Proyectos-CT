@@ -67,7 +67,7 @@
                                             onclick="return confirm('Confirm employee deletion') " class="btn btn-danger"> <i
                                                 class="bi bi-trash"></i></a>
                                         <a href="<?= URL ?>employees/edit/<?= $employee->id ?>" title="Mostrar"
-                                            class="btn btn-success"> <i class="bi bi-eye"></i></a>
+                                            class="btn btn-success"> <i class="bi bi-pencil-square"></i></a>
                                     </td>
                                 <?php else: ?>
                                     <!-- No permitido -->

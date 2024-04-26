@@ -107,22 +107,21 @@ class Login extends Controller
             $_SESSION['id_rol'] = $this->model->getUserIdPerfil($user->id);
             $_SESSION['name_rol'] = $this->model->getUserPerfil($_SESSION['id_rol']);
 
-            if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
+            if ((in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
                 // If the user is admin, they do not need to be add in table employee.
             } else {
                 $employeee = $this->model->getEmployeeId($email);
                 $_SESSION['employee_id'] = $employeee->id;
             }
 
-
-            if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
+            if ((in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
                 # Si el usuario es admin, redirigir a la página de employees
                 $_SESSION['mensaje'] = "Usuario " . $user->name . " ha iniciado sesión";
-                header("location:" . URL . "workingHours/");
-            } elseif ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee']))) {
+                header("location:" . URL . "employees/");
+            } elseif ((in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee']))) {
                 # Si el usuario no es admin, redirigir a la página de workingHours
                 $_SESSION['mensaje'] = "Usuario " . $user->name . " ha iniciado sesión";
-                header("location:" . URL . "employees/");
+                header("location:" . URL . "workingHours/");
             }
         }
 
