@@ -98,6 +98,97 @@ class projectsModel extends Model
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #    
+    #  _____  ______          _____  
+    # |  __ \|  ____|   /\   |  __ \ 
+    # | |__) | |__     /  \  | |  | |
+    # |  _  /|  __|   / /\ \ | |  | |
+    # | | \ \| |____ / ____ \| |__| |
+    # |_|  \_\______/_/    \_\_____/ 
+    #
+    # ---------------------------------------------------------------------------------
+    # function read
+    # take the info of an project
+    public function read($id)
+    {
+        try {
+            $sql = " 
+                SELECT
+                    id,
+                    project, 
+                    description,
+                    id_projectManager,
+                    id_customer,
+                    finish_date
+                FROM 
+                    projects
+                WHERE id =  :id;";
+
+            # Connect with the database
+            $conexion = $this->db->connect();
+
+            $pdoSt = $conexion->prepare($sql);
+
+            $pdoSt->bindParam(':id', $id, PDO::PARAM_INT);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+
+            return $pdoSt->fetch();
+
+        } catch (PDOException $e) {
+            include_once ('template/partials/errorDB.php');
+            exit();
+        }
+
+    }
+    # ---------------------------------------------------------------------------------
+    #  
+    #   _    _ _____  _____       _______ ______ 
+    #  | |  | |  __ \|  __ \   /\|__   __|  ____|
+    #  | |  | | |__) | |  | | /  \  | |  | |__   
+    #  | |  | |  ___/| |  | |/ /\ \ | |  |  __|  
+    #  | |__| | |    | |__| / ____ \| |  | |____ 
+    #   \____/|_|    |_____/_/    \_\_|  |______|                                        
+    #                                       
+    # --------------------------------------------------------------------------------- 
+    # Method update
+    # Update the project's data
+    public function update(classProject $project_, $id)
+    {
+        try {
+            $sql = " 
+                    UPDATE projects
+                    SET
+                        project=:project,
+                        description=:description,
+                        id_projectManager=:id_projectManager,
+                        id_customer=:id_customer,
+                        finish_date=:finish_date,
+                        update_at = now()
+                    WHERE
+                        id=:id
+                    LIMIT 1";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+
+            $pdoSt->bindParam(":project", $project_->project, PDO::PARAM_STR, 8);
+            $pdoSt->bindParam(":description", $project_->description, PDO::PARAM_STR, 50);
+            $pdoSt->bindParam(":id_projectManager", $project_->id_projectManager, PDO::PARAM_INT, 10);
+            $pdoSt->bindParam(":id_customer", $project_->id_customer, PDO::PARAM_INT, 10);
+            $pdoSt->bindParam(":finish_date", $project_->finish_date, PDO::PARAM_STR, 20);
+            $pdoSt->bindParam(":id", $id, PDO::PARAM_STR);
+
+            $pdoSt->execute();
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+
     # ---------------------------------------------------------------------------------   
     #  
     #   _____  ______ _      ______ _______ ______ 
@@ -127,6 +218,7 @@ class projectsModel extends Model
             exit();
         }
     }
+    
 
     # ---------------------------------------------------------------------------------
     #    ____   _____   _____   ______  _____  

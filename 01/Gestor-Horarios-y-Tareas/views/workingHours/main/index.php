@@ -71,7 +71,7 @@
                                     <td style="display:flex; gap: 5px;">
                                        <a href="<?= URL ?>workingHours/edit/<?= $workingHour->id ?>" title="edit" class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['employee'])) ?
                                             'disabled' : null ?>"> <i class="bi bi-pencil"></i> </a>
-                                        <a href="<?= URL ?>workingHours/delete/<?= $workingHour->id ?>" title="Eliminar" onclick="return confirm('Confirmar eliminación Cuenta') " class="btn btn-danger" <?= (!in_array($_SESSION['id_rol'], $GLOBALS['employee'])) ?
+                                        <a href="<?= URL ?>workingHours/delete/<?= $workingHour->id ?>" title="Eliminar" onclick="return confirm('Confirm work hour deletion') " class="btn btn-danger" <?= (!in_array($_SESSION['id_rol'], $GLOBALS['employee'])) ?
                                             'disabled' : null ?>> <i class="bi bi-trash"></i></a> 
                                     </td>
                                 <?php else: ?>

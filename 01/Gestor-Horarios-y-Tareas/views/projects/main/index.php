@@ -64,7 +64,7 @@
                                         <a href="<?= URL ?>projects/edit/<?= $project_->id ?>" title="edit" class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ?
                                                 'disabled' : null ?>"> <i class="bi bi-pencil"></i> </a>
                                         <a href="<?= URL ?>projects/delete/<?= $project_->id ?>" title="Eliminar"
-                                            onclick="return confirm('Confirmar eliminación Cuenta') " class="btn btn-danger"
+                                            onclick="return confirm('Confirmar project deletion') " class="btn btn-danger"
                                             <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ?
                                                 'disabled' : null ?>> <i class="bi bi-trash"></i></a>
                                     </td>

@@ -74,7 +74,7 @@ class Projects extends Controller
         } else {
 
             # Create an empty object
-            $this->view->workingHours = new classWorkingHours();
+            $this->view->project = new classproject();
 
             # We check if there are errors -> this variable is created to throw an validation error
             if (isset($_SESSION['error'])) {
@@ -83,7 +83,7 @@ class Projects extends Controller
                 $this->view->error = $_SESSION['error'];
 
                 # We autofill the form
-                $this->view->workingHours = unserialize($_SESSION['workingHours']);
+                $this->view->project = unserialize($_SESSION['project']);
 
                 # We rescue the array of errors
                 $this->view->errores = $_SESSION['errores'];
@@ -91,7 +91,7 @@ class Projects extends Controller
                 # We must release the session variables
                 unset($_SESSION['error']);
                 unset($_SESSION['errores']);
-                unset($_SESSION['workingHours']);
+                unset($_SESSION['project']);
                 # If these variables exist when there are no errors, we will enter the error blocks in the conditionals
             }
 
@@ -135,7 +135,7 @@ class Projects extends Controller
             # 1. Security: We sanitize the data that is sent by the user
             $project_ = filter_var($_POST['project'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $description = filter_var($_POST['description'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $id_projectManager = filter_var($_POST['id_project_manager'] ??= '', FILTER_SANITIZE_NUMBER_INT);
+            $id_Manager = filter_var($_POST['id_project_manager'] ??= '', FILTER_SANITIZE_NUMBER_INT);
             $id_customer = filter_var($_POST['id_customer'] ??= '', FILTER_SANITIZE_NUMBER_INT);
             $finish_date = filter_var($_POST['finish_date'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -144,7 +144,7 @@ class Projects extends Controller
                 null,
                 $project_,
                 $description,
-                $id_projectManager,
+                $id_Manager,
                 $id_customer,
                 null,
                 $finish_date,
@@ -168,10 +168,10 @@ class Projects extends Controller
                 $errores['description'] = 'The field description is too long';
             }
 
-            # Id_projectManager
-            if (empty($id_projectManager)) {
+            # id_ManagerManager
+            if (empty($id_Manager)) {
                 $errores['id_project_manager'] = 'The field project Manager is required';
-            } else if (strlen($id_projectManager) > 10) {
+            } else if (strlen($id_Manager) > 10) {
                 $errores['id_project_manager'] = 'The field project Manager is too long';
             }
 
@@ -194,7 +194,7 @@ class Projects extends Controller
             if (!empty($errores)) {
 
                 # Validation's error
-                $_SESSION['workingHours'] = serialize($project);
+                $_SESSION['projects'] = serialize($project);
                 $_SESSION['error'] = 'Formulario no validado';
                 $_SESSION['errores'] = $errores;
 
@@ -209,7 +209,7 @@ class Projects extends Controller
                 #Mensaje
                 $_SESSION['mensaje'] = "Project create correctly";
 
-                # Redirigimos al main de workingHours
+                # Redirigimos al main de project
                 header('location:' . URL . 'projects');
             }
         }
@@ -236,7 +236,7 @@ class Projects extends Controller
             header("location:" . URL . "login");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
-            
+
             $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "projects/");
 
@@ -249,6 +249,200 @@ class Projects extends Controller
             $_SESSION['mensaje'] = 'Project delete correctly';
 
             header("Location:" . URL . "projects/");
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #  ______  _____  _____  _______ 
+    #  |  ____||  __ \|_   _||__   __|
+    #  | |__   | |  | | | |     | |   
+    #  |  __|  | |  | | | |     | |   
+    #  | |____ | |__| |_| |_    | |   
+    #  |______||_____/|_____|   |_|
+    #
+    # ---------------------------------------------------------------------------------
+    # Method edit. 
+    # Show a form to edit a project
+    public function edit($param = [])
+    {
+        session_start();
+
+        if (!isset($_SESSION['id'])) {
+            $_SESSION['mensaje'] = "User must be authenticated";
+
+            header("location:" . URL . "login");
+
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
+            $_SESSION['mensaje'] = "Operation without privileges";
+
+            header('location:' . URL . 'projects');
+
+        } else {
+
+            # obtengo el id del project que voy a editar
+
+            $id = $param[0];
+
+            $this->view->id = $id;
+            $this->view->title = "Formulario editar project";
+            $this->view->project_ = $this->model->read($id);
+
+            $this->view->project_managers = $this->model->get_projectManagers();
+            $this->view->customers = $this->model->get_customers();
+
+            # Comprobamos si hay errores -> esta variable se crea al lanzar un error de validacion
+            if (isset($_SESSION['error'])) {
+                # rescatemos el mensaje
+                $this->view->error = $_SESSION['error'];
+
+                # Autorellenamos el formulario
+                $this->view->project_ = unserialize($_SESSION['employee']);
+
+                # Recupero array de errores específicos
+                $this->view->errores = $_SESSION['errores'];
+
+                # debemos liberar las variables de sesión ya que su cometido ha sido resuelto
+                unset($_SESSION['error']);
+                unset($_SESSION['errores']);
+                unset($_SESSION['projects']);
+                # Si estas variables existen cuando no hay errores, entraremos en los bloques de error en las condicionales
+            }
+
+            $this->view->render("projects/edit/index");
+        }
+    }
+    # ---------------------------------------------------------------------------------
+    #
+    #   _    _  _____   _____         _______  ______ 
+    #  | |  | ||  __ \ |  __ \    /\ |__   __||  ____|
+    #  | |  | || |__) || |  | |  /  \   | |   | |__   
+    #  | |  | ||  ___/ | |  | | / /\ \  | |   |  __|  
+    #  | |__| || |     | |__| |/ ____ \ | |   | |____ 
+    #   \____/ |_|     |_____//_/    \_\|_|   |______|
+    #                                               
+    # ---------------------------------------------------------------------------------
+    # Método update.
+    # Update the table of the table workinhours 
+    public function update($param = [])
+    {
+
+        #Iniciar Sesión
+        session_start();
+
+        if (!isset($_SESSION['id'])) {
+            $_SESSION['mensaje'] = "User must be authenticated";
+
+            header("location:" . URL . "login");
+
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
+            
+            $_SESSION['mensaje'] = "Operation without privileges";
+            header("location:" . URL . "project");
+
+        } else {
+
+            # 1. Security: We sanitize the data that is sent by the user
+            $project_ = filter_var($_POST['project'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $description = filter_var($_POST['description'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $id_Manager = filter_var($_POST['id_project_manager'] ??= '', FILTER_SANITIZE_NUMBER_INT);
+            $id_customer = filter_var($_POST['id_customer'] ??= '', FILTER_SANITIZE_NUMBER_INT);
+            $finish_date = filter_var($_POST['finish_date'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+
+            # 2. Create an object of the class
+            $project = new classProject(
+                null,
+                $project_,
+                $description,
+                $id_Manager,
+                $id_customer,
+                null,
+                $finish_date,
+                null
+            );
+
+            $id = $param[0];
+
+            #Take the original data
+            $project_orig = $this->model->read($id);
+
+            # 3. Validation
+            # Only if is necessary
+            # Only in case when the field is modified 
+
+            $errores = [];
+
+            # project
+            if (strcmp($project->project, $project_orig->project) !== 0) {
+                if (empty($project_)) {
+                    $errores['project'] = 'The field project_ is required';
+                } else if (strlen($project_) > 10) {
+                    $errores['project'] = 'The field project_ is too long';
+
+                }
+            }
+
+            # description
+            if (strcmp($project->description, $project_orig->description) !== 0) {
+
+                if (empty($description)) {
+                    $errores['description'] = 'The field description is required';
+                } else if (strlen($description) > 50) {
+                    $errores['description'] = 'The field description is too long';
+                }
+            }
+
+            # id_projectManager
+            if (strcmp($project->id_projectManager, $project_orig->id_projectManager) !== 0) {
+
+                if (empty($id_Manager)) {
+                    $errores['id_project_manager'] = 'The field id_Manager is required ';
+                } else if (strlen($id_Manager) > 10) {
+                    $errores['id_project_manager'] = 'The field id_Manager is too long';
+                }
+            }
+
+            # id_customer
+            if (strcmp($project->id_customer, $project_orig->id_customer) !== 0) {
+
+                if (empty($id_customer)) {
+                    $errores['id_customer'] = 'The field id_customer is required';
+                } else if (strlen($id_customer) > 10) {
+                    $errores['id_customer'] = 'The field id_customer is too long';
+                }
+            }
+
+            # finish_date
+            if (strcmp($project->finish_date, $project_orig->finish_date) !== 0) {
+
+                if (empty($finish_date)) {
+                    $errores['finish_date'] = 'The field finish_date is required ';
+                } else if (strlen($finish_date) > 20) {
+                    $errores['finish_date'] = 'The field finish_date is too long';
+
+                }
+            }
+
+            if (!empty($errores)) {
+
+                # Validation's error
+                $_SESSION['project'] = serialize($project);
+                $_SESSION['error'] = 'Formulario no validado';
+                $_SESSION['errores'] = $errores;
+
+                # Redirect to workingHour's main
+                header('location:' . URL . 'projects/edit/' . $id);
+
+            } else {
+
+                # Adding the data to the table working hours
+                $this->model->update($project, $id);
+
+                # Message
+                $_SESSION['mensaje'] = "project actualizado correctamente";
+
+                # Redirect to Working Hours main
+                header('location:' . URL . 'projects');
+            }
         }
     }
 
