@@ -7,6 +7,7 @@ require_once 'libs/view.php';
 
 require_once 'class/class.employee.php';
 require_once 'class/class.workinghours.php';
+require_once 'class/class.project.php';
 
 require_once 'fpdf/fpdf.php';
 require_once 'class/class.user.php';

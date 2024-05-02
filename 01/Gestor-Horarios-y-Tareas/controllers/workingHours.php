@@ -238,12 +238,13 @@ class WorkingHours extends Controller
     }
 
     # ---------------------------------------------------------------------------------   
-    #     _____         _        _        
-    #    |  __ \       | |      | |       
-    #    | |  | |  ___ | |  ___ | |_  ___ 
-    #    | |  | | / _ \| | / _ \| __|/ _ \
-    #    | |__| ||  __/| ||  __/| |_|  __/
-    #    |_____/  \___||_| \___| \__|\___|
+    #  
+    #   _____  ______ _      ______ _______ ______ 
+    #  |  __ \|  ____| |    |  ____|__   __|  ____|
+    #  | |  | | |__  | |    | |__     | |  | |__   
+    #  | |  | |  __| | |    |  __|    | |  |  __|  
+    #  | |__| | |____| |____| |____   | |  | |____ 
+    #  |_____/|______|______|______|  |_|  |______|    
     #                               
     # ---------------------------------------------------------------------------------
     # Method delete. 
@@ -256,7 +257,7 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
             $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "workingHours");
         } else {

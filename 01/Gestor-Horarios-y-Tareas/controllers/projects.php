@@ -97,10 +97,158 @@ class Projects extends Controller
 
             $this->view->title = "Form new working hour";
 
-            $this->view->projectManagers = $this->model->get_projectManagers();
+            $this->view->project_managers = $this->model->get_projectManagers();
             $this->view->customers = $this->model->get_customers();
 
             $this->view->render("projects/new/index");
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #    _____  _____   ______         _______  ______ 
+    #   / ____||  __ \ |  ____|    /\ |__   __||  ____|
+    #  | |     | |__) || |__      /  \   | |   | |__   
+    #  | |     |  _  / |  __|    / /\ \  | |   |  __|  
+    #  | |____ | | \ \ | |____  / ____ \ | |   | |____ 
+    #   \_____||_|  \_\|______|/_/    \_\|_|   |______|
+    #
+    # ---------------------------------------------------------------------------------
+    # Method create. 
+    # Allow to add a new working hour
+    public function create($param = [])
+    {
+        # Session start
+        session_start();
+
+        if (!isset($_SESSION['id'])) {
+            $_SESSION['mensaje'] = "User must authenticated";
+
+            header("location:" . URL . "login");
+
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
+
+            $_SESSION['mensaje'] = "Unprivileged operation";
+            header("location:" . URL . "projects");
+
+        } else {
+
+            # 1. Security: We sanitize the data that is sent by the user
+            $project_ = filter_var($_POST['project'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $description = filter_var($_POST['description'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $id_projectManager = filter_var($_POST['id_project_manager'] ??= '', FILTER_SANITIZE_NUMBER_INT);
+            $id_customer = filter_var($_POST['id_customer'] ??= '', FILTER_SANITIZE_NUMBER_INT);
+            $finish_date = filter_var($_POST['finish_date'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+
+            # 2. Create an object of the class
+            $project = new classProject(
+                null,
+                $project_,
+                $description,
+                $id_projectManager,
+                $id_customer,
+                null,
+                $finish_date,
+                null
+            );
+
+            # 3. Validation
+            $errores = [];
+
+            # Project
+            if (empty($project_)) {
+                $errores['project'] = 'The field project is required';
+            } else if (strlen($project_) > 8) {
+                $errores['project'] = 'The field project is too long';
+            }
+
+            # Description
+            if (empty($description)) {
+                $errores['description'] = 'The field description is required';
+            } else if (strlen($description) > 50) {
+                $errores['description'] = 'The field description is too long';
+            }
+
+            # Id_projectManager
+            if (empty($id_projectManager)) {
+                $errores['id_project_manager'] = 'The field project Manager is required';
+            } else if (strlen($id_projectManager) > 10) {
+                $errores['id_project_manager'] = 'The field project Manager is too long';
+            }
+
+            # Id_customer
+            if (empty($id_customer)) {
+                $errores['id_customer'] = 'The field customer is required';
+            } else if (strlen($id_customer) > 10) {
+                $errores['id_customer'] = 'Field customer too long';
+            }
+
+            # Finish_date
+            if (empty($finish_date)) {
+                $errores['finish_date'] = 'The field finish_date is required';
+            } else if (strlen($finish_date) > 20) {
+                $errores['finish_date'] = 'Finish date too long';
+            }
+
+            #4. Verify Validation
+
+            if (!empty($errores)) {
+
+                # Validation's error
+                $_SESSION['workingHours'] = serialize($project);
+                $_SESSION['error'] = 'Formulario no validado';
+                $_SESSION['errores'] = $errores;
+
+                header('location:' . URL . 'projects/new');
+
+            } else {
+
+                #Create project
+                # Añadir registro a la tabla
+                $this->model->create($project);
+
+                #Mensaje
+                $_SESSION['mensaje'] = "Project create correctly";
+
+                # Redirigimos al main de workingHours
+                header('location:' . URL . 'projects');
+            }
+        }
+    }
+
+    # ---------------------------------------------------------------------------------   
+    #  
+    #   _____  ______ _      ______ _______ ______ 
+    #  |  __ \|  ____| |    |  ____|__   __|  ____|
+    #  | |  | | |__  | |    | |__     | |  | |__   
+    #  | |  | |  __| | |    |  __|    | |  |  __|  
+    #  | |__| | |____| |____| |____   | |  | |____ 
+    #  |_____/|______|______|______|  |_|  |______|    
+    #                               
+    # ---------------------------------------------------------------------------------
+    # Method delete. 
+    # Allow to delete the project
+    public function delete($param = [])
+    {
+        session_start();
+        if (!isset($_SESSION['id'])) {
+            $_SESSION['mensaje'] = "User must be authenticated";
+
+            header("location:" . URL . "login");
+
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
+            
+            $_SESSION['mensaje'] = "Operation without privileges";
+            header("location:" . URL . "projects/");
+
+        } else {
+            $id = $param[0];
+
+            # We delete the working hour
+            $this->model->delete($id);
+
+            $_SESSION['mensaje'] = 'Project delete correctly';
+
+            header("Location:" . URL . "projects/");
         }
     }
 
@@ -124,7 +272,7 @@ class Projects extends Controller
             header("location:" . URL . "login/");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
-            
+
             $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "projects/");
 

@@ -47,6 +47,88 @@ class projectsModel extends Model
     }
 
     # ---------------------------------------------------------------------------------
+    #    _____  _____   ______         _______  ______ 
+    #   / ____||  __ \ |  ____|    /\ |__   __||  ____|
+    #  | |     | |__) || |__      /  \   | |   | |__   
+    #  | |     |  _  / |  __|    / /\ \  | |   |  __|  
+    #  | |____ | | \ \ | |____  / ____ \ | |   | |____ 
+    #   \_____||_|  \_\|______|/_/    \_\|_|   |______|
+    #
+    # ---------------------------------------------------------------------------------
+    # Method create
+    # Allow to create a new project
+    public function create(classProject $project)
+    {
+        try {
+            $sql = " INSERT INTO 
+                        projects 
+                        (
+                            project, 
+                            description, 
+                            id_projectManager, 
+                            id_customer, 
+                            finish_date
+                        ) 
+                        VALUES 
+                        ( 
+                            :project, 
+                            :description, 
+                            :id_projectManager, 
+                            :id_customer, 
+                            :finish_date
+                        )";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+
+            // Link the parameters
+            //-----------------------------------------------------------------------------------
+            $pdoSt->bindParam(":project", $project->project, PDO::PARAM_STR, 8);
+            $pdoSt->bindParam(":description", $project->description, PDO::PARAM_STR, 50);
+            $pdoSt->bindParam(":id_projectManager", $project->id_projectManager, PDO::PARAM_INT, 10);
+            $pdoSt->bindParam(":id_customer", $project->id_customer, PDO::PARAM_INT, 10);
+            $pdoSt->bindParam(":finish_date", $project->finish_date, PDO::PARAM_STR, 20);
+
+            // execute
+            $pdoSt->execute();
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    # ---------------------------------------------------------------------------------   
+    #  
+    #   _____  ______ _      ______ _______ ______ 
+    #  |  __ \|  ____| |    |  ____|__   __|  ____|
+    #  | |  | | |__  | |    | |__     | |  | |__   
+    #  | |  | |  __| | |    |  __|    | |  |  __|  
+    #  | |__| | |____| |____| |____   | |  | |____ 
+    #  |_____/|______|______|______|  |_|  |______|    
+    #                               
+    # ---------------------------------------------------------------------------------
+    # Method delete
+    # Permit execute command DELETE at the table projects
+    public function delete($id)
+    {
+        try {
+
+            $sql = "DELETE FROM projects WHERE id = :id;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":id", $id, PDO::PARAM_INT);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
     #    ____   _____   _____   ______  _____  
     #   / __ \ |  __ \ |  __ \ |  ____||  __ \ 
     #  | |  | || |__) || |  | || |__   | |__) |
@@ -56,7 +138,7 @@ class projectsModel extends Model
     #
     # ---------------------------------------------------------------------------------
     # Method order
-    # Allows you to sort the workingHours table by any of the main columns
+    # Allows you to sort the proj$project table by any of the main columns
     # The sort order is set by the select column number
     public function order(int $criterio)
     {
@@ -110,7 +192,7 @@ class projectsModel extends Model
     public function get_customers()
     {
         try {
-            $sql = "SELECT id, name, description FROM customer";
+            $sql = "SELECT id, name FROM customer";
             $conexion = $this->db->connect();
             $result = $conexion->prepare($sql);
             $result->setFetchMode(PDO::FETCH_OBJ);
@@ -139,7 +221,7 @@ class projectsModel extends Model
     public function get_projectManagers()
     {
         try {
-            $sql = "SELECT id, name, description FROM customer";
+            $sql = "SELECT id, name, last_name FROM projectManager";
             $conexion = $this->db->connect();
             $result = $conexion->prepare($sql);
             $result->setFetchMode(PDO::FETCH_OBJ);

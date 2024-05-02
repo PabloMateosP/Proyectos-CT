@@ -23,7 +23,7 @@
                     <!-- Project -->
                     <div class="mb-3">
                         <label for="project" class="form-label">Project</label>
-                        <input type="number" class="form-control" id="project" name="project">
+                        <input type="text" class="form-control" id="project" name="project">
                         <!-- Show possible error -->
                         <?php if (isset($this->errores['project'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -65,20 +65,19 @@
 
                     <!-- Customer -->
                     <div class="mb-3">
-                        <label for="id_project" class="form-label">Project</label>
-                        <select class="form-select" name="id_project" id="id_project">
+                        <label for="id_customer" class="form-label">Customer</label>
+                        <select class="form-select" name="id_customer" id="id_customer">
                             <option selected disabled>Select project </option>
-                            <?php foreach ($this->projects as $project_): ?>
-                                <option value="<?= $project_->id ?>">
-                                    <?= $project_->project ?> (<?= $project_->description ?>) - Project Manager:
-                                    <?= $project_->manager_name ?>, <?= $project_->manager_last_name ?>
+                            <?php foreach ($this->customers as $customer): ?>
+                                <option value="<?= $customer->id ?>">
+                                    <?= $customer->name ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
                         <!-- Show possible error -->
-                        <?php if (isset($this->errores['id_project'])): ?>
+                        <?php if (isset($this->errores['id_customer'])): ?>
                             <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['id_project'] ?>
+                                <?= $this->errores['id_customer'] ?>
                             </span>
                         <?php endif; ?>
                     </div>
@@ -97,7 +96,7 @@
 
                     <!-- botones de acción -->
                     <div class="mb-3">
-                        <a class="btn btn-secondary" href="<?= URL ?>workingHours/" role="button">Cancelar</a>
+                        <a class="btn btn-secondary" href="<?= URL ?>projects/" role="button">Cancelar</a>
                         <button type="reset" class="btn btn-danger">Borrar</button>
                         <button type="submit" class="btn btn-primary">Crear</button>
                     </div>
