@@ -21,5 +21,10 @@ $GLOBALS['organiser_employee'] = [3,4];
 // Variable for employee use
 $GLOBALS['employee'] = [4];
 
+# ------------------------------
+// Everyone except employees
+$GLOBALS['exceptEmp'] = [1,2,3];
+
 // Variable for all 
 $GLOBALS['all'] = [1,2,3,4];
+# ------------------------------

@@ -39,7 +39,7 @@
                             <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['employee'])): ?>
                                 <th>Acciones</th>
                             <?php else: ?>
-                                <!-- No permitido -->     
+                                     
                             <?php endif; ?>
                         </tr>
                     </thead>

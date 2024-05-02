@@ -1,5 +1,5 @@
 <?php
-
+    # Clase para pantalla errores.
     class Errores extends Controller {
 
         function __construct() {

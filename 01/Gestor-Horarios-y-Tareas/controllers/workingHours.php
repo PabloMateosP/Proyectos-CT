@@ -3,16 +3,25 @@
 class WorkingHours extends Controller
 {
 
+    # ---------------------------------------------------------------------------------
+    #   _____  ______ _   _ _____  ______ _____  
+    #  |  __ \|  ____| \ | |  __ \|  ____|  __ \ 
+    #  | |__) | |__  |  \| | |  | | |__  | |__) |
+    #  |  _  /|  __| | . ` | |  | |  __| |  _  / 
+    #  | | \ \| |____| |\  | |__| | |____| | \ \ 
+    #  |_|  \_\______|_| \_|_____/|______|_|  \_\
+    # 
+    # ---------------------------------------------------------------------------------
     # Main method. Charge all the working hours in the database.
     public function render($param = [])
     {
-        # Start or continuo the session
+        # Start or continue the session
         session_start();
         if (!isset($_SESSION['id'])) {
             $_SESSION['notify'] = "Usuario sin autentificar";
 
             header("location:" . URL . "login");
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
             $_SESSION['mensaje'] = "Usuario sin autentificar";
             header("location:" . URL . "index");
 
@@ -42,6 +51,15 @@ class WorkingHours extends Controller
         }
     }
 
+    # ---------------------------------------------------------------------------------    
+    #   _   _ ________          __
+    #  | \ | |  ____\ \        / /
+    #  |  \| | |__   \ \  /\  / / 
+    #  | . ` |  __|   \ \/  \/ /  
+    #  | |\  | |____   \  /\  /   
+    #  |_| \_|______|   \/  \/    
+    #                          
+    # ---------------------------------------------------------------------------------
     # "New" method. Form to add an new working Hours
     # Show a form to create a new working hour
     public function new($param = [])
@@ -92,6 +110,7 @@ class WorkingHours extends Controller
             $this->view->render("workingHours/new/index");
         }
     }
+
     # ---------------------------------------------------------------------------------
     #    _____  _____   ______         _______  ______ 
     #   / ____||  __ \ |  ____|    /\ |__   __||  ____|
@@ -515,9 +534,9 @@ class WorkingHours extends Controller
     #   \____/ |_|  \_\|_____/ |______||_|  \_\
     #
     # ---------------------------------------------------------------------------------
-    # Método ordenar
-    # Permite ordenar la tabla de workingHours por cualquiera de las columnas de la tabla
-    public function ordenar($param = [])
+    # Method order
+    # Allow order the table working Hours
+    public function order($param = [])
     {
         session_start();
         if (!isset($_SESSION['id'])) {
@@ -568,7 +587,7 @@ class WorkingHours extends Controller
             $this->view->render("workingHours/main/index");
         }
     }
-    
+
     # ---------------------------------------------------------------------------------
     #
     #   ______ __   __ _____    ____   _____  _______ 

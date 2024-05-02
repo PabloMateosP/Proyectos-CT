@@ -28,15 +28,15 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Nombre</th>
+                            <th>Name</th>
                             <th>Email</th>
-                            <th>Telefono</th>
-                            <th>Ciudad</th>
-                            <th>Horas Totales</th>
+                            <th>Phone</th>
+                            <th>City</th>
+                            <th>Total Hours</th>
                             <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin'])): ?>
-                                <th>Acciones</th>
+                                <th>Actions</th>
                             <?php elseif ((isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['organiser']))): ?>
-                                <th>Acciones</th>
+                                <th>Actions</th>
                             <?php else: ?>
                                 <!-- No permitido -->
                             <?php endif; ?>
