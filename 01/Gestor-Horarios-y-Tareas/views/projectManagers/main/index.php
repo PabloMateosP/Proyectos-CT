@@ -54,9 +54,9 @@
                                 </td>
                                 <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
                                     <td style="display:flex; gap: 5px;">
-                                        <a href="<?= URL ?>projectsManager/edit/<?= $projectManager->id ?>" title="edit" class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ?
+                                        <a href="<?= URL ?>projectManagers/edit/<?= $projectManager->id ?>" title="edit" class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ?
                                                 'disabled' : null ?>"> <i class="bi bi-pencil"></i> </a>
-                                        <a href="<?= URL ?>projectsManager/delete/<?= $projectManager->id ?>" title="Eliminar"
+                                        <a href="<?= URL ?>projectManagers/delete/<?= $projectManager->id ?>" title="Eliminar"
                                             onclick="return confirm('Confirmar project deletion') " class="btn btn-danger"
                                             <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ?
                                                 'disabled' : null ?>> <i class="bi bi-trash"></i></a>

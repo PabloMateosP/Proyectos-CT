@@ -83,4 +83,75 @@ class projectManagersModel extends Model
             exit();
         }
     }
+
+    # ---------------------------------------------------------------------------------
+    #  
+    #   _    _ _____  _____       _______ ______ 
+    #  | |  | |  __ \|  __ \   /\|__   __|  ____|
+    #  | |  | | |__) | |  | | /  \  | |  | |__   
+    #  | |  | |  ___/| |  | |/ /\ \ | |  |  __|  
+    #  | |__| | |    | |__| / ____ \| |  | |____ 
+    #   \____/|_|    |_____/_/    \_\_|  |______|                                        
+    #                                       
+    # --------------------------------------------------------------------------------- 
+    # Method update
+    # Update the projectManager's data
+    public function update(classProjectManagers $projectManager, $id)
+    {
+        try {
+            $sql = " 
+                    UPDATE projectManagers
+                    SET
+                        last_name=:last_name,
+                        name=:name,
+                        update_at = now()
+                    WHERE
+                        id=:id
+                    LIMIT 1";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+
+            $pdoSt->bindParam(":last_name", $projectManager->last_name, PDO::PARAM_STR, 8);
+            $pdoSt->bindParam(":name", $projectManager->name, PDO::PARAM_STR, 50);
+            $pdoSt->bindParam(":id", $id, PDO::PARAM_STR);
+
+            $pdoSt->execute();
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #    
+    #   _____  ______ _      ______ _______ ______ 
+    #  |  __ \|  ____| |    |  ____|__   __|  ____|
+    #  | |  | | |__  | |    | |__     | |  | |__   
+    #  | |  | |  __| | |    |  __|    | |  |  __|  
+    #  | |__| | |____| |____| |____   | |  | |____ 
+    #  |_____/|______|______|______|  |_|  |______|
+    #
+    # ---------------------------------------------------------------------------------
+    # Method delete
+    # Permit execute command DELETE at the table project Manager
+    public function delete($id)
+    {
+        try {
+
+            $sql = "DELETE FROM projectManager WHERE id = :id;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":id", $id, PDO::PARAM_INT);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
 }

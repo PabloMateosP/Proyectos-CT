@@ -3,7 +3,7 @@
 
 <head>
     <?php require_once ("template/partials/head.php"); ?>
-    <title>Add workingHour - Gesbank</title>
+    <title>Add workingHour</title>
 </head>
 
 <body>

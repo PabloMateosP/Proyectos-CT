@@ -311,6 +311,7 @@ class Projects extends Controller
             $this->view->render("projects/edit/index");
         }
     }
+    
     # ---------------------------------------------------------------------------------
     #
     #   _    _  _____   _____         _______  ______ 
