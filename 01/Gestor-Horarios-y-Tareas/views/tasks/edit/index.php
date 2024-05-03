@@ -18,12 +18,12 @@
             </div>
             <div class="card-body">
                 <!-- formulario  -->
-                <form action="<?= URL ?>tasks/create" method="POST">
+                <form action="<?= URL ?>tasks/update/<?= $this->id ?>" method="POST">
 
                     <!-- task -->
                     <div class="mb-3">
                         <label for="task" class="form-label">Task</label>
-                        <input type="text" class="form-control" name="task">
+                        <input type="text" class="form-control" name="task" value="<?= $this->task->task ?>">
                         <!-- Mostrar posible error -->
                         <?php if (isset($this->errores['task'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -35,7 +35,8 @@
                     <!-- description -->
                     <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
-                        <input type="text" class="form-control" name="description">
+                        <input type="text" class="form-control" name="description"
+                            value="<?= $this->task->description ?>">
                         <!-- Mostrar posible error -->
                         <?php if (isset($this->errores['description'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -50,7 +51,7 @@
                         <select class="form-select" name="id_project" id="id_project">
                             <option selected disabled>Select Project</option>
                             <?php foreach ($this->projects as $project): ?>
-                                <option value="<?= $project->id ?>">
+                                <option value="<?= $project->id ?>" <?= ($this->task->id_project == $project->id) ? "selected" : null; ?>>
                                     <?= $project->project ?> (<?= $project->description ?>) - Project Manager:
                                     <?= $project->manager_last_name ?>, <?= $project-> manager_name ?>
                                 </option>

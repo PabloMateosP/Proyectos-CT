@@ -35,6 +35,12 @@
         </li>
 
         <li class="nav-item">
+          <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
+            <a class="nav-link active" href="<?= URL ?>projectManagers/">Project Manager</a>
+          <?php endif; ?>
+        </li>
+
+        <li class="nav-item">
           <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin'])): ?>
             <a class="nav-link active" href="<?= URL ?>users/">Users</a>
           <?php endif; ?>

@@ -342,6 +342,7 @@ class WorkingHours extends Controller
             $this->view->render("workingHours/edit/index");
         }
     }
+    
     # ---------------------------------------------------------------------------------
     #
     #   _    _  _____   _____         _______  ______ 
@@ -506,7 +507,6 @@ class WorkingHours extends Controller
     # Método mostrar
     # Show all the data from the table working hours
     // ---------------------------------------------
-
     public function mostrar($param = [])
     {
         session_start();
@@ -570,7 +570,7 @@ class WorkingHours extends Controller
     # Método buscar
     # Permite buscar los registros de workingHours que cumplan con el patrón especificado en la expresión
     # de búsqueda
-    public function buscar($param = [])
+    public function search($param = [])
     {
         session_start();
         if (!isset($_SESSION['id'])) {
@@ -601,7 +601,7 @@ class WorkingHours extends Controller
     # ---------------------------------------------------------------------------------
     # Método exportar
     # Permite exportar los registros de workingHours a un archivo CSV
-    public function exportar($param = [])
+    public function export($param = [])
     {
         # Validar la sesión del usuario
         session_start();
@@ -678,8 +678,20 @@ class WorkingHours extends Controller
         readfile('php:#output');
     }
 
+
     # ---------------------------------------------------------------------------------
-    public function importar($param = [])
+    #    
+    #   _____ __  __ _____   ____  _____ _______ 
+    #  |_   _|  \/  |  __ \ / __ \|  __ \__   __|
+    #    | | | \  / | |__) | |  | | |__) | | |
+    #    | | | |\/| |  ___/| |  | |  _  /  | |
+    #   _| |_| |  | | |    | |__| | | \ \  | |
+    #  |_____|_|  |_|_|     \____/|_|  \_\ |_|
+    #
+    # ---------------------------------------------------------------------------------
+    # Method import
+    # Method to import information to table workingHours
+    public function import($param = [])
     {
         # Validar la sesión del usuario
         session_start();
@@ -692,7 +704,6 @@ class WorkingHours extends Controller
             header("location:" . URL . "workingHours");
             exit();
         }
-
 
         # Validar si se ha subido un archivo
         if (!isset($_FILES['archivos']) || $_FILES['archivos']['error'] != UPLOAD_ERR_OK) {
@@ -740,6 +751,17 @@ class WorkingHours extends Controller
     }
 
     # ---------------------------------------------------------------------------------
+    #    
+    #   _____  _____  ______ 
+    #  |  __ \|  __ \|  ____|
+    #  | |__) | |  | | |__   
+    #  |  ___/| |  | |  __|  
+    #  | |    | |__| | |     
+    #  |_|    |_____/|_|     
+    #
+    # ---------------------------------------------------------------------------------
+    # Method pdf 
+    # Method to transfer information on hours worked to pdf
     function pdf($param = [])
     {
         # Validar la sesión del usuario

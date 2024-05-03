@@ -9,6 +9,7 @@ require_once 'libs/view.php';
 require_once 'class/class.employee.php';
 require_once 'class/class.workinghours.php';
 require_once 'class/class.project.php';
+require_once 'class/class.projectManagers.php';
 require_once 'class/class.task.php';
 require_once 'class/class.user.php';
 
