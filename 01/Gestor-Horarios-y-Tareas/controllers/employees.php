@@ -43,7 +43,7 @@ class Employees extends Controller
             header("location:" . URL . "login");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
-            
+
             $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "employees");
 
@@ -239,7 +239,7 @@ class Employees extends Controller
 
     # Method edit. 
     # Show an form that allow to change the data of an employee
-    public function editar($param = [])
+    public function edit($param = [])
     {
         session_start();
 
@@ -262,8 +262,6 @@ class Employees extends Controller
             $this->view->title = "Form edit employee";
             $this->view->employee = $this->model->read($id);
 
-            $this->view->employee = $this->model->getemployee($this->view->id);
-
             # We check for errors -> this variable is created when throwing a validation error
 
             if (isset($_SESSION['error'])) {
@@ -284,7 +282,8 @@ class Employees extends Controller
 
             }
 
-            $this->view->render("employees/editar/index");
+            $this->view->render("employees/edit/index");
+
         }
     }
 
@@ -362,14 +361,16 @@ class Employees extends Controller
             # Phone: we validate 9 numbers phone and unique 
             if (strcmp($employee->phone, $employee_orig->phone) !== 0) {
                 $options_tlf = [
-                    'options_tlf' => [
+                    'options' => [
                         'regexp' => '/^\d{9}$/'
                     ]
                 ];
-                if (!filter_var($phone, FILTER_VALIDATE_REGEXP, $options_tlf)) {
+                
+                if (!filter_var($employee->phone, FILTER_VALIDATE_REGEXP, $options_tlf)) {
                     $errores['telefono'] = 'The format entered is incorrect';
                 }
             }
+
 
             # City
             if (strcmp($employee->city, $employee_orig->city) !== 0) {
@@ -423,7 +424,7 @@ class Employees extends Controller
                 $_SESSION['errores'] = $errores;
 
                 # Redirect to the page edit 
-                header('location:' . URL . 'employees/editar/' . $id);
+                header('location:' . URL . 'employees/edit/' . $id);
 
             } else {
 
@@ -514,7 +515,7 @@ class Employees extends Controller
             $_SESSION['mensaje'] = "User must authenticated";
             header("location:" . URL . "login");
             exit();  # Terminar la ejecución para evitar procesar la exportación sin autenticación
-        } 
+        }
 
         # Obtener datos de employees
         $employees = $this->model->get()->fetchAll(PDO::FETCH_ASSOC);

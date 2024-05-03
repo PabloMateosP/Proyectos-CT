@@ -151,58 +151,27 @@ class employeesModel extends Model
         }
     }
 
-    # Método getemployee
+    # Método read
     # Obtiene los detalles de un employee a partir del id
-    public function getemployee($id)
-    {
-        try {
-            $sql = " 
-                    SELECT     
-                        id,
-                        last_name,
-                        name,
-                        telefono,
-                        ciudad,
-                        dni,
-                        email
-                    FROM  
-                        employees  
-                    WHERE
-                        id = :id";
-
-            $conexion = $this->db->connect();
-            $pdoSt = $conexion->prepare($sql);
-            $pdoSt->bindParam(":id", $id, PDO::PARAM_INT);
-            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
-            $pdoSt->execute();
-            return $pdoSt->fetch();
-
-        } catch (PDOException $e) {
-            require_once ("template/partials/errorDB.php");
-            exit();
-        }
-    }
-
     public function read($id)
     {
 
         try {
-            $sql = " SELECT
-            id,
-            last_name, 
-            name,
-            telefono,
-            ciudad,
-            dni,
-            email
-        FROM 
-            employees
-        WHERE id =  :id;
-                ";
+            $sql = "SELECT
+                        id,
+                        last_name, 
+                        name,
+                        phone,
+                        city,
+                        dni,
+                        email,
+                        total_hours
+                    FROM 
+                        employees
+                    WHERE id =  :id;
+                            ";
 
-            # Conectar con la base de datos
             $conexion = $this->db->connect();
-
 
             $pdoSt = $conexion->prepare($sql);
 
@@ -219,8 +188,19 @@ class employeesModel extends Model
 
     }
 
-    # Método update
-    # Actuliza los detalles de un employee una vez editados en el formuliario
+
+    # ---------------------------------------------------------------------------------
+    #
+    #   _    _  _____   _____         _______  ______ 
+    #  | |  | ||  __ \ |  __ \    /\ |__   __||  ____|
+    #  | |  | || |__) || |  | |  /  \   | |   | |__   
+    #  | |  | ||  ___/ | |  | | / /\ \  | |   |  __|  
+    #  | |__| || |     | |__| |/ ____ \ | |   | |____ 
+    #   \____/ |_|     |_____//_/    \_\|_|   |______|
+    #                                               
+    # ---------------------------------------------------------------------------------
+    # Method update
+    # Update an employee's details once edited in the form
     public function update(classemployee $employee, $id)
     {
         try {
@@ -229,10 +209,11 @@ class employeesModel extends Model
                     SET
                         last_name=:last_name,
                         name=:name,
-                        telefono=:telefono,
-                        ciudad=:ciudad,
+                        phone=:phone,
+                        city=:city,
                         dni=:dni,
                         email=:email,
+                        total_hours=:total_hours,
                         update_at = now()
                     WHERE
                         id=:id
@@ -240,26 +221,29 @@ class employeesModel extends Model
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
-            //Vinculamos los parámetros
-            $pdoSt->bindParam(":name", $employee->name, PDO::PARAM_STR, 30);
-            $pdoSt->bindParam(":last_name", $employee->last_name, PDO::PARAM_STR, 50);
-            $pdoSt->bindParam(":email", $employee->email, PDO::PARAM_STR, 50);
-            $pdoSt->bindParam(":telefono", $employee->telefono, PDO::PARAM_STR, 9);
-            $pdoSt->bindParam(":ciudad", $employee->ciudad, PDO::PARAM_STR, 30);
+
+            $pdoSt->bindParam(":name", $employee->name, PDO::PARAM_STR, 20);
+            $pdoSt->bindParam(":last_name", $employee->last_name, PDO::PARAM_STR, 45);
+            $pdoSt->bindParam(":email", $employee->email, PDO::PARAM_STR, 45);
+            $pdoSt->bindParam(":phone", $employee->phone, PDO::PARAM_INT, 9);
+            $pdoSt->bindParam(":city", $employee->city, PDO::PARAM_STR, 20);
+            $pdoSt->bindParam(":total_hours", $employee->total_hours, PDO::PARAM_STR, 20);
             $pdoSt->bindParam(":dni", $employee->dni, PDO::PARAM_STR, 9);
             $pdoSt->bindParam(":id", $id, PDO::PARAM_INT);
 
             $pdoSt->execute();
 
-        } catch (PDOException $error) {
+        } catch (PDOException $e) {
+
             require_once ("template/partials/errorDB.php");
             exit();
+
         }
     }
 
-    # Método update
-    # Permite ordenar la tabla de employee por cualquiera de las columnas del main
-    # El criterio de ordenación se establec mediante el número de la columna del select
+    # Method order
+    # Allows you to sort the employee table by any of the main columns
+    # The sort order was established by the number of the select column
     public function order(int $criterio)
     {
         try {

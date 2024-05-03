@@ -13,32 +13,30 @@
         <li class="nav-item">
           <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])): ?>
             <a class="nav-link active" href="<?= URL ?>employees/">Employees</a>
-          <?php else: ?>
-
           <?php endif; ?>
         </li>
 
         <li class="nav-item">
           <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['all'])): ?>
             <a class="nav-link active" href="<?= URL ?>workingHours/">Working Hours</a>
-          <?php else: ?>
-
           <?php endif; ?>
         </li>
 
         <li class="nav-item">
           <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
             <a class="nav-link active" href="<?= URL ?>projects/">Projects</a>
-          <?php else: ?>
+          <?php endif; ?>
+        </li>
 
+        <li class="nav-item">
+          <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
+            <a class="nav-link active" href="<?= URL ?>tasks/">Tasks</a>
           <?php endif; ?>
         </li>
 
         <li class="nav-item">
           <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin'])): ?>
             <a class="nav-link active" href="<?= URL ?>users/">Users</a>
-          <?php else: ?>
-
           <?php endif; ?>
         </li>
       </ul>

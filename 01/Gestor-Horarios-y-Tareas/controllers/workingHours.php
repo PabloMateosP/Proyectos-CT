@@ -18,7 +18,7 @@ class WorkingHours extends Controller
         # Start or continue the session
         session_start();
         if (!isset($_SESSION['id'])) {
-            $_SESSION['notify'] = "Usuario sin autentificar";
+            $_SESSION['notify'] = "Unauthenticated user";
 
             header("location:" . URL . "login");
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {

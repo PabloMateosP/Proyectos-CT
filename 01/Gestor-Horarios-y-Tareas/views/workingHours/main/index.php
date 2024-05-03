@@ -36,7 +36,7 @@
                             <th>Description (Task)</th>
                             <th>Date Worked</th>
                             <th>Duration</th>
-                            <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['employee'])): ?>
+                            <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['emp_admin'])): ?>
                                 <th>Acciones</th>
                             <?php else: ?>
                                      
@@ -67,11 +67,11 @@
                                 <td class="text-center">
                                     <?= $workingHour->duration ?>
                                 </td>
-                                <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['employee'])): ?>   
+                                <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['emp_admin'])): ?>   
                                     <td style="display:flex; gap: 5px;">
-                                       <a href="<?= URL ?>workingHours/edit/<?= $workingHour->id ?>" title="edit" class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['employee'])) ?
+                                       <a href="<?= URL ?>workingHours/edit/<?= $workingHour->id ?>" title="edit" class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['emp_admin'])) ?
                                             'disabled' : null ?>"> <i class="bi bi-pencil"></i> </a>
-                                        <a href="<?= URL ?>workingHours/delete/<?= $workingHour->id ?>" title="Eliminar" onclick="return confirm('Confirm work hour deletion') " class="btn btn-danger" <?= (!in_array($_SESSION['id_rol'], $GLOBALS['employee'])) ?
+                                        <a href="<?= URL ?>workingHours/delete/<?= $workingHour->id ?>" title="Eliminar" onclick="return confirm('Confirm work hour deletion') " class="btn btn-danger" <?= (!in_array($_SESSION['id_rol'], $GLOBALS['emp_admin'])) ?
                                             'disabled' : null ?>> <i class="bi bi-trash"></i></a> 
                                     </td>
                                 <?php else: ?>

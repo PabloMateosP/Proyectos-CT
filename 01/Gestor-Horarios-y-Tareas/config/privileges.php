@@ -27,4 +27,7 @@ $GLOBALS['exceptEmp'] = [1,2,3];
 
 // Variable for all 
 $GLOBALS['all'] = [1,2,3,4];
+
+// Variable for employee and admin 
+$GLOBALS['emp_admin'] = [1,4];
 # ------------------------------
