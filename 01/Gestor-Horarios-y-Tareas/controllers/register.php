@@ -143,9 +143,9 @@ class Register extends Controller
             // </ul>";
 
             // // Configuración del correo con PHPMailer
-            // $mail->setFrom($remitente, 'Pablo');
+            // $mail->setFrom($remitente, '');
             // $mail->addAddress($destinatario, $name);
-            // $mail->addReplyTo($remitente, 'Pablo Mateos');
+            // $mail->addReplyTo($remitente, '');
 
             // // Configuración del contenido del correo
             // $mail->isHTML(true);

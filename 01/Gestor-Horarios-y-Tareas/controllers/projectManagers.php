@@ -90,6 +90,8 @@ class ProjectManagers extends Controller
 
             $this->view->title = "Form new Project Manager";
 
+            $this->view->projects = $this->model->get_projects();
+
             $this->view->render("projectManagers/new/index");
         }
     }
@@ -155,8 +157,9 @@ class ProjectManagers extends Controller
             }
 
             # id_project
+            # If the project Manager hasn't got any project assigned the id_project will be null
             if (empty($id_project)) {
-                $errores['id_project'] = 'The field id_project is required';
+                $id_project = null;
             } else if (strlen($id_project) > 10) {
                 $errores['id_project'] = 'The field id_project is too long';
             }

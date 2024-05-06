@@ -95,7 +95,7 @@ class Projects extends Controller
                 # If these variables exist when there are no errors, we will enter the error blocks in the conditionals
             }
 
-            $this->view->title = "Form new working hour";
+            $this->view->title = "Form new Project";
 
             $this->view->project_managers = $this->model->get_projectManagers();
             $this->view->customers = $this->model->get_customers();
@@ -168,16 +168,16 @@ class Projects extends Controller
                 $errores['description'] = 'The field description is too long';
             }
 
-            # id_ManagerManager
+            # id_projectManager
             if (empty($id_Manager)) {
-                $errores['id_project_manager'] = 'The field project Manager is required';
+                $id_Manager = null;
             } else if (strlen($id_Manager) > 10) {
                 $errores['id_project_manager'] = 'The field project Manager is too long';
             }
 
             # Id_customer
             if (empty($id_customer)) {
-                $errores['id_customer'] = 'The field customer is required';
+                $id_customer = null;
             } else if (strlen($id_customer) > 10) {
                 $errores['id_customer'] = 'Field customer too long';
             }
@@ -396,7 +396,7 @@ class Projects extends Controller
             if (strcmp($project->id_projectManager, $project_orig->id_projectManager) !== 0) {
 
                 if (empty($id_Manager)) {
-                    $errores['id_project_manager'] = 'The field id_Manager is required ';
+                    $id_Manager = null;
                 } else if (strlen($id_Manager) > 10) {
                     $errores['id_project_manager'] = 'The field id_Manager is too long';
                 }
@@ -406,7 +406,7 @@ class Projects extends Controller
             if (strcmp($project->id_customer, $project_orig->id_customer) !== 0) {
 
                 if (empty($id_customer)) {
-                    $errores['id_customer'] = 'The field id_customer is required';
+                    $id_customer = null;
                 } else if (strlen($id_customer) > 10) {
                     $errores['id_customer'] = 'The field id_customer is too long';
                 }
@@ -439,7 +439,7 @@ class Projects extends Controller
                 $this->model->update($project, $id);
 
                 # Message
-                $_SESSION['mensaje'] = "project actualizado correctamente";
+                $_SESSION['mensaje'] = "project update correctly";
 
                 # Redirect to Working Hours main
                 header('location:' . URL . 'projects');

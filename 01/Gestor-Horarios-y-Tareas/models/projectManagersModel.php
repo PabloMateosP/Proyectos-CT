@@ -19,21 +19,57 @@ class projectManagersModel extends Model
     {
         try {
             $sql = "
-            SELECT 
-                pM.id,
-                concat_ws(', ', pM.last_name, pM.name) pManager_name,
-                pr.project
-            FROM 
-                projectManager pM
-            JOIN
-                projects pr ON pM.id_project = pr.id
-            ORDER by pM.id asc;";
+        SELECT 
+            pM.id,
+            concat_ws(', ', pM.last_name, pM.name) pManager_name,
+            pr.project
+        FROM 
+            projectManager pM
+        LEFT JOIN
+            projects pr ON pM.id_project = pr.id
+        ORDER by pM.id asc;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->setFetchMode(PDO::FETCH_OBJ);
             $pdoSt->execute();
             return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    # ---------------------------------------------------------------------------------  
+    #  
+    #    _____ ______ _______   _____  _____   ____       _ ______ _____ _______ _____ 
+    #   / ____|  ____|__   __| |  __ \|  __ \ / __ \     | |  ____/ ____|__   __/ ____|
+    #  | |  __| |__     | |    | |__) | |__) | |  | |    | | |__ | |       | | | (___  
+    #  | | |_ |  __|    | |    |  ___/|  _  /| |  | |_   | |  __|| |       | |  \___ \ 
+    #  | |__| | |____   | |    | |    | | \ \| |__| | |__| | |___| |____   | |  ____) |
+    #   \_____|______|  |_|    |_|    |_|  \_\\____/ \____/|______\_____|  |_| |_____/ 
+    #
+    # ---------------------------------------------------------------------------------
+    # function get_projects 
+    # function to get the information about all the projects
+    public function get_projects()
+    {
+        try {
+            $sql = "SELECT 
+                        pr.id,
+                        pr.project,
+                        pr.description AS 'desc'
+                    FROM 
+                        projects pr
+                    order by pr.id";
+
+            $conexion = $this->db->connect();
+            $result = $conexion->prepare($sql);
+            $result->setFetchMode(PDO::FETCH_OBJ);
+            $result->execute();
+
+            return $result->fetchAll();
 
         } catch (PDOException $e) {
             require_once ("template/partials/errorDB.php");

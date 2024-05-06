@@ -2,26 +2,26 @@
 class RegisterModel extends Model
 {
 
-    # Valida el nombre de usuario
+    # Validate user name
     public function validaName($username)
     {
-        if ((strlen($username) < 5) || (strlen($username) > 50)) {
+        if ((strlen($username) < 4) || (strlen($username) > 50)) {
             return false;
         }
         return true;
 
     }
 
-    #Validar password
+    #Validate password
     public function validatePass($pass)
     {
-        if ((strlen($pass) < 5) || (strlen($pass) > 50)) {
+        if ((strlen($pass) < 4) || (strlen($pass) > 50)) {
             return false;
         }
         return true;
     }
 
-    #Validar email unique
+    #Validate unique email
     public function validateEmailUnique($email)
     {
 
@@ -68,15 +68,11 @@ class RegisterModel extends Model
             $stmt->bindParam(':email', $email, PDO::PARAM_STR, 50);
             $stmt->bindParam(':pass', $password_encriptado, PDO::PARAM_STR, 60);
 
-
-
             $stmt->execute();
-
-
 
             # Asignamos rol de registrado
             // Rol que asignaremos por defecto
-            $role_id = 3;
+            $role_id = 4;
             $insertarsql = "INSERT INTO roles_users VALUES (
                 null,
                 :user_id,

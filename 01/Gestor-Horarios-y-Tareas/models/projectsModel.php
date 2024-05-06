@@ -28,9 +28,9 @@ class projectsModel extends Model
                     pr.finish_date
                 FROM 
                     projects pr
-                JOIN 
+                LEFT JOIN 
                     projectManager prM ON pr.id_projectManager = prM.id
-                JOIN 
+                LEFT JOIN 
                     customer c ON pr.id_customer = c.id
                 ORDER by pr.id asc;";
 
@@ -246,9 +246,9 @@ class projectsModel extends Model
                     pr.finish_date
                 FROM 
                     projects pr
-                JOIN 
+                LEFT JOIN 
                     projectManager prM ON pr.id_projectManager = prM.id
-                JOIN 
+                LEFT JOIN 
                     customer c ON pr.id_customer = c.id
                 ORDER by :criterio;";
 

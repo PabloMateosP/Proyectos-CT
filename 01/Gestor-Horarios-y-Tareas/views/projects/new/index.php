@@ -14,7 +14,7 @@
         <!-- card that contains the form -->
         <div class="card">
             <div class="card-header">
-                <?php require_once "views/workingHours/partials/header.php"; ?>
+                <?php require_once "views/projects/partials/header.php"; ?>
             </div>
             <div class="card-body">
                 <!-- formulario  -->

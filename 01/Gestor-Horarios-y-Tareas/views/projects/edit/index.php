@@ -51,6 +51,7 @@
                         <label for="id_project_manager" class="form-label">Project Manager</label>
                         <select class="form-select" name="id_project_manager" id="id_project_manager">
                             <option selected disabled>Select project manager</option>
+                            <option value="null"></option>
                             <?php foreach ($this->project_managers as $project_manager): ?>
                                 <option value="<?= $project_manager->id ?>"
                                     <?= ($this->project_->id_projectManager == $project_manager->id) ? "selected" : null; ?>>
@@ -71,6 +72,7 @@
                         <label for="id_customer" class="form-label">Customer</label>
                         <select class="form-select" name="id_customer" id="id_customer">
                             <option selected disabled>Select project </option>
+                            <option value="null"></option>
                             <?php foreach ($this->customers as $customer): ?>
                                 <option value="<?= $customer->id ?>" <?= ($this->project_->id_customer == $customer->id) ? "selected" : null; ?>>
                                     <?= $customer->name ?>
@@ -100,9 +102,9 @@
 
                     <!-- botones de acción -->
                     <div class="mb-3">
-                        <a class="btn btn-secondary" href="<?= URL ?>projects/" role="button">Cancelar</a>
-                        <button type="reset" class="btn btn-danger">Borrar</button>
-                        <button type="submit" class="btn btn-primary">Crear</button>
+                        <a class="btn btn-secondary" href="<?= URL ?>projects/" role="button">Cancel</a>
+                        <button type="reset" class="btn btn-danger">Clear</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
                     </div>
                 </form>
             </div>

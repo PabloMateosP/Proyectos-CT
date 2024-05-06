@@ -44,7 +44,7 @@
                 <input class="form-control me-2" type="search" placeholder="Buscar..." aria-label="Search"
                     name="expresion">
                 <button
-                    class="btn btn-outline-secondary <?= in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']) ? 'null' : 'disabled' ?>"
+                    class="btn btn-outline-secondary <?= in_array($_SESSION['id_rol'], $GLOBALS['all']) ? 'null' : 'disabled' ?>"
                     type="submit">Buscar</button>
             </form>
         </div>

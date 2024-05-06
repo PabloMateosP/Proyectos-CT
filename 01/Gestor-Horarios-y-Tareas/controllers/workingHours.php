@@ -342,7 +342,7 @@ class WorkingHours extends Controller
             $this->view->render("workingHours/edit/index");
         }
     }
-    
+
     # ---------------------------------------------------------------------------------
     #
     #   _    _  _____   _____         _______  ______ 
@@ -578,13 +578,23 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
             $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "workingHours");
         } else {
             $expresion = $_GET["expresion"];
             $this->view->title = "Tabla workingHours";
-            $this->view->workingHours = $this->model->filter($expresion);
+
+            if ((!in_array($_SESSION['id_rol'], $GLOBALS['employee']))) {
+
+                $this->view->workingHours = $this->model->filterEmp($expresion);
+
+            } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
+
+                $this->view->workingHours = $this->model->filter($expresion);
+
+            }
+
             $this->view->render("workingHours/main/index");
         }
     }

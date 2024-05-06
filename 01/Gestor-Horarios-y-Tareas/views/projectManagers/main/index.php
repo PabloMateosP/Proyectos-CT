@@ -29,7 +29,8 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Id
+                            <th></th>
+                            <th>Id</th>
                             <th>Project Manager</th>
                             <th>Project</th>
                             <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
@@ -42,6 +43,7 @@
                     <tbody>
                         <?php foreach ($this->projectManagers as $projectManager): ?>
                             <tr>
+                                <td></td>
                                 <td>
                                     <?= $projectManager->id ?>
                                 </td>
@@ -67,7 +69,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="4">Nº:
+                            <td colspan="5">Nº:
                                 <?= $this->projectManagers->rowCount() ?>
                             </td>
                         </tr>

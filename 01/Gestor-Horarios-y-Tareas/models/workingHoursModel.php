@@ -206,130 +206,6 @@ class workingHoursModel extends Model
 
     # ---------------------------------------------------------------------------------
     #    
-    #   _    _ _____  _____       _______ ______   _______ ____ _______       _        _    _  ____  _    _ _____   _____ 
-    #  | |  | |  __ \|  __ \   /\|__   __|  ____| |__   __/ __ \__   __|/\   | |      | |  | |/ __ \| |  | |  __ \ / ____|
-    #  | |  | | |__) | |  | | /  \  | |  | |__       | | | |  | | | |  /  \  | |      | |__| | |  | | |  | | |__) | (___  
-    #  | |  | |  ___/| |  | |/ /\ \ | |  |  __|      | | | |  | | | | / /\ \ | |      |  __  | |  | | |  | |  _  / \___ \ 
-    #  | |__| | |    | |__| / ____ \| |  | |____     | | | |__| | | |/ ____ \| |____  | |  | | |__| | |__| | | \ \ ____) |
-    #   \____/|_|    |_____/_/    \_\_|  |______|    |_|  \____/  |_/_/    \_\______| |_|  |_|\____/ \____/|_|  \_\_____/ 
-    #                                                                                                                                                                                                                                       
-    # ---------------------------------------------------------------------------------
-    # Método update para las horas totales del usuario
-    # Permite actualizar las horas totales de un usuario mediante la suma de la duración de las horas laborales 
-    #
-    public function update_total_hours($id)
-    {
-        try {
-            $sql = "
-                UPDATE employees e
-                SET e.total_hours = (
-                    SELECT SUM(wh.duration)
-                    FROM working_hours wh
-                    WHERE wh.id_employee = e.id
-                );
-            ";
-        } catch (PDOException $error) {
-            require_once ("template/partials/errorDB.php");
-            exit();
-        }
-    }
-
-    # ---------------------------------------------------------------------------------
-    #    
-    #    _____ _____  ______       _______ ______ 
-    #   / ____|  __ \|  ____|   /\|__   __|  ____|
-    #  | |    | |__) | |__     /  \  | |  | |__   
-    #  | |    |  _  /|  __|   / /\ \ | |  |  __|  
-    #  | |____| | \ \| |____ / ____ \| |  | |____ 
-    #   \_____|_|  \_\______/_/    \_\_|  |______|
-    #
-    # ---------------------------------------------------------------------------------
-    # Method create
-    # Allow to create a new working hour
-    public function create(classWorkingHours $workingHours)
-    {
-        try {
-            $sql = " INSERT INTO 
-                        working_hours 
-                        (
-                            id_employee, 
-                            id_time_code, 
-                            id_work_order, 
-                            id_project, 
-                            id_task, 
-                            description,
-                            duration,
-                            date_worked
-                        ) 
-                        VALUES 
-                        ( 
-                            :id_employee, 
-                            :id_time_code, 
-                            :id_work_order, 
-                            :id_project, 
-                            :id_task, 
-                            :description_,
-                            :duration,
-                            :date_worked
-                        )";
-
-            $conexion = $this->db->connect();
-            $pdoSt = $conexion->prepare($sql);
-
-            // Link the parameters
-            //-----------------------------------------------------------------------------------
-            $pdoSt->bindParam(":id_employee", $workingHours->id_employee, PDO::PARAM_STR, 10);
-            $pdoSt->bindParam(":id_time_code", $workingHours->id_time_code, PDO::PARAM_STR, 10);
-            $pdoSt->bindParam(":id_work_order", $workingHours->id_work_order, PDO::PARAM_STR, 10);
-            $pdoSt->bindParam(":id_project", $workingHours->id_project, PDO::PARAM_STR, 10);
-            $pdoSt->bindParam(":id_task", $workingHours->id_task, PDO::PARAM_STR, 10);
-            $pdoSt->bindParam(":description_", $workingHours->description, PDO::PARAM_STR, 50);
-            $pdoSt->bindParam(":duration", $workingHours->duration, PDO::PARAM_INT, 2);
-            $pdoSt->bindParam(":date_worked", $workingHours->date_worked, PDO::PARAM_STR, 20);
-
-            // execute
-            $pdoSt->execute();
-
-        } catch (PDOException $e) {
-            require_once ("template/partials/errorDB.php");
-            exit();
-        }
-    }
-
-    # ---------------------------------------------------------------------------------
-    #    
-    #    _____ _    _ __  __   _______ _    _  ____  _    _ _____   _____  __          ___    _  ____  _    _ _____   _____ 
-    #   / ____| |  | |  \/  | |__   __| |  | |/ __ \| |  | |  __ \ / ____| \ \        / / |  | |/ __ \| |  | |  __ \ / ____|
-    #  | (___ | |  | | \  / |    | |  | |__| | |  | | |  | | |__) | (___    \ \  /\  / /| |__| | |  | | |  | | |__) | (___  
-    #   \___ \| |  | | |\/| |    | |  |  __  | |  | | |  | |  _  / \___ \    \ \/  \/ / |  __  | |  | | |  | |  _  / \___ \ 
-    #   ____) | |__| | |  | |    | |  | |  | | |__| | |__| | | \ \ ____) |    \  /\  /  | |  | | |__| | |__| | | \ \ ____) |
-    #  |_____/ \____/|_|  |_|    |_|  |_|  |_|\____/ \____/|_|  \_\_____/      \/  \/   |_|  |_|\____/ \____/|_|  \_\_____/                                                                                                                   
-    #
-    # ---------------------------------------------------------------------------------
-    # sumTHoursWHours
-    # Sum the new working hour plus the total hours 
-    public function sumTHoursWHour($duration, $employee_id)
-    {
-        try {
-            // Consulta SQL para actualizar las total_hours del empleado sumando la duración de la nueva working hour
-            $sql = "UPDATE employees SET total_hours = total_hours + :duration WHERE id = :employee_id";
-
-            // Preparar la consulta
-            $pdoSt = $this->db->connect()->prepare($sql);
-
-            // Vincular los parámetros
-            $pdoSt->bindParam(":duration", $duration, PDO::PARAM_INT);
-            $pdoSt->bindParam(":employee_id", $employee_id, PDO::PARAM_INT);
-
-            // Ejecutar la consulta
-            $pdoSt->execute();
-        } catch (PDOException $e) {
-            require_once ("template/partialS/errorDB.php");
-        }
-    }
-
-    # ---------------------------------------------------------------------------------
-    #    
     #   _____ ______ _______  __          ___    _  ____  _    _ _____  
     #   / ____|  ____|__   __| \ \        / / |  | |/ __ \| |  | |  __ \ 
     #  | |  __| |__     | |     \ \  /\  / /| |__| | |  | | |  | | |__) |
@@ -344,7 +220,7 @@ class workingHoursModel extends Model
     {
         try {
             $sql = "SELECT id, total_hours FROM employees WHERE id = :user_id";
-            
+
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->bindParam(':user_id', $id);
@@ -491,6 +367,130 @@ class workingHoursModel extends Model
         } catch (PDOException $e) {
             require_once ("template/partials/errorDB.php");
             exit();
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #    
+    #   _    _ _____  _____       _______ ______   _______ ____ _______       _        _    _  ____  _    _ _____   _____ 
+    #  | |  | |  __ \|  __ \   /\|__   __|  ____| |__   __/ __ \__   __|/\   | |      | |  | |/ __ \| |  | |  __ \ / ____|
+    #  | |  | | |__) | |  | | /  \  | |  | |__       | | | |  | | | |  /  \  | |      | |__| | |  | | |  | | |__) | (___  
+    #  | |  | |  ___/| |  | |/ /\ \ | |  |  __|      | | | |  | | | | / /\ \ | |      |  __  | |  | | |  | |  _  / \___ \ 
+    #  | |__| | |    | |__| / ____ \| |  | |____     | | | |__| | | |/ ____ \| |____  | |  | | |__| | |__| | | \ \ ____) |
+    #   \____/|_|    |_____/_/    \_\_|  |______|    |_|  \____/  |_/_/    \_\______| |_|  |_|\____/ \____/|_|  \_\_____/ 
+    #                                                                                                                                                                                                                                       
+    # ---------------------------------------------------------------------------------
+    # Método update para las horas totales del usuario
+    # Permite actualizar las horas totales de un usuario mediante la suma de la duración de las horas laborales 
+    #
+    public function update_total_hours($id)
+    {
+        try {
+            $sql = "
+                UPDATE employees e
+                SET e.total_hours = (
+                    SELECT SUM(wh.duration)
+                    FROM working_hours wh
+                    WHERE wh.id_employee = e.id
+                );
+            ";
+        } catch (PDOException $error) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #    
+    #    _____ _____  ______       _______ ______ 
+    #   / ____|  __ \|  ____|   /\|__   __|  ____|
+    #  | |    | |__) | |__     /  \  | |  | |__   
+    #  | |    |  _  /|  __|   / /\ \ | |  |  __|  
+    #  | |____| | \ \| |____ / ____ \| |  | |____ 
+    #   \_____|_|  \_\______/_/    \_\_|  |______|
+    #
+    # ---------------------------------------------------------------------------------
+    # Method create
+    # Allow to create a new working hour
+    public function create(classWorkingHours $workingHours)
+    {
+        try {
+            $sql = " INSERT INTO 
+                        working_hours 
+                        (
+                            id_employee, 
+                            id_time_code, 
+                            id_work_order, 
+                            id_project, 
+                            id_task, 
+                            description,
+                            duration,
+                            date_worked
+                        ) 
+                        VALUES 
+                        ( 
+                            :id_employee, 
+                            :id_time_code, 
+                            :id_work_order, 
+                            :id_project, 
+                            :id_task, 
+                            :description_,
+                            :duration,
+                            :date_worked
+                        )";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+
+            // Link the parameters
+            //-----------------------------------------------------------------------------------
+            $pdoSt->bindParam(":id_employee", $workingHours->id_employee, PDO::PARAM_STR, 10);
+            $pdoSt->bindParam(":id_time_code", $workingHours->id_time_code, PDO::PARAM_STR, 10);
+            $pdoSt->bindParam(":id_work_order", $workingHours->id_work_order, PDO::PARAM_STR, 10);
+            $pdoSt->bindParam(":id_project", $workingHours->id_project, PDO::PARAM_STR, 10);
+            $pdoSt->bindParam(":id_task", $workingHours->id_task, PDO::PARAM_STR, 10);
+            $pdoSt->bindParam(":description_", $workingHours->description, PDO::PARAM_STR, 50);
+            $pdoSt->bindParam(":duration", $workingHours->duration, PDO::PARAM_INT, 2);
+            $pdoSt->bindParam(":date_worked", $workingHours->date_worked, PDO::PARAM_STR, 20);
+
+            // execute
+            $pdoSt->execute();
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #    
+    #    _____ _    _ __  __   _______ _    _  ____  _    _ _____   _____  __          ___    _  ____  _    _ _____   _____ 
+    #   / ____| |  | |  \/  | |__   __| |  | |/ __ \| |  | |  __ \ / ____| \ \        / / |  | |/ __ \| |  | |  __ \ / ____|
+    #  | (___ | |  | | \  / |    | |  | |__| | |  | | |  | | |__) | (___    \ \  /\  / /| |__| | |  | | |  | | |__) | (___  
+    #   \___ \| |  | | |\/| |    | |  |  __  | |  | | |  | |  _  / \___ \    \ \/  \/ / |  __  | |  | | |  | |  _  / \___ \ 
+    #   ____) | |__| | |  | |    | |  | |  | | |__| | |__| | | \ \ ____) |    \  /\  /  | |  | | |__| | |__| | | \ \ ____) |
+    #  |_____/ \____/|_|  |_|    |_|  |_|  |_|\____/ \____/|_|  \_\_____/      \/  \/   |_|  |_|\____/ \____/|_|  \_\_____/                                                                                                                   
+    #
+    # ---------------------------------------------------------------------------------
+    # sumTHoursWHours
+    # Sum the new working hour plus the total hours 
+    public function sumTHoursWHour($duration, $employee_id)
+    {
+        try {
+            // Consulta SQL para actualizar las total_hours del empleado sumando la duración de la nueva working hour
+            $sql = "UPDATE employees SET total_hours = total_hours + :duration WHERE id = :employee_id";
+
+            // Preparar la consulta
+            $pdoSt = $this->db->connect()->prepare($sql);
+
+            // Vincular los parámetros
+            $pdoSt->bindParam(":duration", $duration, PDO::PARAM_INT);
+            $pdoSt->bindParam(":employee_id", $employee_id, PDO::PARAM_INT);
+
+            // Ejecutar la consulta
+            $pdoSt->execute();
+        } catch (PDOException $e) {
+            require_once ("template/partialS/errorDB.php");
         }
     }
 
@@ -710,6 +710,78 @@ class workingHoursModel extends Model
     # Método filter
     # Permite filtar la tabla workingHourss a partir de una expresión de búsqueda
     public function filter($expresion)
+    {
+        try {
+
+            $sql = "
+                    SELECT 
+                        wh.id, 
+                        wh.id_employee, 
+                        concat_ws(', ', emp.last_name, emp.name) AS employee_name, 
+                        tc.time_code, 
+                        p.project AS project_name,  
+                        t.description AS task_description,  
+                        wo.description AS work_order_description, 
+                        wh.date_worked, 
+                        wh.duration 
+                    FROM 
+                        working_hours wh
+                    JOIN 
+                        employees emp ON wh.id_employee = emp.id
+                    JOIN 
+                        time_codes tc ON wh.id_time_code = tc.id
+                    JOIN 
+                        projects p ON wh.id_project = p.id
+                    JOIN 
+                        tasks t ON wh.id_task = t.id
+                    JOIN 
+                        work_orders wo ON wh.id_work_order = wo.id
+                    WHERE 
+                        concat_ws(  
+                            ' ',
+                            emp.last_name,
+                            emp.name,
+                            tc.time_code,
+                            t.description,
+                            wo.description,
+                            wh.date_worked,
+                            wh.duration
+                            )
+                        LIKE 
+                            :expresion
+                    
+                    ORDER BY id ASC";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+
+            # enlazamos parámetros con variable
+            $expresion = "%" . $expresion . "%";
+            $pdoSt->bindValue(':expresion', $expresion, PDO::PARAM_STR);
+
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #    
+    #   ______ _____ _   _______ ______ _____  
+    #  |  ____|_   _| | |__   __|  ____|  __ \ 
+    #  | |__    | | | |    | |  | |__  | |__) |
+    #  |  __|   | | | |    | |  |  __| |  _  / 
+    #  | |     _| |_| |____| |  | |____| | \ \ 
+    #  |_|    |_____|______|_|  |______|_|  \_\
+    #
+    # ---------------------------------------------------------------------------------
+    # Method filter
+    # Allow an employee to search in the table working hour 
+    public function filterEmp($expresion)
     {
         try {
 

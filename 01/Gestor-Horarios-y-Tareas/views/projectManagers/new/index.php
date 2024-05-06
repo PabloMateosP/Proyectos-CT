@@ -44,6 +44,25 @@
                         <?php endif; ?>
                     </div>
 
+                    <!-- Id_project -->
+                    <div class="mb-3">
+                        <label for="id_project" class="form-label">Project</label>
+                        <select class="form-select" name="id_project" id="id_project">
+                            <option selected disabled>Select project </option>
+                            <?php foreach ($this->projects as $project_): ?>
+                                <option value="<?= $project_->id ?>">
+                                    <?= $project_->project ?> (<?= $project_->desc ?>)
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <!-- Show possible error -->
+                        <?php if (isset($this->errores['id_project'])): ?>
+                            <span class="form-text text-danger" role="alert">
+                                <?= $this->errores['id_project'] ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+
                     <!-- botones de acción -->
                     <div class="mb-3">
                         <a class="btn btn-secondary" href="<?= URL ?>projectManagers/" role="button">Cancelar</a>

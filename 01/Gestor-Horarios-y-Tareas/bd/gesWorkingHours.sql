@@ -81,24 +81,25 @@ VALUES
 -- Table to collect project Manager data
 drop table if EXISTS `projectManager`;
 
-create table `projectManager` (
+CREATE TABLE `projectManager` (
     `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
     `last_name` varchar(45) DEFAULT NULL,
     `name` varchar(20) DEFAULT NULL,
-    `id_project` int(10) UNSIGNED,
+    `id_project` int(10) UNSIGNED NULL, 
     `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
     `update_at` timestamp NOT NULL DEFAULT current_timestamp(),
     PRIMARY KEY (`id`)
 );
 
 INSERT INTO
-    `projectManager` (`last_name`, `name`)
+    `projectManager` (`last_name`, `name`, `id_project`)
 VALUES
-    ('Gomez', 'Juan'),
-    ('Perez', 'Ana'),
-    ('Rodriguez', 'Carlos'),
-    ('Fernandez', 'Maria'),
-    ('Martinez', 'Pedro');
+    ('Gomez', 'Juan', 1),
+    ('Perez', 'Ana', NULL),
+    ('Rodriguez', 'Carlos', 3),
+    ('Fernandez', 'Maria', NULL), 
+    ('Martinez', 'Pedro', 5); 
+
 
 --
 -- Table structure for table `customer`
@@ -170,11 +171,7 @@ create table `projects` (
     `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
     `finish_date` timestamp not null default current_timestamp(),
     `update_at` timestamp NOT NULL DEFAULT current_timestamp(),
-    PRIMARY KEY (`id`),
-    KEY `id_projectManager` (`id_projectManager`),
-    CONSTRAINT `projects_ibfk_1` FOREIGN KEY (`id_projectManager`) REFERENCES `projectManager` (`id`) ON DELETE
-    SET
-        NULL ON UPDATE CASCADE
+    PRIMARY KEY (`id`)
 );
 
 INSERT INTO
@@ -291,7 +288,7 @@ INSERT INTO
         `work_order`,
         `description`,
         `order_responsible`,
-        `project`,
+        `id_project`,
         `id_customer`
     )
 VALUES
@@ -299,28 +296,28 @@ VALUES
         'WO123456',
         'Repair machinery',
         'John Doe',
-        'PRJ001',
+        1,
         1
     ),
     (
         'WO789012',
         'Install new software',
         'Jane Smith',
-        'PRJ002',
+        2,
         2
     ),
     (
         'WO345678',
         'Inspect electrical system',
         'Mike Johnson',
-        'PRJ003',
+        3,
         3
     ),
     (
         'WO901234',
         'Replace damaged parts',
         'Emily Davis',
-        'PRJ004',
+        4,
         4
     );
 
@@ -424,15 +421,6 @@ CREATE TABLE IF NOT EXISTS `users` (
     `update_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-insert into `users` 
-    VALUES
-    (   
-        1,
-        admin,
-        'admin@gmail.com',
-        'admin'
-    );
-
 --
 -- Table structure for table `roles`
 -- Table to collect roles data
@@ -492,14 +480,3 @@ CREATE TABLE IF NOT EXISTS `roles_users`(
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `update_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-INSERT INTO
-    `roles_users`
-VALUES
-    (
-        1,
-        1,
-        1,
-        default,
-        default
-    );
