@@ -20,13 +20,14 @@ class projectManagersModel extends Model
         try {
             $sql = "
             SELECT 
-                id,
-                concat_ws(', ', last_name, name) pManager_name,
-                created_at,
-                update_at
+                pM.id,
+                concat_ws(', ', pM.last_name, pM.name) pManager_name,
+                pr.project
             FROM 
-                projectManager
-            ORDER by id asc;";
+                projectManager pM
+            JOIN
+                projects pr ON pM.id_project = pr.id
+            ORDER by pM.id asc;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
@@ -59,12 +60,14 @@ class projectManagersModel extends Model
                         projectManager 
                         (
                             last_name, 
-                            name
+                            name,
+                            id_project
                         ) 
                         VALUES 
                         ( 
                             :last_name, 
-                            :name
+                            :name,
+                            :id_project
                         )";
 
             $conexion = $this->db->connect();
@@ -74,6 +77,7 @@ class projectManagersModel extends Model
             //-----------------------------------------------------------------------------------
             $pdoSt->bindParam(":last_name", $projectManager->last_name, PDO::PARAM_STR, 45);
             $pdoSt->bindParam(":name", $projectManager->name, PDO::PARAM_STR, 20);
+            $pdoSt->bindParam(":id_project", $projectManager->id_project, PDO::PARAM_INT, 10);
 
             // execute
             $pdoSt->execute();
@@ -104,6 +108,7 @@ class projectManagersModel extends Model
                     SET
                         last_name=:last_name,
                         name=:name,
+                        id_project=:id_project,
                         update_at = now()
                     WHERE
                         id=:id
@@ -114,6 +119,7 @@ class projectManagersModel extends Model
 
             $pdoSt->bindParam(":last_name", $projectManager->last_name, PDO::PARAM_STR, 8);
             $pdoSt->bindParam(":name", $projectManager->name, PDO::PARAM_STR, 50);
+            $pdoSt->bindParam(":id_project", $projectManager->id_project, PDO::PARAM_INT, 10);
             $pdoSt->bindParam(":id", $id, PDO::PARAM_STR);
 
             $pdoSt->execute();

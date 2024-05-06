@@ -20,7 +20,7 @@ create table `employees` (
     `city` varchar(20) DEFAULT NULL,
     `dni` char(9) DEFAULT NULL,
     `email` varchar(45) DEFAULT NULL,
-    `total_hours` int(2) DEFAULT NULL, 
+    `total_hours` int(2) DEFAULT NULL,
     `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
     `update_at` timestamp NOT NULL DEFAULT current_timestamp(),
     PRIMARY KEY (`id`),
@@ -85,6 +85,7 @@ create table `projectManager` (
     `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
     `last_name` varchar(45) DEFAULT NULL,
     `name` varchar(20) DEFAULT NULL,
+    `id_project` int(10) UNSIGNED,
     `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
     `update_at` timestamp NOT NULL DEFAULT current_timestamp(),
     PRIMARY KEY (`id`)
@@ -277,13 +278,14 @@ CREATE TABLE IF NOT EXISTS `work_orders` (
     `work_order` CHAR(10) DEFAULT NULL,
     `description` VARCHAR(50) DEFAULT NULL,
     `order_responsible` varchar(20) Default Null,
-    `project` char(8) DEFAULT NULL,
+    `id_project` char(8) DEFAULT NULL,
     `id_customer` int(10) unsigned DEFAULT NULL,
     `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
     `finish_date` timestamp not null default current_timestamp(),
     `update_at` timestamp NOT NULL DEFAULT current_timestamp(),
-    PRIMARY KEY (`id`) 
+    PRIMARY KEY (`id`)
 );
+
 INSERT INTO
     `work_orders` (
         `work_order`,
@@ -408,7 +410,6 @@ VALUES
 -- ------------------------------------------------------------------------------------------------------
 -- USER GESTION 
 -- ------------------------------------------------------------------------------------------------------
-
 --
 -- Table structure for table `users`
 -- Table to collect users data
@@ -423,6 +424,15 @@ CREATE TABLE IF NOT EXISTS `users` (
     `update_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+insert into `users` 
+    VALUES
+    (   
+        1,
+        admin,
+        'admin@gmail.com',
+        'admin'
+    );
+
 --
 -- Table structure for table `roles`
 -- Table to collect roles data
@@ -432,21 +442,6 @@ CREATE TABLE IF NOT EXISTS `roles`(
     `id` INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     `name` VARCHAR(20),
     `description` VARCHAR(100),
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `update_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
---
--- Table structure for table `roles_users`
--- Table to collect users roles
-DROP TABLE IF EXISTS `roles_users`;
-
-CREATE TABLE IF NOT EXISTS `roles_users`(
-    `id` INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    `user_id` INT UNSIGNED,
-    `role_id` INT UNSIGNED,
-    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `update_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -464,7 +459,7 @@ VALUES
     (
         2,
         'Manager',
-        'Can create tasks, projects, workingHours and employee',
+        'Can create tasks, projects, workingHours and employees',
         default,
         default
     ),
@@ -476,9 +471,35 @@ VALUES
         default
     ),
     (
-        4, 
+        4,
         'Employee',
         'Can create workingHours.',
+        default,
+        default
+    );
+
+--
+-- Table structure for table `roles_users`
+-- Table to collect users roles
+DROP TABLE IF EXISTS `roles_users`;
+
+CREATE TABLE IF NOT EXISTS `roles_users`(
+    `id` INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    `user_id` INT UNSIGNED,
+    `role_id` INT UNSIGNED,
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `update_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO
+    `roles_users`
+VALUES
+    (
+        1,
+        1,
+        1,
         default,
         default
     );

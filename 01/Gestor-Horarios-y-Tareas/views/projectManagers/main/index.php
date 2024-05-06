@@ -31,9 +31,9 @@
                         <tr>
                             <th>Id
                             <th>Project Manager</th>
-                            <th>Created At</th>
+                            <th>Project</th>
                             <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
-                                <th>Acciones</th>
+                                <th>Actions</th>
                             <?php else: ?>
 
                             <?php endif; ?>
@@ -49,7 +49,7 @@
                                     <?= $projectManager->pManager_name ?>
                                 </td>
                                 <td>
-                                    <?= $projectManager->created_at ?>
+                                    <?= $projectManager->project ?>
                                 </td>
                                 </td>
                                 <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>

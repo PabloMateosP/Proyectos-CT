@@ -125,12 +125,14 @@ class ProjectManagers extends Controller
             # 1. Security: We sanitize the data that is sent by the user
             $last_name = filter_var($_POST['last_name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $name = filter_var($_POST['name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $id_project = filter_var($_POST['id_project'] ??= '', FILTER_SANITIZE_NUMBER_INT);
 
             # 2. Create an object of the class
             $projectManager = new classProjectManagers(
                 null,
                 $last_name,
                 $name,
+                $id_project,
                 null,
                 null
             );
@@ -150,6 +152,13 @@ class ProjectManagers extends Controller
                 $errores['name'] = 'The field name is required';
             } else if (strlen($name) > 20) {
                 $errores['name'] = 'The field name is too long';
+            }
+
+            # id_project
+            if (empty($id_project)) {
+                $errores['id_project'] = 'The field id_project is required';
+            } else if (strlen($id_project) > 10) {
+                $errores['id_project'] = 'The field id_project is too long';
             }
 
             #4. Verify Validation
