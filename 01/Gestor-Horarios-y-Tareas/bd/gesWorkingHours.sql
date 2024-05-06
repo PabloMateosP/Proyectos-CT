@@ -130,7 +130,7 @@ CREATE TABLE `projects` (
 
 -- Table structure for table `project_employee`
 -- Table to establish the relationship between projects and employees
--- [Tabla para indicar que un empleado está asociado a uno o varios proyectos]
+-- [Tabla para indicar que un empleado está asociado a uno o varios proyectos y viceversa]
 DROP TABLE IF EXISTS `project_employee`;
 
 CREATE TABLE `project_employee` (
@@ -139,19 +139,6 @@ CREATE TABLE `project_employee` (
     PRIMARY KEY (`id_employee`, `id_project`),
     FOREIGN KEY (`id_employee`) REFERENCES `employees`(`id`),
     FOREIGN KEY (`id_project`) REFERENCES `projects`(`id`)
-);
-
--- Table structure for table `employee_project`
--- Table to establish the relationship between projects and employees
--- [Tabla para indicar que un proyecto está asociado a uno o varios empleados]
-DROP TABLE IF EXISTS `employee_project`;
-
-CREATE TABLE `employee_project` (
-    `id_project` INT(10) UNSIGNED NOT NULL,
-    `id_employee` INT(10) UNSIGNED NOT NULL,
-    PRIMARY KEY (`id_project`, `id_employee`),
-    FOREIGN KEY (`id_project`) REFERENCES `projects`(`id`),
-    FOREIGN KEY (`id_employee`) REFERENCES `employees`(`id`)
 );
 
 -- Table structure for table `project_managers`

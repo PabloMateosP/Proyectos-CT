@@ -21,7 +21,7 @@ class classProject
         $id_customer = null,
         $created_at = null,
         $finish_date = null,
-        $update_at = null,
+        $update_at = null
 
     ) {
 

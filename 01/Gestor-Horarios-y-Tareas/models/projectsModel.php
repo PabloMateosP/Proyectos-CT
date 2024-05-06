@@ -51,6 +51,40 @@ class projectsModel extends Model
     }
 
     # ---------------------------------------------------------------------------------
+    #    
+    #    _____ ______ _______   ______ __  __ _____  _      ______     ________ ______  _____ 
+    #   / ____|  ____|__   __| |  ____|  \/  |  __ \| |    / __ \ \   / /  ____|  ____|/ ____|
+    #  | |  __| |__     | |    | |__  | \  / | |__) | |   | |  | \ \_/ /| |__  | |__  | (___  
+    #  | | |_ |  __|    | |    |  __| | |\/| |  ___/| |   | |  | |\   / |  __| |  __|  \___ \ 
+    #  | |__| | |____   | |    | |____| |  | | |    | |___| |__| | | |  | |____| |____ ____) |
+    #   \_____|______|  |_|    |______|_|  |_|_|    |______\____/  |_|  |______|______|_____/ 
+    #
+    # ---------------------------------------------------------------------------------
+    # Method get 
+    # Select form table enployee
+    public function get_Employees() {
+        try {
+            $sql = "
+            SELECT 
+                id,
+                concat_ws(', ', last_name, name) employee
+            FROM 
+                employees
+            ORDER BY id;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
     #    _____  _____   ______         _______  ______ 
     #   / ____||  __ \ |  ____|    /\ |__   __||  ____|
     #  | |     | |__) || |__      /  \   | |   | |__   
@@ -64,36 +98,51 @@ class projectsModel extends Model
     public function create(classProject $project)
     {
         try {
-            $sql = " INSERT INTO 
-                        projects 
-                        (
-                            project, 
-                            description, 
-                            id_projectManager, 
-                            id_customer, 
-                            finish_date
-                        ) 
-                        VALUES 
-                        ( 
-                            :project, 
-                            :description, 
-                            :id_projectManager, 
-                            :id_customer, 
-                            :finish_date
-                        )";
+            $sql = "INSERT INTO 
+                    projects 
+                    (
+                        project, 
+                        description, 
+                        finish_date
+                    ) 
+                    VALUES 
+                    ( 
+                        :project, 
+                        :description, 
+                        :finish_date
+                    )";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
 
             // Link the parameters
-            //-----------------------------------------------------------------------------------
             $pdoSt->bindParam(":project", $project->project, PDO::PARAM_STR, 8);
             $pdoSt->bindParam(":description", $project->description, PDO::PARAM_STR, 50);
-            $pdoSt->bindParam(":id_projectManager", $project->id_projectManager, PDO::PARAM_INT, 10);
-            $pdoSt->bindParam(":id_customer", $project->id_customer, PDO::PARAM_INT, 10);
             $pdoSt->bindParam(":finish_date", $project->finish_date, PDO::PARAM_STR, 20);
 
             // execute
+            $pdoSt->execute();
+
+            // Retrieve the ID of the last inserted row
+            $lastInsertedId = $conexion->lastInsertId();
+
+            return $lastInsertedId; // Return the ID of the last inserted row
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    public function insertProjectManagerRelationship($projectId, $projectManagerId)
+    {
+        try {
+            
+            $sql = "INSERT INTO projectManager_project (id_project, id_project_manager) VALUES (:projectId, :projectManagerId)";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":projectId", $projectId, PDO::PARAM_INT);
+            $pdoSt->bindParam(":projectManagerId", $projectManagerId, PDO::PARAM_INT);
             $pdoSt->execute();
 
         } catch (PDOException $e) {
@@ -101,6 +150,25 @@ class projectsModel extends Model
             exit();
         }
     }
+
+    public function insertCustomerProjectRelationship($projectId, $customerId)
+    {
+        try {
+
+            $sql = "INSERT INTO customer_project (id_project, id_customer) VALUES (:projectId, :customerId)";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":projectId", $projectId, PDO::PARAM_INT);
+            $pdoSt->bindParam(":customerId", $customerId, PDO::PARAM_INT);
+            $pdoSt->execute();
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+
 
     # ---------------------------------------------------------------------------------
     #    
@@ -222,7 +290,7 @@ class projectsModel extends Model
             exit();
         }
     }
-    
+
 
     # ---------------------------------------------------------------------------------
     #    ____   _____   _____   ______  _____  
@@ -329,7 +397,7 @@ class projectsModel extends Model
             require_once ("template/partials/errorDB.php");
             exit();
         }
-    }                                                                                                                        
- 
+    }
+
 
 }

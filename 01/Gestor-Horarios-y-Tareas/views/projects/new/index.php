@@ -82,6 +82,38 @@
                         <?php endif; ?>
                     </div>
 
+                    <!-- Employees -->
+                    <div class="mb-3">
+                        <label class="form-label">Employees</label>
+                        <div class="row">
+                            <?php $count = 0; ?>
+                            <?php foreach ($this->employees as $employee_): ?>
+                                <?php if ($count % 4 === 0 && $count !== 0): ?>
+                                </div>
+                                <div class="row">
+                                <?php endif; ?>
+                                <div class="col-md-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="employees[]"
+                                            value="<?= $employee_->id ?>" id="employee<?= $employee_->id ?>">
+                                        <label class="form-check-label" for="employee<?= $employee_->id ?>">
+                                            <?= $employee_->employee ?>
+                                        </label>
+                                    </div>
+                                </div>
+                                <?php $count++; ?>
+                            <?php endforeach; ?>
+                        </div>
+                        <!-- Show possible error -->
+                        <?php if (isset($this->errores['employees'])): ?>
+                            <span class="form-text text-danger" role="alert">
+                                <?= $this->errores['employees'] ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+
+
+
                     <!-- Finish Date -->
                     <div class="mb-3">
                         <label for="finish_date" class="form-label">Finish Date</label>

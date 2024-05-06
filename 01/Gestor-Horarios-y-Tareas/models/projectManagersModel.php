@@ -95,17 +95,15 @@ class projectManagersModel extends Model
     {
         try {
             $sql = " INSERT INTO 
-                        projectManager 
+                        project_managers 
                         (
                             last_name, 
-                            name,
-                            id_project
+                            name
                         ) 
                         VALUES 
                         ( 
                             :last_name, 
-                            :name,
-                            :id_project
+                            :name
                         )";
 
             $conexion = $this->db->connect();
@@ -115,8 +113,7 @@ class projectManagersModel extends Model
             //-----------------------------------------------------------------------------------
             $pdoSt->bindParam(":last_name", $projectManager->last_name, PDO::PARAM_STR, 45);
             $pdoSt->bindParam(":name", $projectManager->name, PDO::PARAM_STR, 20);
-            $pdoSt->bindParam(":id_project", $projectManager->id_project, PDO::PARAM_INT, 10);
-
+            
             // execute
             $pdoSt->execute();
 

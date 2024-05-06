@@ -99,6 +99,7 @@ class Projects extends Controller
 
             $this->view->project_managers = $this->model->get_projectManagers();
             $this->view->customers = $this->model->get_customers();
+            $this->view->employees = $this->model->get_Employees();
 
             $this->view->render("projects/new/index");
         }
@@ -135,17 +136,15 @@ class Projects extends Controller
             # 1. Security: We sanitize the data that is sent by the user
             $project_ = filter_var($_POST['project'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $description = filter_var($_POST['description'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $id_Manager = filter_var($_POST['id_project_manager'] ??= '', FILTER_SANITIZE_NUMBER_INT);
+            $id_project_manager = filter_var($_POST['id_project_manager'] ??= '', FILTER_SANITIZE_NUMBER_INT);
             $id_customer = filter_var($_POST['id_customer'] ??= '', FILTER_SANITIZE_NUMBER_INT);
             $finish_date = filter_var($_POST['finish_date'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
 
-            # 2. Create an object of the class
+            # 2. Create an object of the class project, project_employee, project_managers and customer_project
             $project = new classProject(
                 null,
                 $project_,
                 $description,
-                $id_Manager,
-                $id_customer,
                 null,
                 $finish_date,
                 null
@@ -166,20 +165,6 @@ class Projects extends Controller
                 $errores['description'] = 'The field description is required';
             } else if (strlen($description) > 50) {
                 $errores['description'] = 'The field description is too long';
-            }
-
-            # id_projectManager
-            if (empty($id_Manager)) {
-                $id_Manager = null;
-            } else if (strlen($id_Manager) > 10) {
-                $errores['id_project_manager'] = 'The field project Manager is too long';
-            }
-
-            # Id_customer
-            if (empty($id_customer)) {
-                $id_customer = null;
-            } else if (strlen($id_customer) > 10) {
-                $errores['id_customer'] = 'Field customer too long';
             }
 
             # Finish_date
@@ -204,7 +189,32 @@ class Projects extends Controller
 
                 #Create project
                 # Añadir registro a la tabla
-                $this->model->create($project);
+
+                if (empty($id_project_manager) && empty($id_customer)) {
+
+                    $this->model->create($project);
+
+                } elseif (empty($id_customer)) {
+
+                    $project_id = $this->model->create($project);
+
+                    $this->model->insertProjectManagerRelationship($project_id, $id_project_manager);
+
+                } elseif (empty($id_project_manager)) {
+
+                    $project_id = $this->model->create($project);
+
+                    $this->model->insertCustomerProjectRelationship($project_id, $id_customer);
+
+                } else {
+
+                    $project_id = $this->model->create($project);
+
+                    $this->model->insertProjectManagerRelationship($project_id, $id_project_manager);
+
+                    $this->model->insertCustomerProjectRelationship($project_id, $id_customer);
+
+                }
 
                 #Mensaje
                 $_SESSION['mensaje'] = "Project create correctly";
@@ -311,7 +321,7 @@ class Projects extends Controller
             $this->view->render("projects/edit/index");
         }
     }
-    
+
     # ---------------------------------------------------------------------------------
     #
     #   _    _  _____   _____         _______  ______ 
@@ -336,7 +346,7 @@ class Projects extends Controller
             header("location:" . URL . "login");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
-            
+
             $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "project");
 

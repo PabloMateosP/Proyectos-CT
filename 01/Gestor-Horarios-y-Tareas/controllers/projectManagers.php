@@ -134,7 +134,6 @@ class ProjectManagers extends Controller
                 null,
                 $last_name,
                 $name,
-                $id_project,
                 null,
                 null
             );
@@ -156,13 +155,13 @@ class ProjectManagers extends Controller
                 $errores['name'] = 'The field name is too long';
             }
 
-            # id_project
-            # If the project Manager hasn't got any project assigned the id_project will be null
-            if (empty($id_project)) {
-                $id_project = null;
-            } else if (strlen($id_project) > 10) {
-                $errores['id_project'] = 'The field id_project is too long';
-            }
+            // # id_project
+            // # If the project Manager hasn't got any project assigned the id_project will be null
+            // if (empty($id_project)) {
+            //     $id_project = null;
+            // } else if (strlen($id_project) > 10) {
+            //     $errores['id_project'] = 'The field id_project is too long';
+            // }
 
             #4. Verify Validation
 
