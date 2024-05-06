@@ -19,15 +19,17 @@ class projectManagersModel extends Model
     {
         try {
             $sql = "
-        SELECT 
-            pM.id,
-            concat_ws(', ', pM.last_name, pM.name) pManager_name,
-            pr.project
-        FROM 
-            projectManager pM
-        LEFT JOIN
-            projects pr ON pM.id_project = pr.id
-        ORDER by pM.id asc;";
+                SELECT 
+                    pM.id,
+                    concat_ws(', ', pM.last_name, pM.name) pManager_name,
+                    pr.project
+                FROM 
+                    project_managers pM
+                LEFT JOIN
+                    projectManager_project pMr ON pM.id = pMr.id_project_manager
+                LEFT JOIN 
+                    projects pr ON pMr.id_project = pr.id
+                ORDER by pM.id asc;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);

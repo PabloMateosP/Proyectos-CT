@@ -23,15 +23,19 @@ class projectsModel extends Model
                     pr.id,
                     pr.project,
                     pr.description,
-                    concat_ws(', ', prM.last_name, prM.name) manager_name,
+                    concat_ws(', ', pm.last_name, pm.name) manager_name,
                     c.name customerName,
                     pr.finish_date
                 FROM 
                     projects pr
                 LEFT JOIN 
-                    projectManager prM ON pr.id_projectManager = prM.id
+                    projectManager_project ppm ON pr.id = ppm.id_project
+                LEFT JOIN
+                    project_managers pm ON ppm.id_project_manager = pm.id
                 LEFT JOIN 
-                    customer c ON pr.id_customer = c.id
+                    customer_project cp ON pr.id = cp.id_project
+                LEFT JOIN 
+                    customers c ON cp.id_customer = c.id 
                 ORDER by pr.id asc;";
 
             $conexion = $this->db->connect();
@@ -284,7 +288,7 @@ class projectsModel extends Model
     public function get_customers()
     {
         try {
-            $sql = "SELECT id, name FROM customer";
+            $sql = "SELECT id, name FROM customers";
             $conexion = $this->db->connect();
             $result = $conexion->prepare($sql);
             $result->setFetchMode(PDO::FETCH_OBJ);
@@ -313,7 +317,7 @@ class projectsModel extends Model
     public function get_projectManagers()
     {
         try {
-            $sql = "SELECT id, name, last_name FROM projectManager";
+            $sql = "SELECT id, name, last_name FROM project_managers";
             $conexion = $this->db->connect();
             $result = $conexion->prepare($sql);
             $result->setFetchMode(PDO::FETCH_OBJ);

@@ -26,7 +26,6 @@ class workingHoursModel extends Model
                 tc.time_code,
                 p.project AS project_name,
                 t.description AS task_description,
-                wo.description AS work_order_description,
                 wh.date_worked,
                 wh.duration
             FROM 
@@ -39,8 +38,6 @@ class workingHoursModel extends Model
                 projects p ON wh.id_project = p.id
             JOIN 
                 tasks t ON wh.id_task = t.id
-            JOIN 
-                work_orders wo ON wh.id_work_order = wo.id
             ORDER by wh.id asc;";
 
             $conexion = $this->db->connect();
@@ -79,7 +76,6 @@ class workingHoursModel extends Model
             tc.time_code,
             p.project AS project_name,
             t.description AS task_description,
-            wo.description AS work_order_description,
             wh.date_worked,
             wh.duration
         FROM 
@@ -92,8 +88,6 @@ class workingHoursModel extends Model
             projects p ON wh.id_project = p.id
         JOIN 
             tasks t ON wh.id_task = t.id
-        JOIN 
-            work_orders wo ON wh.id_work_order = wo.id
         JOIN users u on emp.email = u.email
         WHERE
             u.email = :email
@@ -125,20 +119,26 @@ class workingHoursModel extends Model
     public function getTotalHours()
     {
         try {
-            $sql = "SELECT id, total_hours FROM employees where id = :employee_id";
+            $sql = "SELECT id, total_hours FROM employees WHERE id = :employee_id";
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->bindParam(':employee_id', $_SESSION['employee_id']);
             $pdoSt->execute();
             $result = $pdoSt->fetch(PDO::FETCH_ASSOC);
-            return $result['total_hours'];
 
+            // Verificar si $result es falso o es un array
+            if ($result !== false && isset($result['total_hours'])) {
+                return $result['total_hours'];
+            } else {
+                return 0;
+            }
         } catch (PDOException $e) {
             require_once ("template/partials/errorDB.php");
             exit();
         }
-
     }
+
+
 
 
     # ---------------------------------------------------------------------------------
@@ -263,36 +263,6 @@ class workingHoursModel extends Model
         }
     }
 
-    # ---------------------------------------------------------------------------------
-    #    
-    #    _____ ______ _______  __          ______  _____  _  __    ____  _____  _____  ______  _____ 
-    #   / ____|  ____|__   __| \ \        / / __ \|  __ \| |/ /   / __ \|  __ \|  __ \|  ____|/ ____|
-    #  | |  __| |__     | |     \ \  /\  / / |  | | |__) | ' /   | |  | | |__) | |  | | |__  | (___  
-    #  | | |_ |  __|    | |      \ \/  \/ /| |  | |  _  /|  <    | |  | |  _  /| |  | |  __|  \___ \ 
-    #  | |__| | |____   | |       \  /\  / | |__| | | \ \| . \   | |__| | | \ \| |__| | |____ ____) |
-    #   \_____|______|  |_|        \/  \/   \____/|_|  \_\_|\_\   \____/|_|  \_\_____/|______|_____/                                                                                           
-    #
-    # ---------------------------------------------------------------------------------
-    # get_work_ordes
-    # Select the work_ordes from the order_works 
-    public function get_work_ordes()
-    {
-        try {
-            $sql = "SELECT id, work_order, description, order_responsible FROM work_orders";
-            $conexion = $this->db->connect();
-            $result = $conexion->prepare($sql);
-            $result->setFetchMode(PDO::FETCH_OBJ);
-            $result->execute();
-
-            return $result->fetchAll();
-
-        } catch (PDOException $e) {
-            require_once ("template/partials/errorDB.php");
-            exit();
-        }
-    }
-
-
     # ---------------------------------------------------------------------------------  
     #  
     #    _____ ______ _______   _____  _____   ____       _ ______ _____ _______ _____ 
@@ -306,31 +276,33 @@ class workingHoursModel extends Model
     # function get_projects 
     # function to get the information about all the projects
     public function get_projects()
-    {
-        try {
-            $sql = "SELECT 
-                        pr.id,
-                        pr.project,
-                        pr.description,
-                        pm.last_name AS manager_last_name,
-                        pm.name AS manager_name
-                    FROM 
-                        projects pr
-                    JOIN 
-                        projectManager pm ON pr.id_projectManager = pm.id";
+{
+    try {
+        $sql = "SELECT 
+                    pr.id,
+                    pr.project,
+                    pr.description,
+                    pm.last_name AS manager_last_name,
+                    pm.name AS manager_name
+                FROM 
+                    projects pr
+                JOIN 
+                    projectManager_project ppm ON pr.id = ppm.id_project
+                JOIN 
+                    project_managers pm ON ppm.id_project_manager = pm.id";
 
-            $conexion = $this->db->connect();
-            $result = $conexion->prepare($sql);
-            $result->setFetchMode(PDO::FETCH_OBJ);
-            $result->execute();
+        $conexion = $this->db->connect();
+        $result = $conexion->prepare($sql);
+        $result->setFetchMode(PDO::FETCH_OBJ);
+        $result->execute();
 
-            return $result->fetchAll();
-
-        } catch (PDOException $e) {
-            require_once ("template/partials/errorDB.php");
-            exit();
-        }
+        return $result->fetchAll();
+    } catch (PDOException $e) {
+        require_once ("template/partials/errorDB.php");
+        exit();
     }
+}
+
 
 
     # ---------------------------------------------------------------------------------
@@ -697,6 +669,64 @@ class workingHoursModel extends Model
         }
     }
 
+
+    # ---------------------------------------------------------------------------------
+    #
+    #     ____  _____  _____  ______ _____  
+    #    / __ \|  __ \|  __ \|  ____|  __ \ 
+    #   | |  | | |__) | |  | | |__  | |__) |
+    #   | |  | |  _  /| |  | |  __| |  _  / 
+    #   | |__| | | \ \| |__| | |____| | \ \ 
+    #    \____/|_|  \_\_____/|______|_|  \_\ 
+    # 
+    # ---------------------------------------------------------------------------------
+    # Method order
+    # Permite ordenar la tabla de workingHours por cualquiera de las columnas del main
+    # El criterio de ordenación se establec mediante el número de la columna del select
+    public function orderEmp(int $criterio, $id)
+    {
+        try {
+            $sql = "
+            SELECT 
+                wh.id, 
+                wh.id_employee, 
+                concat_ws(', ', emp.last_name, emp.name) employee_name, 
+                tc.time_code, 
+                p.project AS project_name,  
+                t.description AS task_description,  
+                wo.description AS work_order_description, 
+                wh.date_worked, 
+                wh.duration 
+            FROM 
+                working_hours wh
+            JOIN 
+                employees emp ON wh.id_employee = emp.id
+            JOIN 
+                time_codes tc ON wh.id_time_code = tc.id
+            JOIN 
+                projects p ON wh.id_project = p.id
+            JOIN 
+                tasks t ON wh.id_task = t.id
+            JOIN 
+                work_orders wo ON wh.id_work_order = wo.id
+            WHERE wh.id_employee = :id
+            ORDER by :criterio;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":criterio", $criterio, PDO::PARAM_INT);
+            $pdoSt->bindParam(":id", $id, PDO::PARAM_INT);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+
+            $pdoSt->execute();
+
+            return $pdoSt;
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
     # ---------------------------------------------------------------------------------
     #    
     #   ______ _____ _   _______ ______ _____  
@@ -770,65 +800,63 @@ class workingHoursModel extends Model
     }
 
     # ---------------------------------------------------------------------------------
-    #    
-    #   ______ _____ _   _______ ______ _____  
-    #  |  ____|_   _| | |__   __|  ____|  __ \ 
-    #  | |__    | | | |    | |  | |__  | |__) |
-    #  |  __|   | | | |    | |  |  __| |  _  / 
-    #  | |     _| |_| |____| |  | |____| | \ \ 
-    #  |_|    |_____|______|_|  |______|_|  \_\
+    #        
+    #   ______ _____ _   _______ ______ _____     ______ __  __ _____  
+    #  |  ____|_   _| | |__   __|  ____|  __ \   |  ____|  \/  |  __ \ 
+    #  | |__    | | | |    | |  | |__  | |__) |  | |__  | \  / | |__) |
+    #  |  __|   | | | |    | |  |  __| |  _  /   |  __| | |\/| |  ___/ 
+    #  | |     _| |_| |____| |  | |____| | \ \   | |____| |  | | |     
+    #  |_|    |_____|______|_|  |______|_|  \_\  |______|_|  |_|_|     
+    # 
     #
     # ---------------------------------------------------------------------------------
     # Method filter
     # Allow an employee to search in the table working hour 
-    public function filterEmp($expresion)
+    public function filterEmp($empId, $expresion)
     {
         try {
-
             $sql = "
-                    SELECT 
-                        wh.id, 
-                        wh.id_employee, 
-                        concat_ws(', ', emp.last_name, emp.name) AS employee_name, 
-                        tc.time_code, 
-                        p.project AS project_name,  
-                        t.description AS task_description,  
-                        wo.description AS work_order_description, 
-                        wh.date_worked, 
-                        wh.duration 
-                    FROM 
-                        working_hours wh
-                    JOIN 
-                        employees emp ON wh.id_employee = emp.id
-                    JOIN 
-                        time_codes tc ON wh.id_time_code = tc.id
-                    JOIN 
-                        projects p ON wh.id_project = p.id
-                    JOIN 
-                        tasks t ON wh.id_task = t.id
-                    JOIN 
-                        work_orders wo ON wh.id_work_order = wo.id
-                    WHERE 
-                        concat_ws(  
-                            ' ',
-                            emp.last_name,
-                            emp.name,
-                            tc.time_code,
-                            t.description,
-                            wo.description,
-                            wh.date_worked,
-                            wh.duration
-                            )
-                        LIKE 
-                            :expresion
-                    
-                    ORDER BY id ASC";
+                SELECT 
+                    wh.id, 
+                    wh.id_employee, 
+                    concat_ws(', ', emp.last_name, emp.name) AS employee_name, 
+                    tc.time_code, 
+                    p.project AS project_name,  
+                    t.description AS task_description,  
+                    wo.description AS work_order_description, 
+                    wh.date_worked, 
+                    wh.duration 
+                FROM 
+                    working_hours wh
+                JOIN 
+                    employees emp ON wh.id_employee = emp.id
+                JOIN 
+                    time_codes tc ON wh.id_time_code = tc.id
+                JOIN 
+                    projects p ON wh.id_project = p.id
+                JOIN 
+                    tasks t ON wh.id_task = t.id
+                JOIN 
+                    work_orders wo ON wh.id_work_order = wo.id
+                WHERE 
+                    wh.id_employee = :empId AND
+                    concat_ws(
+                        ' ',
+                        emp.last_name,
+                        emp.name,
+                        tc.time_code,
+                        t.description,
+                        wo.description,
+                        wh.date_worked,
+                        wh.duration
+                    ) LIKE :expresion
+                ORDER BY id ASC";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
 
-            # enlazamos parámetros con variable
             $expresion = "%" . $expresion . "%";
+            $pdoSt->bindValue(':empId', $empId, PDO::PARAM_INT);
             $pdoSt->bindValue(':expresion', $expresion, PDO::PARAM_STR);
 
             $pdoSt->setFetchMode(PDO::FETCH_OBJ);
@@ -840,4 +868,5 @@ class workingHoursModel extends Model
             exit();
         }
     }
+
 }

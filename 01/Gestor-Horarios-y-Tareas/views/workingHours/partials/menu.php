@@ -31,13 +31,16 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="<?= URL ?>workingHours/order/4">Time Code</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/order/3">Nombre Empleado</a></li>
+                        <?php if (in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
+                            <li><a class="dropdown-item" href="<?= URL ?>workingHours/order/3">Nombre Empleado</a></li>
+                        <?php endif; ?>
                         <li><a class="dropdown-item" href="<?= URL ?>workingHours/order/5">Nombre Proyecto</a></li>
                         <li><a class="dropdown-item" href="<?= URL ?>workingHours/order/6">Tarea</a></li>
                         <li><a class="dropdown-item" href="<?= URL ?>workingHours/order/7">Orden de Trabajo</a></li>
                         <li><a class="dropdown-item" href="<?= URL ?>workingHours/order/8">Fecha de Trabajo</a></li>
                         <li><a class="dropdown-item" href="<?= URL ?>workingHours/order/9">Duración</a></li>
                     </ul>
+
                 </li>
             </ul>
             <form class="d-flex" method="get" action="<?= URL ?>workingHours/search">

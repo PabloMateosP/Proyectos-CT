@@ -175,3 +175,12 @@ I really don't know how to solve the organization of the privileges of the user,
 5. We must think perfectly how to organised the privileges of the differents users in the app. 
 
 6. We must planifing the security copies of the database. 
+
+7. I must create a calendary to put the non laboral days and when is an holiday the employees musn't put the hours in the app
+
+
+-------------------------------------------------------------------------
+
+Exportar tanto por trabajador como por todos los trabajadores así como por fecha. 
+
+

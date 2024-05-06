@@ -13,7 +13,11 @@ require_once 'class/class.projectManagers.php';
 require_once 'class/class.task.php';
 require_once 'class/class.user.php';
 
+// --- Exportar PDF ---
 require_once 'fpdf/fpdf.php';
+require_once 'class/class.pdfWorkingHours.php';
+
+
 require_once "libs/lib.php";
 require_once 'libs/app.php';
 require_once 'config/config.php';

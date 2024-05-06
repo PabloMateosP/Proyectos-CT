@@ -38,8 +38,19 @@ class WorkingHours extends Controller
             if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['employee'])) {
 
                 $email = $this->view->email_account = $this->model->get_userEmailById($_SESSION['id']);
+
                 $this->view->workingHours = $this->model->get_employeeHours($email);
-                $this->view->total_hours = $this->model->getTotalHours();
+
+                if ($this->model->getTotalHours() == null) {
+
+                    $this->view->total_hours = 0;
+
+                } else {
+
+                    $this->view->total_hours = $this->model->getTotalHours();
+
+                }
+                
 
             } else {
 
@@ -103,7 +114,6 @@ class WorkingHours extends Controller
             $this->view->title = "Form new working hour";
 
             $this->view->time_Codes = $this->model->get_times_codes();
-            $this->view->work_Ordes = $this->model->get_work_ordes();
             $this->view->projects = $this->model->get_projects();
             $this->view->tasks = $this->model->get_tasks();
 
@@ -550,8 +560,21 @@ class WorkingHours extends Controller
             header("location:" . URL . "workingHours");
         } else {
             $criterio = $param[0];
+
             $this->view->title = "Tabla workingHours";
-            $this->view->workingHours = $this->model->order($criterio);
+
+            if ((in_array($_SESSION['id_rol'], $GLOBALS['employee']))) {
+
+                $this->view->workingHours = $this->model->orderEmp($criterio , $_SESSION['employee_id']);
+                $this->view->total_hours = $this->model->getTotalHours();
+
+
+            } else if ((in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
+
+                $this->view->workingHours = $this->model->order($criterio);
+
+            }
+
             $this->view->render("workingHours/main/index");
         }
 
@@ -585,11 +608,13 @@ class WorkingHours extends Controller
             $expresion = $_GET["expresion"];
             $this->view->title = "Tabla workingHours";
 
-            if ((!in_array($_SESSION['id_rol'], $GLOBALS['employee']))) {
+            if ((in_array($_SESSION['id_rol'], $GLOBALS['employee']))) {
 
-                $this->view->workingHours = $this->model->filterEmp($expresion);
+                $this->view->workingHours = $this->model->filterEmp($_SESSION['employee_id'],$expresion);
+                $this->view->total_hours = $this->model->getTotalHours();
 
-            } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
+
+            } else if ((in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
 
                 $this->view->workingHours = $this->model->filter($expresion);
 
@@ -780,9 +805,9 @@ class WorkingHours extends Controller
             $_SESSION['mensaje'] = "User must be authenticated";
             header("location:" . URL . "login");
             exit();
-        } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['export'])) {
+        } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])) {
             $_SESSION['mensaje'] = "Unprivileged operation";
-            header("location:" . URL . "cuentas");
+            header("location:" . URL . "workingHours");
             exit();
         }
 
@@ -796,7 +821,7 @@ class WorkingHours extends Controller
             ['header' => 'Email', 'field' => 'email', 'width' => 40],
         ];
 
-        $pdf = new PDFworkingHours();
+        $pdf = new PDFWorkingHours();
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->TituloInforme();
