@@ -16,13 +16,16 @@ class timeCodes extends Controller
 
     public function render($param = [])
     {
-        # Began or continuo session
+        # Began or continue session
         session_start();
         if (!isset($_SESSION['id'])) {
+
             $_SESSION['notify'] = "Unauthenticated User";
 
             header("location:" . URL . "login");
+
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
+
             $_SESSION['mensaje'] = "Unauthenticated User";
             header("location:" . URL . "index");
 
