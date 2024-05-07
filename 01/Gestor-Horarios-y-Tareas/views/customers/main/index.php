@@ -4,7 +4,7 @@
 <head>
     <!-- head -->
     <?php require_once ("template/partials/head.php"); ?>
-    <title>employees</title>
+    <title>customers</title>
 </head>
 
 <body>
@@ -14,71 +14,62 @@
         <div class="card">
             <div class="card-header">
                 <!-- cabecera  -->
-                <?php include "views/employees/partials/header.php" ?>
+                <?php include "views/customers/partials/header.php" ?>
             </div>
             <div class="card-header">
                 <!-- Menu principal -->
-                <?php require_once "views/employees/partials/menu.php" ?>
+                <?php require_once "views/customers/partials/menu.php" ?>
             </div>
             <div class="card-body">
                 <!-- Mensaje -->
                 <?php require_once "template/partials/mensaje.php" ?>
                 <?php require ('template/partials/modalClientes.php'); ?>
-                <!-- tabla employees -->
+                <!-- tabla customers -->
                 <table class="table">
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Email</th>
                             <th>Phone</th>
                             <th>City</th>
-                            <th>Total Hours</th>
-                            <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin'])): ?>
-                                <th>Actions</th>
-                            <?php elseif ((isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['organiser']))): ?>
-                                <th>Actions</th>
-                            <?php else: ?>
-                                <!-- No permitido -->
-                            <?php endif; ?>
+                            <th>Address</th>
+                            <th>Email</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($this->employees as $employee): ?>
+                        <?php foreach ($this->customers as $customer): ?>
                             <tr>
                                 <td>
-                                    <?= $employee->employee ?>
+                                    <?= $customer->name ?>
                                 </td>
                                 <td>
-                                    <?= $employee->email ?>
+                                    <?= $customer->phone ?>
                                 </td>
                                 <td>
-                                    <?= $employee->phone ?>
+                                    <?= $customer->city ?>
                                 </td>
                                 <td>
-                                    <?= $employee->city ?>
+                                    <?= $customer->address ?>
                                 </td>
                                 <td>
-                                    <?= $employee->total_hours ?>
+                                    <?= $customer->email ?>
                                 </td>
                                 <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])): ?>
                                     <td style="display:flex; gap: 5px;">
-                                        <a href="#" title="Mostrar" class="btn btn-warning"> <i class="bi bi-eye"></i></a>
-                                        <a href="<?= URL ?>employees/delete/<?= $employee->id ?>" title="Delete"
-                                            onclick="return confirm('Confirm employee deletion') " class="btn btn-danger"> <i
+                                        <a href="<?= URL ?>customers/delete/<?= $customer->id ?>" title="delete"
+                                            onclick="return confirm('Confirm customer deletion') " class="btn btn-danger"> <i
                                                 class="bi bi-trash"></i></a>
-                                        <a href="<?= URL ?>employees/edit/<?= $employee->id ?>" title="edit"
+                                        <a href="<?= URL ?>customers/edit/<?= $customer->id ?>" title="edit"
                                             class="btn btn-success"> <i class="bi bi-pencil-square"></i></a>
                                     </td>
-                                <?php else: ?>
-                                    <!-- No permitido -->
                                 <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="8">Nº Registros:
-                                <?= $this->employees->rowCount() ?>
+                            <td colspan="6">Nº Registros:
+                                <?= $this->customers->rowCount() ?>
                             </td>
                         </tr>
                     </tfoot>

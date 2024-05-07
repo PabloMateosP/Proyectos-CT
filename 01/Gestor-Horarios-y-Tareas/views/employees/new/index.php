@@ -3,7 +3,7 @@
 
 <head>
     <?php require_once ("template/partials/head.php"); ?>
-    <title>Add employee - Gesbank</title>
+    <title>Add employee</title>
 </head>
 
 <body>

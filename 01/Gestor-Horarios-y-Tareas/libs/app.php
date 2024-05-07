@@ -9,7 +9,7 @@ class App {
               
         # El primer elemento de la url es el controlador
         # El segundo es el método del controlador
-        # El resto me imagino que son parámetros del método
+        # El resto son parámetros del método
         
         $url = isset($_GET['url']) ? $_GET['url'] : null;
         $url = rtrim($url, '/');

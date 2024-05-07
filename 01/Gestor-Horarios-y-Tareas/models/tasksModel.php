@@ -58,23 +58,25 @@ class tasksModel extends Model
     public function get_projects()
     {
         try {
-            $sql = "SELECT 
-                        pr.id,
-                        pr.project,
-                        pr.description,
-                        pm.last_name AS manager_last_name,
-                        pm.name AS manager_name
-                    FROM 
-                        projects pr
-                    JOIN 
-                        projectManager pm ON pr.id_projectManager = pm.id";
+            $sql = "
+                SELECT 
+                    pr.id,
+                    pr.project,
+                    pr.description,
+                    concat_ws(', ', pm.last_name, pm.name) manager_name
+                FROM 
+                    projects pr
+                LEFT JOIN 
+                    projectManager_project ppm ON pr.id = ppm.id_project
+                LEFT JOIN
+                    project_managers pm ON ppm.id_project_manager = pm.id
+                ORDER by pr.id asc;";
 
             $conexion = $this->db->connect();
-            $result = $conexion->prepare($sql);
-            $result->setFetchMode(PDO::FETCH_OBJ);
-            $result->execute();
-
-            return $result->fetchAll();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+            return $pdoSt;
 
         } catch (PDOException $e) {
             require_once ("template/partials/errorDB.php");

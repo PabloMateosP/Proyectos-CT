@@ -39,8 +39,16 @@ class Projects extends Controller
 
             $this->view->title = "Projects";
 
-            $this->view->projects = $this->model->get();
+            if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['employee'])) {
 
+                $this->view->projects = $this->model->getEmpProj($_SESSION['employee_id']);
+
+            } else {
+                
+                $this->view->projects = $this->model->get();
+
+            }
+            
             $this->view->render("projects/main/index");
 
         }

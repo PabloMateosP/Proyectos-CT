@@ -3,7 +3,7 @@
 
 <head>
     <?php require_once ("template/partials/head.php"); ?>
-    <title>Add task</title>
+    <title>Add Time Code</title>
 </head>
 
 <body>
@@ -14,20 +14,20 @@
         <!-- card that contains the form -->
         <div class="card">
             <div class="card-header">
-                <?php require_once "views/tasks/partials/header.php"; ?>
+                <?php require_once "views/timeCodes/partials/header.php"; ?>
             </div>
             <div class="card-body">
                 <!-- formulario  -->
-                <form action="<?= URL ?>tasks/create" method="POST">
+                <form action="<?= URL ?>timeCodes/create" method="POST">
 
-                    <!-- task -->
+                    <!-- time_code -->
                     <div class="mb-3">
-                        <label for="task" class="form-label">Task</label>
-                        <input type="text" class="form-control" name="task">
+                        <label for="time_code" class="form-label">Time code</label>
+                        <input type="text" class="form-control" name="time_code">
                         <!-- Mostrar posible error -->
-                        <?php if (isset($this->errores['task'])): ?>
+                        <?php if (isset($this->errores['time_code'])): ?>
                             <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['task'] ?>
+                                <?= $this->errores['time_code'] ?>
                             </span>
                         <?php endif; ?>
                     </div>
@@ -43,30 +43,10 @@
                             </span>
                         <?php endif; ?>
                     </div>
-
-                    <!-- id_project -->
-                    <div class="mb-3">
-                        <label for="id_project" class="form-label">Project</label>
-                        <select class="form-select" name="id_project" id="id_project">
-                            <option selected disabled>Select Project</option>
-                            <?php foreach ($this->projects as $project): ?>
-                                <option value="<?= $project->id ?>">
-                                    <?= $project->project ?> (<?= $project->description ?>) - Project Manager:
-                                    <?= $project-> manager_name ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <!-- Show possible error -->
-                        <?php if (isset($this->errores['id_project'])): ?>
-                            <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['id_project'] ?>
-                            </span>
-                        <?php endif; ?>
-                    </div>
-
+                    
                     <!-- botones de acción -->
                     <div class="mb-3">
-                        <a class="btn btn-secondary" href="<?= URL ?>tasks/" role="button">Cancelar</a>
+                        <a class="btn btn-secondary" href="<?= URL ?>timeCodes/" role="button">Cancelar</a>
                         <button type="reset" class="btn btn-danger">Borrar</button>
                         <button type="submit" class="btn btn-primary">Crear</button>
                     </div>

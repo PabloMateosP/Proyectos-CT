@@ -53,7 +53,7 @@
                             <?php foreach ($this->projects as $project): ?>
                                 <option value="<?= $project->id ?>" <?= ($this->task->id_project == $project->id) ? "selected" : null; ?>>
                                     <?= $project->project ?> (<?= $project->description ?>) - Project Manager:
-                                    <?= $project->manager_last_name ?>, <?= $project-> manager_name ?>
+                                    <?= $project-> manager_name ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>

@@ -8,8 +8,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
+                <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
                     <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']) ?: 'disabled' ?>"
                         href="<?= URL ?>projects/new">New</a>
+                <?php endif; ?>    
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"

@@ -50,6 +50,45 @@ class projectsModel extends Model
         }
     }
 
+    # Method get 
+    # Select form table project for the view except employee
+    public function getEmpProj($employee_id)
+    {
+        try {
+            $sql = "
+                SELECT 
+                    pr.id,
+                    pr.project,
+                    pr.description,
+                    concat_ws(', ', pm.last_name, pm.name) manager_name,
+                    c.name customerName,
+                    pr.finish_date
+                FROM 
+                    projects pr
+                LEFT JOIN 
+                    projectManager_project ppm ON pr.id = ppm.id_project
+                LEFT JOIN
+                    project_managers pm ON ppm.id_project_manager = pm.id
+                LEFT JOIN 
+                    customer_project cp ON pr.id = cp.id_project
+                LEFT JOIN 
+                    customers c ON cp.id_customer = c.id 
+                WHERE pr.id = :employee_id
+                ORDER by pr.id asc;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":employee_id", $employee_id, PDO::PARAM_INT);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
     # ---------------------------------------------------------------------------------
     #    
     #    _____ ______ _______   ______ __  __ _____  _      ______     ________ ______  _____ 

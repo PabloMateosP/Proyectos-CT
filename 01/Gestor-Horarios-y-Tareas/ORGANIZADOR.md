@@ -181,9 +181,15 @@ I really don't know how to solve the organization of the privileges of the user,
 
 -------------------------------------------------------------------------
 
-Exportar tanto por trabajador como por todos los trabajadores así como por fecha. 
+Hay que hacer: (muchas cosas :[)
+    --> Crear un calendario para poner los no laborales y los festivos
+    --> Poner método task para ver las tareas de cada proyecto en el botón success
+    --> Hacer que cuando se añada un nuevo project manager con un proyecto, al campo id_projectManager de ese proyecto se le añada el id de ese projectManager, además de al editar y al eliminar.
+    --> Hay que añadir a los empleados el poder introfucirlos en un proyecto al crearlo
+    
 
 Día 07/05/24 
     - He hecho el añadir proyectos con los empleados necesarios, el manager del proyecto y tengo que probar con el cliente 
     - He hecho para añadir managers de proyecto con su proyecto (Hay un fallo, si añade un proyecto con un project manager sale en la tabla project manager pero si se añade un project manager desde el apartado project manager con sus proyectos no sale su proyecto conectado, creo que para ello hay que añadir al crear en el project manager que se añada a la columna del proyecto id_projectManager el id de ese nuevo project manager)
     - Por otra parte hay otro fallo al añadir muchos proyectos para un project manager, se rompe la visualización correcta.
+    - He añadido el main y new de customers (Me queda cambiar todos los botones a grupo de botones)
