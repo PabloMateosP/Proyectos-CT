@@ -186,6 +186,7 @@ Hay que hacer: (muchas cosas :[)
     --> Poner método task para ver las tareas de cada proyecto en el botón success
     --> Hacer que cuando se añada un nuevo project manager con un proyecto, al campo id_projectManager de ese proyecto se le añada el id de ese projectManager, además de al editar y al eliminar.
     --> Hay que añadir a los empleados el poder introfucirlos en un proyecto al crearlo
+    --> Hay que hacer que el empleado solo vea las tareas del proyecto en el que se encuentra registrado
     
 
 Día 07/05/24 
@@ -193,3 +194,4 @@ Día 07/05/24
     - He hecho para añadir managers de proyecto con su proyecto (Hay un fallo, si añade un proyecto con un project manager sale en la tabla project manager pero si se añade un project manager desde el apartado project manager con sus proyectos no sale su proyecto conectado, creo que para ello hay que añadir al crear en el project manager que se añada a la columna del proyecto id_projectManager el id de ese nuevo project manager)
     - Por otra parte hay otro fallo al añadir muchos proyectos para un project manager, se rompe la visualización correcta.
     - He añadido el main y new de customers (Me queda cambiar todos los botones a grupo de botones)
+    - He hecho que el empleado solo vea el proyecto en el que se encuentra registrado 
