@@ -44,21 +44,32 @@
                         <?php endif; ?>
                     </div>
 
-                    <!-- Id_project -->
+                    <!-- Employees -->
                     <div class="mb-3">
-                        <label for="id_project" class="form-label">Project</label>
-                        <select class="form-select" name="id_project" id="id_project">
-                            <option selected disabled>Select project </option>
+                        <label class="form-label">Projects</label>
+                        <div class="row">
+                            <?php $count = 0; ?>
                             <?php foreach ($this->projects as $project_): ?>
-                                <option value="<?= $project_->id ?>">
-                                    <?= $project_->project ?> (<?= $project_->desc ?>)
-                                </option>
+                                <?php if ($count % 4 === 0 && $count !== 0): ?>
+                                </div>
+                                <div class="row">
+                                <?php endif; ?>
+                                <div class="col-md-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="projects[]"
+                                            value="<?= $project_->id ?>" id="projects<?= $project_->id ?>">
+                                        <label class="form-check-label" for="projects<?= $project_->id ?>">
+                                            <?= $project_->project ?>
+                                        </label>
+                                    </div>
+                                </div>
+                                <?php $count++; ?>
                             <?php endforeach; ?>
-                        </select>
+                        </div>
                         <!-- Show possible error -->
-                        <?php if (isset($this->errores['id_project'])): ?>
+                        <?php if (isset($this->errores['projects'])): ?>
                             <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['id_project'] ?>
+                                <?= $this->errores['projects'] ?>
                             </span>
                         <?php endif; ?>
                     </div>

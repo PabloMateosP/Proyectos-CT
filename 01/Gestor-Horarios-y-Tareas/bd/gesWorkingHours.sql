@@ -75,18 +75,21 @@ CREATE TABLE `employees` (
 --         '0'
 --     );
 
+
 -- Table structure for table `projects`
 -- Table to collect project data
-DROP TABLE IF EXISTS `projects`;
-
 CREATE TABLE `projects` (
     `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `project` CHAR(8) DEFAULT NULL,
     `description` VARCHAR(50) DEFAULT NULL,
+    `id_projectManager` INT(10) UNSIGNED,
+    `id_customer` INT(10) UNSIGNED,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `finish_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `update_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_project_manager` FOREIGN KEY (`id_projectManager`) REFERENCES `project_managers` (`id`),
+    CONSTRAINT `fk_customer` FOREIGN KEY (`id_customer`) REFERENCES `customers` (`id`)
 );
 
 -- INSERT INTO
@@ -127,7 +130,6 @@ CREATE TABLE `projects` (
 --         5,
 --         5
 --     );
-
 -- Table structure for table `project_employee`
 -- Table to establish the relationship between projects and employees
 -- [Tabla para indicar que un empleado está asociado a uno o varios proyectos y viceversa]
@@ -162,7 +164,6 @@ CREATE TABLE `project_managers` (
 --     ('Rodriguez', 'Carlos', 3),
 --     ('Fernandez', 'Maria', NULL),
 --     ('Martinez', 'Pedro', 5);
-
 -- Table structure for table `projectManager_project`
 -- Table to establish the relationship between project managers and projects
 -- [Tabla para relacionar un manager de proyecto con uno o más proyecto]
@@ -231,7 +232,6 @@ create table `customers` (
 --         'Gran Via 654',
 --         'pedro.martinez@example.com'
 --     );
-
 -- Table structure for table `customer_project`
 -- Table to establish the relationship between customers and projects
 -- [Tabla para relacionar un cliente con varios proyectos]
@@ -275,7 +275,6 @@ CREATE TABLE `tasks` (
 --     (3, 'Pruebas unitarias', 3, 3),
 --     (4, 'Despliegue en producción', 4, 4),
 --     (5, 'Optimización de rendimiento', 4, 5);
-
 -- 
 -- Table structure for table `time_codes`
 -- Table to collect time codes
@@ -301,7 +300,6 @@ CREATE TABLE IF NOT EXISTS `time_codes` (
 --     (905, 'Unpaid Leaves'),
 --     (906, 'Temp Layoff'),
 --     (909, 'Covid Flex-Hours');
-
 --
 -- Table structure for table `working_hours`
 -- Table to collect working hours
@@ -376,7 +374,6 @@ CREATE TABLE IF NOT EXISTS `working_hours` (
 --         5,
 --         '2024-04-14 09:15:45'
 --     );
-
 -- ------------------------------------------------------------------------------------------------------
 -- USER GESTION 
 -- ------------------------------------------------------------------------------------------------------

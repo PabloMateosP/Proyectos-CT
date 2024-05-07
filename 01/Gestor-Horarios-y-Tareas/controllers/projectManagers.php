@@ -15,19 +15,14 @@ class ProjectManagers extends Controller
     # Main method. Charge all the projectManagers in the database.
     public function render($param = [])
     {
-        # Start or continue the session
         session_start();
         if (!isset($_SESSION['id'])) {
             $_SESSION['notify'] = "Unauthenticated user";
-
             header("location:" . URL . "login");
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
             $_SESSION['mensaje'] = "Unauthenticated user";
             header("location:" . URL . "index");
-
         } else {
-
-            # Probing if exist some message
             if (isset($_SESSION['mensaje'])) {
                 $this->view->mensaje = $_SESSION['mensaje'];
                 unset($_SESSION['mensaje']);
@@ -37,9 +32,21 @@ class ProjectManagers extends Controller
 
             $this->view->projectManagers = $this->model->get();
 
+            $projectManagers = $this->model->get();
+
+            $allProjects = []; // Array para almacenar todos los proyectos
+
+            foreach ($projectManagers as $projectManager) {
+                $projects = $this->model->getProjectsByManager($projectManager->id);
+                $allProjects = array_merge($allProjects, $projects); // Fusionar los proyectos al array
+            }
+
+            $this->view->projects = $allProjects; // Asignar todos los proyectos al view
+
             $this->view->render("projectManagers/main/index");
         }
     }
+
 
     # ---------------------------------------------------------------------------------    
     #   _   _ ________          __
@@ -127,7 +134,6 @@ class ProjectManagers extends Controller
             # 1. Security: We sanitize the data that is sent by the user
             $last_name = filter_var($_POST['last_name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $name = filter_var($_POST['name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $id_project = filter_var($_POST['id_project'] ??= '', FILTER_SANITIZE_NUMBER_INT);
 
             # 2. Create an object of the class
             $projectManager = new classProjectManagers(
@@ -155,14 +161,6 @@ class ProjectManagers extends Controller
                 $errores['name'] = 'The field name is too long';
             }
 
-            // # id_project
-            // # If the project Manager hasn't got any project assigned the id_project will be null
-            // if (empty($id_project)) {
-            //     $id_project = null;
-            // } else if (strlen($id_project) > 10) {
-            //     $errores['id_project'] = 'The field id_project is too long';
-            // }
-
             #4. Verify Validation
 
             if (!empty($errores)) {
@@ -176,7 +174,15 @@ class ProjectManagers extends Controller
 
             } else {
 
-                $this->model->create($projectManager);
+                $projectManager_id = $this->model->create($projectManager);
+
+
+                if (isset($_POST['projects'])) {
+                    $projects = $_POST['projects'];
+                    foreach ($projects as $project_id) {
+                        $this->model->insertProjectManagerRelationship($project_id, $projectManager_id);
+                    }
+                }
 
                 #Mensaje
                 $_SESSION['mensaje'] = "Working Hour create correctly";
@@ -263,7 +269,7 @@ class ProjectManagers extends Controller
             header("location:" . URL . "login");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
-            
+
             $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "project");
 

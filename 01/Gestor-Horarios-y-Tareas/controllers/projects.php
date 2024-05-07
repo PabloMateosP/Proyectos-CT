@@ -145,6 +145,8 @@ class Projects extends Controller
                 null,
                 $project_,
                 $description,
+                $id_project_manager,
+                $id_customer,
                 null,
                 $finish_date,
                 null

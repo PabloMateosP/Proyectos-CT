@@ -21,14 +21,9 @@ class projectManagersModel extends Model
             $sql = "
                 SELECT 
                     pM.id,
-                    concat_ws(', ', pM.last_name, pM.name) pManager_name,
-                    pr.project
+                    concat_ws(', ', pM.last_name, pM.name) pManager_name
                 FROM 
                     project_managers pM
-                LEFT JOIN
-                    projectManager_project pMr ON pM.id = pMr.id_project_manager
-                LEFT JOIN 
-                    projects pr ON pMr.id_project = pr.id
                 ORDER by pM.id asc;";
 
             $conexion = $this->db->connect();
@@ -40,6 +35,30 @@ class projectManagersModel extends Model
         } catch (PDOException $e) {
             require_once ("template/partials/errorDB.php");
             exit();
+        }
+    }
+
+    public function getProjectsByManager($managerId)
+    {
+        try {
+
+            $sql = "SELECT p.id_projectManager, p.project 
+                FROM projects p 
+                LEFT JOIN project_managers pm ON p.id_projectManager = pm.id
+                WHERE pm.id = :manager_id OR pm.id IS NULL";
+
+            $conexion = $this->db->connect();
+            $stmt = $conexion->prepare($sql);
+            $stmt->bindParam(':manager_id', $managerId);
+            $stmt->execute();
+
+            return $stmt->fetchAll();
+
+        } catch (PDOException $e) {
+
+            require_once ("template/partials/errorDB.php");
+            exit();
+
         }
     }
 
@@ -113,8 +132,30 @@ class projectManagersModel extends Model
             //-----------------------------------------------------------------------------------
             $pdoSt->bindParam(":last_name", $projectManager->last_name, PDO::PARAM_STR, 45);
             $pdoSt->bindParam(":name", $projectManager->name, PDO::PARAM_STR, 20);
-            
+
             // execute
+            $pdoSt->execute();
+
+            // Retrieve the ID of the last inserted row
+            $lastInsertedId = $conexion->lastInsertId();
+
+            return $lastInsertedId; // Return the ID of the last inserted row
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    public function insertProjectManagerRelationship($projectId, $projectManagerId)
+    {
+        try {
+
+            $sql = "INSERT INTO projectManager_project (id_project, id_project_manager) VALUES (:projectId, :projectManagerId)";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":projectId", $projectId, PDO::PARAM_INT);
+            $pdoSt->bindParam(":projectManagerId", $projectManagerId, PDO::PARAM_INT);
             $pdoSt->execute();
 
         } catch (PDOException $e) {

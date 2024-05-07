@@ -50,8 +50,7 @@
                     <div class="mb-3">
                         <label for="id_project_manager" class="form-label">Project Manager</label>
                         <select class="form-select" name="id_project_manager" id="id_project_manager">
-                            <option selected disabled>Select project manager</option>
-                            <option value="null"></option>
+                            <option selected disabled value="null">Select project manager</option>
                             <?php foreach ($this->project_managers as $project_manager): ?>
                                 <option value="<?= $project_manager->id ?>"
                                     <?= ($this->project_->id_projectManager == $project_manager->id) ? "selected" : null; ?>>
@@ -71,8 +70,7 @@
                     <div class="mb-3">
                         <label for="id_customer" class="form-label">Customer</label>
                         <select class="form-select" name="id_customer" id="id_customer">
-                            <option selected disabled>Select project </option>
-                            <option value="null"></option>
+                            <option selected disabled value="null">Select project </option>
                             <?php foreach ($this->customers as $customer): ?>
                                 <option value="<?= $customer->id ?>" <?= ($this->project_->id_customer == $customer->id) ? "selected" : null; ?>>
                                     <?= $customer->name ?>

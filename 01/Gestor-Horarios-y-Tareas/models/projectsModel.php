@@ -105,13 +105,17 @@ class projectsModel extends Model
                     (
                         project, 
                         description, 
-                        finish_date
+                        finish_date,
+                        id_projectManager,
+                        id_customer
                     ) 
                     VALUES 
                     ( 
                         :project, 
                         :description, 
-                        :finish_date
+                        :finish_date,
+                        :id_projectManager,
+                        :id_customer
                     )";
 
             $conexion = $this->db->connect();
@@ -121,6 +125,8 @@ class projectsModel extends Model
             $pdoSt->bindParam(":project", $project->project, PDO::PARAM_STR, 8);
             $pdoSt->bindParam(":description", $project->description, PDO::PARAM_STR, 50);
             $pdoSt->bindParam(":finish_date", $project->finish_date, PDO::PARAM_STR, 20);
+            $pdoSt->bindParam(":id_projectManager", $project->id_projectManager, PDO::PARAM_INT, 10);
+            $pdoSt->bindParam(":id_customer", $project->id_customer, PDO::PARAM_INT, 10);
 
             // execute
             $pdoSt->execute();
@@ -208,6 +214,8 @@ class projectsModel extends Model
                     id,
                     project, 
                     description,
+                    id_projectManager,
+                    id_customer,
                     finish_date
                 FROM 
                     projects
