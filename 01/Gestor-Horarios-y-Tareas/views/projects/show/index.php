@@ -18,12 +18,13 @@
             </div>
             <div class="card-body">
                 <!-- formulario  -->
-                <form action="<?= URL ?>projects/create" method="POST">
+                <form>
 
                     <!-- Project -->
                     <div class="mb-3">
                         <label for="project" class="form-label">Project</label>
-                        <input type="text" class="form-control" id="project" name="project">
+                        <input type="text" class="form-control" id="project" name="project"
+                            value="<?= $this->project_->project ?>" disabled>
                         <!-- Show possible error -->
                         <?php if (isset($this->errores['project'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -35,7 +36,8 @@
                     <!-- Description -->
                     <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
-                        <input type="text" step="any" class="form-control" id="description" name="description">
+                        <input type="text" step="any" class="form-control" id="description" name="description"
+                            value="<?= $this->project_->description ?>" disabled>
                         <!-- Mostrar posible error -->
                         <?php if (isset($this->errores['description'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -49,8 +51,9 @@
                         <label for="id_project_manager" class="form-label">Project Manager</label>
                         <select class="form-select" name="id_project_manager" id="id_project_manager">
                             <option selected disabled>Select project manager</option>
-                            <?php foreach ($this->project_managers as $project_manager): ?>
-                                <option value="<?= $project_manager->id ?>">
+                            <?php foreach ($this->projectManagers as $project_manager): ?>
+                                <option value="<?= $project_manager->id ?>"
+                                    <?= ($this->project_->id_projectManager == $project_manager->id) ? "selected" : null; ?>>
                                     <?= $project_manager->name ?>, <?= $project_manager->last_name ?>
                                 </option>
                             <?php endforeach; ?>
@@ -67,9 +70,9 @@
                     <div class="mb-3">
                         <label for="id_customer" class="form-label">Customer</label>
                         <select class="form-select" name="id_customer" id="id_customer">
-                            <option selected disabled value="null">Select project </option>
+                            <option selected disabled>Select project </option>
                             <?php foreach ($this->customers as $customer): ?>
-                                <option value="<?= $customer->id ?>">
+                                <option value="<?= $customer->id ?>" <?= ($this->project_->id_customer == $customer->id) ? "selected" : null; ?>>
                                     <?= $customer->name ?>
                                 </option>
                             <?php endforeach; ?>
@@ -95,7 +98,8 @@
                                 <div class="col-md-3">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="employees[]"
-                                            value="<?= $employee_->id ?>" id="employee<?= $employee_->id ?>">
+                                            value="<?= $employee_->id ?>" id="employee<?= $employee_->id ?>"
+                                            <?= (in_array($employee_->id, $this->projectEmployees)) ? "checked" : null; ?> disabled>
                                         <label class="form-check-label" for="employee<?= $employee_->id ?>">
                                             <?= $employee_->employee ?>
                                         </label>
@@ -116,7 +120,8 @@
                     <!-- Finish Date -->
                     <div class="mb-3">
                         <label for="finish_date" class="form-label">Finish Date</label>
-                        <input type="datetime-local" class="form-control" id="finish_date" name="finish_date">
+                        <input type="datetime-local" class="form-control" id="finish_date" name="finish_date"
+                            value="<?= $this->project_->finish_date ?>" disabled>
                         <!-- Show possible error -->
                         <?php if (isset($this->errores['finish_date'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -127,9 +132,7 @@
 
                     <!-- botones de acción -->
                     <div class="mb-3">
-                        <a class="btn btn-secondary" href="<?= URL ?>projects/" role="button">Cancelar</a>
-                        <button type="reset" class="btn btn-danger">Borrar</button>
-                        <button type="submit" class="btn btn-primary">Crear</button>
+                        <a class="btn btn-secondary" href="<?= URL ?>projects/" role="button">Cancel</a>
                     </div>
                 </form>
             </div>

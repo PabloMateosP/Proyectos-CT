@@ -190,30 +190,25 @@ class Projects extends Controller
                 #Create project
                 # Añadir registro a la tabla
 
-                if (empty($id_project_manager) && empty($id_customer)) {
+                $project_id = $this->model->create($project);
 
-                    $this->model->create($project);
-
-                } elseif (empty($id_customer)) {
-
-                    $project_id = $this->model->create($project);
-
-                    $this->model->insertProjectManagerRelationship($project_id, $id_project_manager);
-
-                } elseif (empty($id_project_manager)) {
-
-                    $project_id = $this->model->create($project);
+                if (!empty($id_customer)) {
 
                     $this->model->insertCustomerProjectRelationship($project_id, $id_customer);
 
-                } else {
+                }
 
-                    $project_id = $this->model->create($project);
+                if (!empty($id_project_manager)) {
 
                     $this->model->insertProjectManagerRelationship($project_id, $id_project_manager);
 
-                    $this->model->insertCustomerProjectRelationship($project_id, $id_customer);
+                }
 
+                if (isset($_POST['employees'])) {
+                    $employees = $_POST['employees'];
+                    foreach ($employees as $employee_id) {
+                        $this->model->insertProjectEmployeeRelationship($employee_id, $project_id);
+                    }
                 }
 
                 #Mensaje
@@ -222,6 +217,43 @@ class Projects extends Controller
                 # Redirigimos al main de project
                 header('location:' . URL . 'projects');
             }
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #    
+    #    _____ _    _  ______          __
+    #   / ____| |  | |/ __ \ \        / /
+    #  | (___ | |__| | |  | \ \  /\  / / 
+    #   \___ \|  __  | |  | |\ \/  \/ /  
+    #   ____) | |  | | |__| | \  /\  /   
+    #  |_____/|_|  |_|\____/   \/  \/    
+    #
+    # ---------------------------------------------------------------------------------
+    # Method show 
+    # Show a form to watch the information about a project
+    public function show($param = [])
+    {
+        session_start();
+        if (!isset($_SESSION['id'])) {
+            $_SESSION['mensaje'] = "User must autenthicated";
+
+            header("location:" . URL . "login");
+
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
+            $_SESSION['mensaje'] = "Unprivileged Operation";
+            header("location:" . URL . "projects");
+        } else {
+            $id = $param[0];
+            $this->view->title = "Form Show Project";
+            $this->view->employees = $this->model->get_Employees();
+
+            $this->view->projectEmployees = $this->model->getProjectEmployees($id);
+            $this->view->projectManagers = $this->model->get_projectManagers();
+            $this->view->customers = $this->model->get_customers();
+
+            $this->view->project_ = $this->model->read($id);
+            $this->view->render("projects/show/index");
         }
     }
 

@@ -36,8 +36,6 @@
                             <th>Finish Date</th>
                             <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
                                 <th>Acciones</th>
-                            <?php else: ?>
-                                <!-- No permitido -->
                             <?php endif; ?>
                         </tr>
                     </thead>
@@ -61,6 +59,8 @@
                                 </td>
                                 <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
                                     <td style="display:flex; gap: 5px;">
+                                        <a href="<?= URL ?>projects/show/<?= $project_->id ?>" title="edit" class="btn btn-secondary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ?
+                                                'disabled' : null ?>"> <i class="bi bi-eye"></i> </a>
                                         <a href="<?= URL ?>projects/edit/<?= $project_->id ?>" title="edit" class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ?
                                                 'disabled' : null ?>"> <i class="bi bi-pencil"></i> </a>
                                         <a href="<?= URL ?>projects/delete/<?= $project_->id ?>" title="Eliminar"
@@ -68,23 +68,15 @@
                                             <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ?
                                                 'disabled' : null ?>> <i class="bi bi-trash"></i></a>
                                     </td>
-                                <?php else: ?>
-
                                 <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
-                                <td colspan="6">Nº:
-                                    <?= $this->projects->rowCount() ?>
-                                </td>
-                            <?php else: ?>
-                                <td colspan="8">Nº record:
-                                    <?= $this->projects->rowCount() ?>
-                                </td>
-                            <?php endif; ?>
+                            <td colspan="7">Nº:
+                                <?= $this->projects->rowCount() ?>
+                            </td>
                         </tr>
                     </tfoot>
                 </table>

@@ -62,7 +62,8 @@ class projectsModel extends Model
     # ---------------------------------------------------------------------------------
     # Method get 
     # Select form table enployee
-    public function get_Employees() {
+    public function get_Employees()
+    {
         try {
             $sql = "
             SELECT 
@@ -83,6 +84,7 @@ class projectsModel extends Model
             exit();
         }
     }
+
 
     # ---------------------------------------------------------------------------------
     #    _____  _____   ______         _______  ______ 
@@ -137,7 +139,7 @@ class projectsModel extends Model
     public function insertProjectManagerRelationship($projectId, $projectManagerId)
     {
         try {
-            
+
             $sql = "INSERT INTO projectManager_project (id_project, id_project_manager) VALUES (:projectId, :projectManagerId)";
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
@@ -155,7 +157,7 @@ class projectsModel extends Model
     {
         try {
 
-            $sql = "INSERT INTO customer_project (id_project, id_customer) VALUES (:projectId, :customerId)";
+            $sql = "INSERT INTO customer_project (id_customer, id_project) VALUES ( :customerId, :projectId)";
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->bindParam(":projectId", $projectId, PDO::PARAM_INT);
@@ -167,6 +169,22 @@ class projectsModel extends Model
             exit();
         }
     }
+
+    public function insertProjectEmployeeRelationship($employee_id, $project_id)
+    {
+        try {
+            $sql = "INSERT INTO project_employee (id_employee, id_project) VALUES (:employee_id, :project_id)";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':employee_id', $employee_id, PDO::PARAM_INT);
+            $pdoSt->bindParam(':project_id', $project_id, PDO::PARAM_INT);
+            $pdoSt->execute();
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
 
 
 
@@ -190,8 +208,6 @@ class projectsModel extends Model
                     id,
                     project, 
                     description,
-                    id_projectManager,
-                    id_customer,
                     finish_date
                 FROM 
                     projects
@@ -397,6 +413,16 @@ class projectsModel extends Model
             require_once ("template/partials/errorDB.php");
             exit();
         }
+    }
+
+    public function getProjectEmployees($projectId)
+    {
+        $sql = "SELECT id_employee FROM project_employee WHERE id_project = :id_project";
+        $pdoSt = $this->db->connect()->prepare($sql);
+        $pdoSt->bindParam(':id_project', $projectId, PDO::PARAM_INT);
+        $pdoSt->execute();
+        $result = $pdoSt->fetchAll(PDO::FETCH_COLUMN);
+        return $result;
     }
 
 
