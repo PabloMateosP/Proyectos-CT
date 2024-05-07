@@ -44,7 +44,7 @@
                         <?php endif; ?>
                     </div>
 
-                    <!-- Employees -->
+                    <!-- Projects -->
                     <div class="mb-3">
                         <label class="form-label">Projects</label>
                         <div class="row">
@@ -56,8 +56,12 @@
                                 <?php endif; ?>
                                 <div class="col-md-3">
                                     <div class="form-check">
+                                        <?php
+                                        // Verificar si el proyecto tiene un project manager asociado
+                                        $isDisabled = ($project_->id_projectManager !== null) ? 'disabled' : '';
+                                        ?>
                                         <input class="form-check-input" type="checkbox" name="projects[]"
-                                            value="<?= $project_->id ?>" id="projects<?= $project_->id ?>">
+                                            value="<?= $project_->id ?>" id="projects<?= $project_->id ?>" <?= $isDisabled ?>>
                                         <label class="form-check-label" for="projects<?= $project_->id ?>">
                                             <?= $project_->project ?>
                                         </label>

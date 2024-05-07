@@ -80,7 +80,8 @@ class projectManagersModel extends Model
             $sql = "SELECT 
                         pr.id,
                         pr.project,
-                        pr.description AS 'desc'
+                        pr.description AS 'desc',
+                        pr.id_projectManager
                     FROM 
                         projects pr
                     order by pr.id";
