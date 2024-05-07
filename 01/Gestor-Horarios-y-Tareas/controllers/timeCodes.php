@@ -3,7 +3,6 @@
 class timeCodes extends Controller
 {
 
-
     # ---------------------------------------------------------------------------------
     #   _____  ______ _   _ _____  ______ _____  
     #  |  __ \|  ____| \ | |  __ \|  ____|  __ \ 
@@ -35,7 +34,7 @@ class timeCodes extends Controller
                 unset($_SESSION['mensaje']);
             }
 
-            $this->view->title = "timeCodes Table";
+            $this->view->title = "Time Codes Table";
             $this->view->timeCodes = $this->model->get();
             $this->view->render("timeCodes/main/index");
 
