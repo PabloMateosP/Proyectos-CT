@@ -96,20 +96,7 @@
                         <?php endif; ?>
                     </div>
 
-                    <!-- Total_hours -->
-                    <div class="mb-3">
-                        <label for="" class="form-label">Total Hours</label>
-                        <input type="text" class="form-control" name="total_hours"
-                            value="<?= $this->employee->total_hours ?>" disabled>
-                        <!-- Mostrar posible error -->
-                        <?php if (isset($this->errores['total_hours'])): ?>
-                            <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['total_hours'] ?>
-                            </span>
-                        <?php endif; ?>
-                    </div>
-
-                    <!-- Employees -->
+                    <!-- Projects -->
                     <div class="mb-3">
                         <label class="form-label">Project</label>
                         <div class="row">
@@ -123,7 +110,8 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="projects[]"
                                             value="<?= $project_->id ?>" id="employee<?= $project_->id ?>"
-                                            <?= (in_array($project_->id, $this->projectEmployees)) ? "checked" : null; ?> disabled>
+                                            <?= (in_array($project_->id, $this->projectEmployees)) ? "checked" : null; ?>
+                                            disabled>
                                         <label class="form-check-label" for="employee<?= $project_->id ?>">
                                             <?= $project_->project ?>
                                         </label>
@@ -136,6 +124,19 @@
                         <?php if (isset($this->errores['employees'])): ?>
                             <span class="form-text text-danger" role="alert">
                                 <?= $this->errores['employees'] ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Total_hours -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Total Hours</label>
+                        <input type="text" class="form-control" name="total_hours"
+                            value="<?= $this->employee->total_hours ?>" disabled>
+                        <!-- Mostrar posible error -->
+                        <?php if (isset($this->errores['total_hours'])): ?>
+                            <span class="form-text text-danger" role="alert">
+                                <?= $this->errores['total_hours'] ?>
                             </span>
                         <?php endif; ?>
                     </div>

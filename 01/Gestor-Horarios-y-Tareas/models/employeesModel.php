@@ -400,6 +400,31 @@ class employeesModel extends Model
         }
     }
 
+    public function updateRelationPR($id_employee, $id_project){
+        try {
+
+            $sql = "UPDATE 
+                        project_employee 
+                    SET 
+                        id_project=:id_project
+                    WHERE
+                        id_employee=:id_employee
+                    LIMIT 1;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+
+            $pdoSt->bindParam(":id_employee", $id_employee, PDO::PARAM_INT);
+            $pdoSt->bindParam(":id_project", $id_project, PDO::PARAM_INT);
+
+            $pdoSt->execute();
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
     # Method order
     # Allows you to sort the employee table by any of the main columns
     # The sort order was established by the number of the select column

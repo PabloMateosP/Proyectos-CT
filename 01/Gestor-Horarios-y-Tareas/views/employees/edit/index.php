@@ -92,6 +92,37 @@
                         <?php endif; ?>
                     </div>
 
+                    <!-- Projects -->
+                    <div class="mb-3">
+                        <label class="form-label">Project</label>
+                        <div class="row">
+                            <?php $count = 0; ?>
+                            <?php foreach ($this->projects as $project_): ?>
+                                <?php if ($count % 4 === 0 && $count !== 0): ?>
+                                </div>
+                                <div class="row">
+                                <?php endif; ?>
+                                <div class="col-md-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="projects[]"
+                                            value="<?= $project_->id ?>" id="employee<?= $project_->id ?>"
+                                            <?= (in_array($project_->id, $this->projectEmployees)) ? "checked" : null; ?>>
+                                        <label class="form-check-label" for="employee<?= $project_->id ?>">
+                                            <?= $project_->project ?>
+                                        </label>
+                                    </div>
+                                </div>
+                                <?php $count++; ?>
+                            <?php endforeach; ?>
+                        </div>
+                        <!-- Show possible error -->
+                        <?php if (isset($this->errores['projects'])): ?>
+                            <span class="form-text text-danger" role="alert">
+                                <?= $this->errores['projects'] ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+
                     <!-- Total_hours -->
                     <div class="mb-3">
                         <label for="" class="form-label">Total Hours</label>

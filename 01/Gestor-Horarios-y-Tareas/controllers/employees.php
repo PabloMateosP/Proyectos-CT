@@ -213,7 +213,6 @@ class Employees extends Controller
             } else {
 
                 # Create employee
-
                 # Add employee
                 $employee_id = $this->model->create($employee);
 
@@ -249,10 +248,10 @@ class Employees extends Controller
             header("location:" . URL . "employees");
         } else {
             $id = $param[0];
-            
+
             $this->model->deleteRelation($id);
             $this->model->delete($id);
-            
+
             $_SESSION['mensaje'] = 'Employee delete correctly';
 
             header("Location:" . URL . "employees");
@@ -282,6 +281,12 @@ class Employees extends Controller
 
             $this->view->id = $id;
             $this->view->title = "Form edit employee";
+
+            $this->view->projectEmployees = $this->model->getProjectEmployees($id);
+
+            # We recover the data of all the projects 
+            $this->view->projects = $this->model->getProjects();
+
             $this->view->employee = $this->model->read($id);
 
             # We check for errors -> this variable is created when throwing a validation error
@@ -309,6 +314,16 @@ class Employees extends Controller
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #
+    #   _    _  _____   _____         _______  ______ 
+    #  | |  | ||  __ \ |  __ \    /\ |__   __||  ____|
+    #  | |  | || |__) || |  | |  /  \   | |   | |__   
+    #  | |  | ||  ___/ | |  | | / /\ \  | |   |  __|  
+    #  | |__| || |     | |__| |/ ____ \ | |   | |____ 
+    #   \____/ |_|     |_____//_/    \_\|_|   |______|
+    #                                               
+    # ---------------------------------------------------------------------------------
     # Method update.
     # Update the data of an employee
     public function update($param = [])
@@ -387,7 +402,7 @@ class Employees extends Controller
                         'regexp' => '/^\d{9}$/'
                     ]
                 ];
-                
+
                 if (!filter_var($employee->phone, FILTER_VALIDATE_REGEXP, $options_tlf)) {
                     $errores['telefono'] = 'The format entered is incorrect';
                 }
@@ -449,6 +464,14 @@ class Employees extends Controller
                 header('location:' . URL . 'employees/edit/' . $id);
 
             } else {
+
+                # Clean the array and update the relation between employee and project
+                $projects = array_filter($_POST['projects']);
+                if (!empty($projects)) {
+                    foreach ($projects as $project_id) {
+                        $this->model->updateRelationPR($id, $project_id);
+                    }
+                }
 
                 # Update employee
                 $this->model->update($employee, $id);
