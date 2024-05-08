@@ -198,4 +198,4 @@ Día 07/05/24
 
 Día 08/05/24
     - He hecho el editar y borrar de apartados como employee, projectManager y diferentes apartados 
-    - Un empleado no puede estar sin proyecto
+    - Un empleado no puede estar sin proyecto, además hay método para añadir si el empleado no tiene proyecto desde el inicio y para actualizar la relación si el empleado ya lo tuviera y fuese cambiado 
