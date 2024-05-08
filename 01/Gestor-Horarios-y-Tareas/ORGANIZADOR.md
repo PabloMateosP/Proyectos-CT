@@ -195,3 +195,7 @@ Día 07/05/24
     - Por otra parte hay otro fallo al añadir muchos proyectos para un project manager, se rompe la visualización correcta.
     - He añadido el main y new de customers (Me queda cambiar todos los botones a grupo de botones)
     - He hecho que el empleado solo vea el proyecto en el que se encuentra registrado 
+
+Día 08/05/24
+    - He hecho el editar y borrar de apartados como employee, projectManager y diferentes apartados 
+    - Un empleado no puede estar sin proyecto

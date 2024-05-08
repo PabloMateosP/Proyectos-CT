@@ -159,7 +159,7 @@ class employeesModel extends Model
             include_once ('template/partials/errorDB.php');
             exit();
         }
-        
+
     }
 
 
@@ -225,6 +225,26 @@ class employeesModel extends Model
             exit();
         }
     }
+
+    public function createRelationPR($employeeId, $projectId)
+    {
+        try {
+
+            $sql = "INSERT INTO project_employee (id_employee, id_project) VALUES (:employeeId, :projectId)";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':employeeId', $employeeId, PDO::PARAM_INT);
+            $pdoSt->bindParam(':projectId', $projectId, PDO::PARAM_INT);
+            $pdoSt->execute();
+
+        } catch (PDOException $e) {
+
+            require_once ("template/partials/errorDB.php");
+            throw $e;
+            
+        }
+    }
+
 
     # ---------------------------------------------------------------------------------
     #
@@ -400,7 +420,8 @@ class employeesModel extends Model
         }
     }
 
-    public function updateRelationPR($id_employee, $id_project){
+    public function updateRelationPR($id_employee, $id_project)
+    {
         try {
 
             $sql = "UPDATE 
@@ -635,4 +656,26 @@ class employeesModel extends Model
 
         }
     }
+
+    public function isEmployeeRelatedToProject($employeeId, $projectId)
+    {
+        try {
+
+            $sql = "SELECT COUNT(*) AS count FROM project_employee WHERE id_employee = :employeeId AND id_project = :projectId";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':employeeId', $employeeId, PDO::PARAM_INT);
+            $pdoSt->bindParam(':projectId', $projectId, PDO::PARAM_INT);
+            $pdoSt->execute();
+            $result = $pdoSt->fetch(PDO::FETCH_ASSOC);
+            return ($result['count'] > 0);
+
+        } catch (PDOException $e) {
+
+            include_once ('template/partials/errorDB.php');
+            throw $e;
+
+        }
+    }
+
 }
