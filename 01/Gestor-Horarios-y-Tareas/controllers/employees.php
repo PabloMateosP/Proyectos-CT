@@ -81,6 +81,9 @@ class Employees extends Controller
             }
 
             $this->view->title = "Form new employee";
+
+            $this->view->projects = $this->model->getProjects();
+
             $this->view->render("employees/new/index");
         }
     }
@@ -212,7 +215,14 @@ class Employees extends Controller
                 # Create employee
 
                 # Add employee
-                $this->model->create($employee);
+                $employee_id = $this->model->create($employee);
+
+                if (isset($_POST['projects'])) {
+                    $projects = $_POST['projects'];
+                    foreach ($projects as $project_id) {
+                        $this->model->insertProjectEmployeeRelationship($employee_id, $project_id);
+                    }
+                }
 
                 # Message
                 $_SESSION['message'] = "Employee created correctly";
@@ -239,7 +249,10 @@ class Employees extends Controller
             header("location:" . URL . "employees");
         } else {
             $id = $param[0];
+            
+            $this->model->deleteRelation($id);
             $this->model->delete($id);
+            
             $_SESSION['mensaje'] = 'Employee delete correctly';
 
             header("Location:" . URL . "employees");
@@ -453,7 +466,7 @@ class Employees extends Controller
 
     # Método mostrar
     # Muestra en un formulario de solo lectura los detalles de un employee
-    public function mostrar($param = [])
+    public function show($param = [])
     {
         session_start();
         if (!isset($_SESSION['id'])) {
@@ -461,14 +474,16 @@ class Employees extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['employees']['show']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
             $_SESSION['mensaje'] = "unprivileged operation";
             header("location:" . URL . "employees");
         } else {
             $id = $param[0];
-            $this->view->title = "Formulario employee Mostar";
-            $this->view->employee = $this->model->getemployee($id);
-            $this->view->render("employees/mostrar/index");
+            $this->view->title = "Form Employee Show";
+            $this->view->projectEmployees = $this->model->getProjectEmployees($id);
+            $this->view->projects = $this->model->getProjects();
+            $this->view->employee = $this->model->read($id);
+            $this->view->render("employees/show/index");
         }
     }
 

@@ -176,11 +176,14 @@ class ProjectManagers extends Controller
 
                 $projectManager_id = $this->model->create($projectManager);
 
-
                 if (isset($_POST['projects'])) {
                     $projects = $_POST['projects'];
                     foreach ($projects as $project_id) {
+                        # We update the project manager's relation with the project
                         $this->model->insertProjectManagerRelationship($project_id, $projectManager_id);
+
+                        # We update the id in the table project with the project manager id
+                        $this->model->updateProjectId($project_id, $projectManager_id);
                     }
                 }
 
@@ -368,6 +371,11 @@ class ProjectManagers extends Controller
             header("location:" . URL . "projectManagers");
         } else {
             $id = $param[0];
+
+            # We delete the relation between the project Manager and the project
+            $this->model->deleteRelationPM($id);
+
+            $this->model->updateIdProject($id);
 
             # We delete the projectManagers
             $this->model->delete($id);

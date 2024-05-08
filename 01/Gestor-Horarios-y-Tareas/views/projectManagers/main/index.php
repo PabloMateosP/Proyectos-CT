@@ -52,11 +52,7 @@
                                 </td>
 
                                 <td>
-                                    <?php foreach ($this->projects as $project): ?>
-                                        <?php if ($projectManager->id == $project["id_projectManager"]): ?>
-                                            <div><?= $project["project"] ?></div>
-                                        <?php endif; ?>
-                                    <?php endforeach; ?>
+                                    <?= $projectManager->project ?>
                                 </td>
                                 <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
                                     <td style="display:flex; gap: 5px;">

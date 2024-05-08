@@ -33,6 +33,7 @@
                             <th>Description</th>
                             <th>Project</th>
                             <th>Project Description</th>
+                            <th>Creation date</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -50,6 +51,9 @@
                                 </td>
                                 <td>
                                     <?= $task_->projectDescription ?>
+                                </td>
+                                <td>
+                                    <?= $task_->created_at ?>
                                 </td>
                                 <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
                                     <td style="display:flex; gap: 5px;">

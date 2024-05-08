@@ -58,7 +58,8 @@
                                     <div class="form-check">
                                         <?php
                                         // Verificar si el proyecto tiene un project manager asociado
-                                        $isDisabled = ($project_->id_projectManager !== null) ? 'disabled' : '';
+                                        $isDisabled = ($project_->id_projectManager === null || $project_->id_projectManager === 0) ? '' : 'disabled';
+
                                         ?>
                                         <input class="form-check-input" type="checkbox" name="projects[]"
                                             value="<?= $project_->id ?>" id="projects<?= $project_->id ?>" <?= $isDisabled ?>>

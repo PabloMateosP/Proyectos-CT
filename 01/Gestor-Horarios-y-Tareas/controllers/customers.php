@@ -128,7 +128,7 @@ class Customers extends Controller
             # --
             # 1. Security. Sanitize form data
             # --
-            
+
             $name = filter_var($_POST['name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $phone = filter_var($_POST['phone'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $city = filter_var($_POST['city'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -223,6 +223,42 @@ class Customers extends Controller
                 header('location:' . URL . 'customers');
 
             }
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #
+    #    _____  ______ _      ______ _______ ______ 
+    #    |  __ \|  ____| |    |  ____|__   __|  ____|
+    #    | |  | | |__  | |    | |__     | |  | |__   
+    #    | |  | |  __| | |    |  __|    | |  |  __|  
+    #    | |__| | |____| |____| |____   | |  | |____ 
+    #    |_____/|______|______|______|  |_|  |______|
+    #                                                                                                  
+    # ---------------------------------------------------------------------------------
+    # Method delet. 
+    # Allow the elimination of an employee
+    public function delete($param = [])
+    {
+        session_start();
+        if (!isset($_SESSION['id'])) {
+            $_SESSION['mensaje'] = "User must be authenticated";
+
+            header("location:" . URL . "login");
+
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
+            $_SESSION['mensaje'] = "Unprivileged operation";
+            header("location:" . URL . "customers");
+        } else {
+            $id = $param[0];
+
+            $this->model->deleteRelation($id);
+
+            $this->model->delete($id);
+
+            $_SESSION['mensaje'] = 'Customer delete correctly';
+
+            header("Location:" . URL . "customers");
         }
     }
 

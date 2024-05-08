@@ -62,21 +62,22 @@
                                         <div class="btn-group" role="group" aria-label="Project Actions">
                                             <a href="<?= URL ?>projects/show/<?= $project_->id ?>" title="View"
                                                 class="btn btn-secondary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ? 'disabled' : null ?>">
-                                                <i class="bi bi-eye"></i> 
+                                                <i class="bi bi-eye"></i>
                                             </a>
                                             <a href="<?= URL ?>projects/edit/<?= $project_->id ?>" title="Edit"
                                                 class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ? 'disabled' : null ?>">
-                                                <i class="bi bi-pencil"></i> 
+                                                <i class="bi bi-pencil"></i>
                                             </a>
                                             <a href="<?= URL ?>projects/tasks/<?= $project_->id ?>" title="Tasks"
                                                 class="btn btn-success <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ? 'disabled' : null ?>">
-                                                <i class="bi bi-list-task"></i> 
+                                                <i class="bi bi-list-task"></i>
                                             </a>
                                             <a href="<?= URL ?>projects/delete/<?= $project_->id ?>" title="Delete"
-                                                onclick="return confirm('Confirm project deletion')"
+                                                onclick="return confirm('Confirm project deletion, that will do that the children tasks will be deleted')"
                                                 class="btn btn-danger <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ? 'disabled' : null ?>">
-                                                <i class="bi bi-trash"></i> 
+                                                <i class="bi bi-trash"></i>
                                             </a>
+
                                         </div>
                                     </td>
 

@@ -4,6 +4,16 @@
 class employeesModel extends Model
 {
 
+    # ---------------------------------------------------------------------------------
+    #
+    #     _____ ______ _______ 
+    #    / ____|  ____|__   __|
+    #   | |  __| |__     | |   
+    #   | | |_ |  __|    | |   
+    #   | |__| | |____   | |   
+    #    \_____|______|  |_|   
+    #
+    # ---------------------------------------------------------------------------------
     # Método get
     # Consulta SELECT a la tabla empleados
     public function get()
@@ -37,6 +47,16 @@ class employeesModel extends Model
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #
+    #     _____ ______ _______   ______ __  __ _____  _      ______     ________ ______    ______     __  _____ _____  
+    #    / ____|  ____|__   __| |  ____|  \/  |  __ \| |    / __ \ \   / /  ____|  ____|  |  _ \ \   / / |_   _|  __ \ 
+    #   | |  __| |__     | |    | |__  | \  / | |__) | |   | |  | \ \_/ /| |__  | |__     | |_) \ \_/ /    | | | |  | |
+    #   | | |_ |  __|    | |    |  __| | |\/| |  ___/| |   | |  | |\   / |  __| |  __|    |  _ < \   /     | | | |  | |
+    #   | |__| | |____   | |    | |____| |  | | |    | |___| |__| | | |  | |____| |____   | |_) | | |     _| |_| |__| |
+    #    \_____|______|  |_|    |______|_|  |_|_|    |______\____/  |_|  |______|______|  |____/  |_|    |_____|_____/ 
+    #
+    # ---------------------------------------------------------------------------------
     public function getEmployeeById($id)
     {
         try {
@@ -62,27 +82,97 @@ class employeesModel extends Model
             exit();
         }
     }
-    
-    public function getEmployeeByEmail($email) {
+
+    # ---------------------------------------------------------------------------------
+    #
+    #     _____ ______ _______   ______ __  __ _____  _      ______     ________ ______    ______     __  ______ __  __          _____ _      
+    #    / ____|  ____|__   __| |  ____|  \/  |  __ \| |    / __ \ \   / /  ____|  ____|  |  _ \ \   / / |  ____|  \/  |   /\   |_   _| |     
+    #   | |  __| |__     | |    | |__  | \  / | |__) | |   | |  | \ \_/ /| |__  | |__     | |_) \ \_/ /  | |__  | \  / |  /  \    | | | |     
+    #   | | |_ |  __|    | |    |  __| | |\/| |  ___/| |   | |  | |\   / |  __| |  __|    |  _ < \   /   |  __| | |\/| | / /\ \   | | | |     
+    #   | |__| | |____   | |    | |____| |  | | |    | |___| |__| | | |  | |____| |____   | |_) | | |    | |____| |  | |/ ____ \ _| |_| |____ 
+    #    \_____|______|  |_|    |______|_|  |_|_|    |______\____/  |_|  |______|______|  |____/  |_|    |______|_|  |_/_/    \_\_____|______|
+    #
+    # ---------------------------------------------------------------------------------
+    public function getEmployeeByEmail($email)
+    {
         try {
 
-            $sql = "SELECT * FROM employees WHERE email= :email LIMIT 1";
+            $sql = "SELECT * FROM employees WHERE email= :email LIMIT 1;";
             $pdo = $this->db->connect();
             $stmt = $pdo->prepare($sql);
             $stmt->setFetchMode(PDO::FETCH_OBJ);
             $stmt->bindParam(":email", $email, PDO::PARAM_STR);
             $stmt->execute();
-            
+
             return $stmt->fetch();
 
-        }  catch (PDOException $e) {
-            
-            include_once('template/partials/errorDB.php');
+        } catch (PDOException $e) {
+
+            include_once ('template/partials/errorDB.php');
             exit();
 
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #
+    #     _____ ______ _______   _____  _____   ____       _ ______ _____ _______ _____ 
+    #    / ____|  ____|__   __| |  __ \|  __ \ / __ \     | |  ____/ ____|__   __/ ____|
+    #   | |  __| |__     | |    | |__) | |__) | |  | |    | | |__ | |       | | | (___  
+    #   | | |_ |  __|    | |    |  ___/|  _  /| |  | |_   | |  __|| |       | |  \___ \ 
+    #   | |__| | |____   | |    | |    | | \ \| |__| | |__| | |___| |____   | |  ____) |
+    #    \_____|______|  |_|    |_|    |_|  \_\\____/ \____/|______\_____|  |_| |_____/ 
+    #
+    # ---------------------------------------------------------------------------------
+    public function getProjects()
+    {
+        try {
+
+            $sql = "SELECT * FROM projects ORDER BY id;";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+
+            include_once ('template/partials/errorDB.php');
+            exit();
+
+        }
+    }
+
+    public function getProjectEmployees($employeeId)
+    {
+
+        try {
+
+            $sql = "SELECT id_project FROM project_employee WHERE id_employee = :id_employee";
+            $pdoSt = $this->db->connect()->prepare($sql);
+            $pdoSt->bindParam(':id_employee', $employeeId, PDO::PARAM_INT);
+            $pdoSt->execute();
+            $result = $pdoSt->fetchAll(PDO::FETCH_COLUMN);
+            return $result;
+
+        } catch (PDOException $e) {
+            include_once ('template/partials/errorDB.php');
+            exit();
+        }
+        
+    }
+
+
+    # ---------------------------------------------------------------------------------
+    #
+    #     _____ _____  ______       _______ ______ 
+    #    / ____|  __ \|  ____|   /\|__   __|  ____|
+    #   | |    | |__) | |__     /  \  | |  | |__   
+    #   | |    |  _  /|  __|   / /\ \ | |  |  __|  
+    #   | |____| | \ \| |____ / ____ \| |  | |____ 
+    #    \_____|_|  \_\______/_/    \_\_|  |______|
+    #
+    # ---------------------------------------------------------------------------------
     # Método create
     # Permite ejecutar INSERT en la tabla employees
     public function create(classEmployee $employee)
@@ -125,12 +215,55 @@ class employeesModel extends Model
             // Execute
             $pdoSt->execute();
 
+            // Retrieve the ID of the last inserted row
+            $lastInsertedId = $conexion->lastInsertId();
+
+            return $lastInsertedId; // Return the ID of the last inserted row
+
         } catch (PDOException $e) {
             require_once ("template/partials/errorDB.php");
             exit();
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #
+    #     _____  _____   ____       _ ______ _____ _______   ______ __  __ _____  _      ______     ________ ______ 
+    #    |  __ \|  __ \ / __ \     | |  ____/ ____|__   __| |  ____|  \/  |  __ \| |    / __ \ \   / /  ____|  ____|
+    #    | |__) | |__) | |  | |    | | |__ | |       | |    | |__  | \  / | |__) | |   | |  | \ \_/ /| |__  | |__   
+    #    |  ___/|  _  /| |  | |_   | |  __|| |       | |    |  __| | |\/| |  ___/| |   | |  | |\   / |  __| |  __|  
+    #    | |    | | \ \| |__| | |__| | |___| |____   | |    | |____| |  | | |    | |___| |__| | | |  | |____| |____ 
+    #    |_|    |_|  \_\\____/ \____/|______\_____|  |_|    |______|_|  |_|_|    |______\____/  |_|  |______|______|
+    #
+    # ---------------------------------------------------------------------------------
+    public function insertProjectEmployeeRelationship($employee_id, $project_id)
+    {
+        try {
+
+            $sql = "INSERT INTO project_employee (id_employee, id_project) VALUES (:employee_id, :project_id)";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':employee_id', $employee_id, PDO::PARAM_INT);
+            $pdoSt->bindParam(':project_id', $project_id, PDO::PARAM_INT);
+            $pdoSt->execute();
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #    
+    #   _____  ______ _      ______ _______ ______ 
+    #  |  __ \|  ____| |    |  ____|__   __|  ____|
+    #  | |  | | |__  | |    | |__     | |  | |__   
+    #  | |  | |  __| | |    |  __|    | |  |  __|  
+    #  | |__| | |____| |____| |____   | |  | |____ 
+    #  |_____/|______|______|______|  |_|  |______|
+    #                                              
+    # ---------------------------------------------------------------------------------                                          
     # Método delete
     # Permite ejecutar comando DELETE en la tabla employees
     public function delete($id)
@@ -145,12 +278,38 @@ class employeesModel extends Model
             $pdoSt->execute();
             return $pdoSt;
 
-        } catch (PDOException $error) {
+        } catch (PDOException $e) {
             require_once ("template/partials/errorDB.php");
             exit();
         }
     }
 
+    public function deleteRelation($id_employee)
+    {
+        try {
+            $sql = " DELETE FROM project_employee WHERE id_employee = :id_employee;";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":id_employee", $id_employee, PDO::PARAM_INT);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #
+    #    _____  ______          _____  
+    #   |  __ \|  ____|   /\   |  __ \ 
+    #   | |__) | |__     /  \  | |  | |
+    #   |  _  /|  __|   / /\ \ | |  | |
+    #   | | \ \| |____ / ____ \| |__| |
+    #   |_|  \_\______/_/    \_\_____/ 
+    #
+    # ---------------------------------------------------------------------------------
     # Método read
     # Obtiene los detalles de un employee a partir del id
     public function read($id)
@@ -323,6 +482,18 @@ class employeesModel extends Model
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #
+    #    __      __     _      _____ _____       _______ ______    _    _ _   _ _____ ____  _    _ ______    _____  _    _  ____  _   _ ______ 
+    #    \ \    / /\   | |    |_   _|  __ \   /\|__   __|  ____|  | |  | | \ | |_   _/ __ \| |  | |  ____|  |  __ \| |  | |/ __ \| \ | |  ____|
+    #     \ \  / /  \  | |      | | | |  | | /  \  | |  | |__     | |  | |  \| | | || |  | | |  | | |__     | |__) | |__| | |  | |  \| | |__   
+    #      \ \/ / /\ \ | |      | | | |  | |/ /\ \ | |  |  __|    | |  | | . ` | | || |  | | |  | |  __|    |  ___/|  __  | |  | | . ` |  __|  
+    #       \  / ____ \| |____ _| |_| |__| / ____ \| |  | |____   | |__| | |\  |_| || |__| | |__| | |____   | |    | |  | | |__| | |\  | |____ 
+    #        \/_/    \_\______|_____|_____/_/    \_\_|  |______|   \____/|_| \_|_____\___\_\\____/|______|  |_|    |_|  |_|\____/|_| \_|______|
+    #                                                                                                                                                                                                                                                                                       
+    # ---------------------------------------------------------------------------------
+    # Method validate unique phone 
+    # To validate if a phone introduced is unique
     public function validateUniquePhone($phone)
     {
         try {
@@ -354,6 +525,18 @@ class employeesModel extends Model
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #
+    #  __      __     _      _____ _____       _______ ______    _    _ _   _ _____ ____  _    _ ______    ______ __  __          _____ _      
+    #  \ \    / /\   | |    |_   _|  __ \   /\|__   __|  ____|  | |  | | \ | |_   _/ __ \| |  | |  ____|  |  ____|  \/  |   /\   |_   _| |     
+    #   \ \  / /  \  | |      | | | |  | | /  \  | |  | |__     | |  | |  \| | | || |  | | |  | | |__     | |__  | \  / |  /  \    | | | |     
+    #    \ \/ / /\ \ | |      | | | |  | |/ /\ \ | |  |  __|    | |  | | . ` | | || |  | | |  | |  __|    |  __| | |\/| | / /\ \   | | | |     
+    #     \  / ____ \| |____ _| |_| |__| / ____ \| |  | |____   | |__| | |\  |_| || |__| | |__| | |____   | |____| |  | |/ ____ \ _| |_| |____ 
+    #      \/_/    \_\______|_____|_____/_/    \_\_|  |______|   \____/|_| \_|_____\___\_\\____/|______|  |______|_|  |_/_/    \_\_____|______|
+    #   
+    # ---------------------------------------------------------------------------------
+    # Method validate unique email 
+    # To validate if the email introduced is unique 
     public function validateUniqueEmail($email)
     {
         try {
@@ -385,6 +568,18 @@ class employeesModel extends Model
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #    
+    #  __      __     _      _____ _____       _______ ______    _    _ _   _ _____ ____  _    _ ______    _____  _   _ _____ 
+    #  \ \    / /\   | |    |_   _|  __ \   /\|__   __|  ____|  | |  | | \ | |_   _/ __ \| |  | |  ____|  |  __ \| \ | |_   _|
+    #   \ \  / /  \  | |      | | | |  | | /  \  | |  | |__     | |  | |  \| | | || |  | | |  | | |__     | |  | |  \| | | |  
+    #    \ \/ / /\ \ | |      | | | |  | |/ /\ \ | |  |  __|    | |  | | . ` | | || |  | | |  | |  __|    | |  | | . ` | | |  
+    #     \  / ____ \| |____ _| |_| |__| / ____ \| |  | |____   | |__| | |\  |_| || |__| | |__| | |____   | |__| | |\  |_| |_ 
+    #      \/_/    \_\______|_____|_____/_/    \_\_|  |______|   \____/|_| \_|_____\___\_\\____/|______|  |_____/|_| \_|_____|
+    #
+    # ---------------------------------------------------------------------------------
+    # Method validate unique dni 
+    # To validate if a dni is unique
     public function validateUniqueDni($dni)
     {
         try {

@@ -183,4 +183,50 @@ class customersModel extends Model
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #    
+    #   _____  ______ _      ______ _______ ______ 
+    #  |  __ \|  ____| |    |  ____|__   __|  ____|
+    #  | |  | | |__  | |    | |__     | |  | |__   
+    #  | |  | |  __| | |    |  __|    | |  |  __|  
+    #  | |__| | |____| |____| |____   | |  | |____ 
+    #  |_____/|______|______|______|  |_|  |______|
+    #                                              
+    # ---------------------------------------------------------------------------------                                          
+    # Método delete
+    # Permite ejecutar comando DELETE en la tabla customers
+    public function delete($id)
+    {
+        try {
+
+            $sql = " DELETE FROM customers WHERE id = :id;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":id", $id, PDO::PARAM_INT);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    public function deleteRelation($id_customer)
+    {
+        try {
+            $sql = " DELETE FROM customer_project WHERE id_customer = :id_customer;";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":id_customer", $id_customer, PDO::PARAM_INT);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
 }

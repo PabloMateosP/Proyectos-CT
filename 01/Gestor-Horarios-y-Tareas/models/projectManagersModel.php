@@ -21,10 +21,13 @@ class projectManagersModel extends Model
             $sql = "
                 SELECT 
                     pM.id,
-                    concat_ws(', ', pM.last_name, pM.name) pManager_name
+                    concat_ws(', ', pM.last_name, pM.name) pManager_name,
+                    p.project
                 FROM 
                     project_managers pM
-                ORDER by pM.id asc;";
+                LEFT JOIN projectManager_project pp ON pM.id = pp.id_project_manager
+                LEFT JOIN projects p ON pp.id_project = p.id
+                ORDER BY pM.id ASC;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
@@ -37,6 +40,7 @@ class projectManagersModel extends Model
             exit();
         }
     }
+
 
     public function getProjectsByManager($managerId)
     {
@@ -148,6 +152,32 @@ class projectManagersModel extends Model
         }
     }
 
+    public function updateProjectId($id_project, $id)
+    {
+        try {
+            $sql = "UPDATE projects
+                        SET
+                            id_projectManager=:id_project,
+                            update_at = now()
+                        WHERE
+                            id=:id
+                        LIMIT 1";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+
+            $pdoSt->bindParam(":id_project", $id_project, PDO::PARAM_INT, 10);
+            $pdoSt->bindParam(":id", $id, PDO::PARAM_INT, 10);
+
+            $pdoSt->execute();
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+
+    }
+
     public function insertProjectManagerRelationship($projectId, $projectManagerId)
     {
         try {
@@ -207,6 +237,34 @@ class projectManagersModel extends Model
         }
     }
 
+
+    public function updateIdProject($id)
+    {
+        try {
+
+            $sql = "UPDATE projects
+                    SET
+                        id_projectManager=null,
+                        update_at=now()
+                    WHERE
+                        id=:id
+                    LIMIT 1";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+
+            $pdoSt->bindParam(":id", $id, PDO::PARAM_STR);
+
+            $pdoSt->execute();
+
+        } catch (PDOException $e) {
+
+            require_once ("template/partials/errorDB.php");
+            exit();
+
+        }
+    }
+
     # ---------------------------------------------------------------------------------
     #    
     #   _____  ______ _      ______ _______ ______ 
@@ -223,11 +281,28 @@ class projectManagersModel extends Model
     {
         try {
 
-            $sql = "DELETE FROM projectManager WHERE id = :id;";
+            $sql = "DELETE FROM project_managers WHERE id = :id;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->bindParam(":id", $id, PDO::PARAM_INT);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    public function deleteRelationPM($id_project_manager)
+    {
+        try {
+
+            $sql = " DELETE FROM projectManager_project WHERE id_project_manager = :id_project_manager;";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":id_project_manager", $id_project_manager, PDO::PARAM_INT);
             $pdoSt->execute();
             return $pdoSt;
 

@@ -27,55 +27,6 @@ CREATE TABLE `employees` (
     UNIQUE KEY `email` (`email`)
 );
 
--- INSERT INTO
---     `employees` (
---         `last_name`,
---         `name`,
---         `phone`,
---         `city`,
---         `dni`,
---         `email`,
---         `total_hours`
---     )
--- VALUES
---     (
---         'Gomez',
---         'Juan',
---         '123456789',
---         'Madrid',
---         '12345678A',
---         'juan.gomez@example.com',
---         '0'
---     ),
---     (
---         'Lopez',
---         'Maria',
---         '987654321',
---         'Barcelona',
---         '87654321B',
---         'maria.lopez@example.com',
---         '0'
---     ),
---     (
---         'Martinez',
---         'Carlos',
---         '456123789',
---         'Valencia',
---         '23456789C',
---         'carlos.martinez@example.com',
---         '0'
---     ),
---     (
---         'Rodriguez',
---         'Ana',
---         '789456123',
---         'Sevilla',
---         '34567890D',
---         'ana.rodriguez@example.com',
---         '0'
---     );
-
-
 -- Table structure for table `projects`
 -- Table to collect project data
 CREATE TABLE `projects` (
@@ -92,44 +43,6 @@ CREATE TABLE `projects` (
     CONSTRAINT `fk_customer` FOREIGN KEY (`id_customer`) REFERENCES `customers` (`id`)
 );
 
--- INSERT INTO
---     `projects` (
---         `project`,
---         `description`,
---         `id_projectManager`,
---         `id_customer`
---     )
--- VALUES
---     (
---         'PRJ001',
---         'Desarrollo de una aplicación web',
---         1,
---         1
---     ),
---     (
---         'PRJ002',
---         'Migración de base de datos',
---         2,
---         2
---     ),
---     (
---         'PRJ003',
---         'Implementación de seguridad de red',
---         3,
---         3
---     ),
---     (
---         'PRJ004',
---         'Optimización de infraestructura en la nube',
---         4,
---         4
---     ),
---     (
---         'PRJ005',
---         'Desarrollo de una aplicación móvil',
---         5,
---         5
---     );
 -- Table structure for table `project_employee`
 -- Table to establish the relationship between projects and employees
 -- [Tabla para indicar que un empleado está asociado a uno o varios proyectos y viceversa]
@@ -194,44 +107,6 @@ create table `customers` (
     PRIMARY KEY (`id`)
 );
 
--- INSERT INTO
---     `customer` (`name`, `phone`, `city`, `address`, `email`)
--- VALUES
---     (
---         'Juan Perez',
---         '123456789',
---         'Madrid',
---         'Calle Falsa 123',
---         'juan.perez@example.com'
---     ),
---     (
---         'Ana Gomez',
---         '987654321',
---         'Barcelona',
---         'Avenida Siempre Viva 456',
---         'ana.gomez@example.com'
---     ),
---     (
---         'Carlos Rodriguez',
---         '456789123',
---         'Valencia',
---         'Plaza Mayor 789',
---         'carlos.rodriguez@example.com'
---     ),
---     (
---         'Maria Fernandez',
---         '321654987',
---         'Sevilla',
---         'Paseo de la Castellana 321',
---         'maria.fernandez@example.com'
---     ),
---     (
---         'Pedro Martinez',
---         '654321789',
---         'Zaragoza',
---         'Gran Via 654',
---         'pedro.martinez@example.com'
---     );
 -- Table structure for table `customer_project`
 -- Table to establish the relationship between customers and projects
 -- [Tabla para relacionar un cliente con varios proyectos]
@@ -251,7 +126,7 @@ DROP TABLE IF EXISTS `tasks`;
 
 CREATE TABLE `tasks` (
     `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `task` INT(10) DEFAULT NULL,
+    `task` VARCHAR(20) DEFAULT NULL,
     `description` VARCHAR(50) DEFAULT NULL,
     `id_employee` INT(10) UNSIGNED DEFAULT NULL,
     `id_project` INT(10) UNSIGNED DEFAULT NULL,
@@ -262,19 +137,6 @@ CREATE TABLE `tasks` (
     FOREIGN KEY (`id_project`) REFERENCES `projects`(`id`)
 );
 
--- INSERT INTO
---     `tasks` (
---         `task`,
---         `description`,
---         `id_employee`,
---         `id_project`
---     )
--- VALUES
---     (1, 'Diseño de interfaz de usuario', 1, 1),
---     (2, 'Desarrollo de backend', 2, 2),
---     (3, 'Pruebas unitarias', 3, 3),
---     (4, 'Despliegue en producción', 4, 4),
---     (5, 'Optimización de rendimiento', 4, 5);
 -- 
 -- Table structure for table `time_codes`
 -- Table to collect time codes
@@ -289,18 +151,6 @@ CREATE TABLE IF NOT EXISTS `time_codes` (
     PRIMARY KEY (`id`)
 );
 
--- INSERT INTO
---     `time_codes` (`time_code`, `description`)
--- VALUES
---     (100, 'Normal Hours'),
---     (200, 'Non Productive Hours'),
---     (555, 'Extra Hours'),
---     (900, 'Vacation Hours'),
---     (901, 'Compensation Hours'),
---     (905, 'Unpaid Leaves'),
---     (906, 'Temp Layoff'),
---     (909, 'Covid Flex-Hours');
---
 -- Table structure for table `working_hours`
 -- Table to collect working hours
 DROP TABLE IF EXISTS `working_hours`;
@@ -327,53 +177,6 @@ CREATE TABLE IF NOT EXISTS `working_hours` (
     FOREIGN KEY (`id_task`) REFERENCES `tasks` (`id`)
 );
 
--- INSERT INTO
---     `working_hours` (
---         `id_employee`,
---         `id_time_code`,
---         `id_project`,
---         `id_task`,
---         `description`,
---         `duration`,
---         `date_worked`
---     )
--- VALUES
---     (
---         1,
---         2,
---         4,
---         5,
---         'Trabajo en el proyecto X',
---         3,
---         '2024-04-17 12:39:58'
---     ),
---     (
---         2,
---         3,
---         5,
---         1,
---         'Revisión de la tarea Y',
---         5,
---         '2024-04-16 10:30:00'
---     ),
---     (
---         3,
---         4,
---         1,
---         2,
---         'Desarrollo de la orden de trabajo Z',
---         8,
---         '2024-04-15 14:45:30'
---     ),
---     (
---         4,
---         5,
---         2,
---         3,
---         'Análisis del código de tiempo A',
---         5,
---         '2024-04-14 09:15:45'
---     );
 -- ------------------------------------------------------------------------------------------------------
 -- USER GESTION 
 -- ------------------------------------------------------------------------------------------------------

@@ -218,19 +218,20 @@ class projectsModel extends Model
     public function insertProjectEmployeeRelationship($employee_id, $project_id)
     {
         try {
+
             $sql = "INSERT INTO project_employee (id_employee, id_project) VALUES (:employee_id, :project_id)";
+
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->bindParam(':employee_id', $employee_id, PDO::PARAM_INT);
             $pdoSt->bindParam(':project_id', $project_id, PDO::PARAM_INT);
             $pdoSt->execute();
+
         } catch (PDOException $e) {
             require_once ("template/partials/errorDB.php");
             exit();
         }
     }
-
-
 
 
     # ---------------------------------------------------------------------------------
@@ -277,6 +278,7 @@ class projectsModel extends Model
         }
 
     }
+
     # ---------------------------------------------------------------------------------
     #  
     #   _    _ _____  _____       _______ ______ 
@@ -323,6 +325,31 @@ class projectsModel extends Model
         }
     }
 
+    public function updatePMyC($id_project)
+    {
+        try {
+            $sql = " 
+                    UPDATE projects
+                    SET
+                        id_projectManager=null,
+                        id_customer=null
+                    WHERE
+                        id=:id
+                    LIMIT 1";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+
+            $pdoSt->bindParam(":id", $id_project, PDO::PARAM_STR);
+
+            $pdoSt->execute();
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
 
     # ---------------------------------------------------------------------------------   
     #  
@@ -345,6 +372,74 @@ class projectsModel extends Model
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->bindParam(":id", $id, PDO::PARAM_INT);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    public function deleteRelationE($id_project)
+    {
+        try {
+            
+            $sql = " DELETE FROM project_employee WHERE id_project = :id_project;";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":id_project", $id_project, PDO::PARAM_INT);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    public function deleteRelationPM($id_project)
+    {
+        try {
+
+            $sql = " DELETE FROM projectManager_project WHERE id_project = :id_project;";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":id_project", $id_project, PDO::PARAM_INT);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    public function deleteRelationC($id_project)
+    {
+        try {
+
+            $sql = " DELETE FROM customer_project WHERE id_project = :id_project;";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":id_project", $id_project, PDO::PARAM_INT);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    public function deleteTasks($id_project)
+    {
+        try {
+
+            $sql = "DELETE FROM tasks WHERE id_project = :id_project;";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":id_project", $id_project, PDO::PARAM_INT);
             $pdoSt->execute();
             return $pdoSt;
 

@@ -295,7 +295,22 @@ class Projects extends Controller
         } else {
             $id = $param[0];
 
-            # We delete the working hour
+            # We update the line id_projectManager and customer from the project table to delete te relations
+            $this->model->updatePMyC($id);
+
+            # We delete the relation between employee and project
+            $this->model->deleteRelationE($id);
+
+            # We delete the relation between project and project manager
+            $this->model->deleteRelationPM($id);
+
+            # We delete the relation between project and customer
+            $this->model->deleteRelationC($id);
+
+            # We delete the tasks from the project delete 
+            $this->model->deleteTasks($id);
+            
+            # We delete the project
             $this->model->delete($id);
 
             $_SESSION['mensaje'] = 'Project delete correctly';

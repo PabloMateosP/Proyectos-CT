@@ -24,7 +24,8 @@ class tasksModel extends Model
                 tk.task,
                 tk.description,
                 pr.project,
-                pr.description projectDescription
+                pr.description projectDescription,
+                tk.created_at
             FROM 
                 tasks tk
             JOIN 

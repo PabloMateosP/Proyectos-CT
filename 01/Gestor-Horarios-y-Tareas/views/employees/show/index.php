@@ -3,7 +3,7 @@
 
 <head>
     <?php require_once ("template/partials/head.php"); ?>
-    <title>Add employee</title>
+    <title>Add employee - Gesbank</title>
 </head>
 
 <body>
@@ -18,11 +18,12 @@
             </div>
             <div class="card-body">
                 <!-- formulario  -->
-                <form action="<?= URL ?>employees/create" method="POST">
+                <form>
                     <!-- name -->
                     <div class="mb-3">
                         <label for="" class="form-label">Name</label>
-                        <input type="text" class="form-control" name="name" value="<?= $this->employee->name ?>">
+                        <input type="text" class="form-control" name="name" value="<?= $this->employee->name ?>"
+                            disabled>
                         <!-- Mostrar posible error -->
                         <?php if (isset($this->errores['name'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -35,7 +36,7 @@
                     <div class="mb-3">
                         <label for="" class="form-label">Last Name</label>
                         <input type="text" class="form-control" name="last_name"
-                            value="<?= $this->employee->last_name ?>">
+                            value="<?= $this->employee->last_name ?>" disabled>
                         <!-- Mostrar posible error -->
                         <?php if (isset($this->errores['last_name'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -47,7 +48,8 @@
                     <!-- city -->
                     <div class="mb-3">
                         <label for="" class="form-label">City</label>
-                        <input type="text" class="form-control" name="city" value="<?= $this->employee->city ?>">
+                        <input type="text" class="form-control" name="city" value="<?= $this->employee->city ?>"
+                            disabled>
                         <!-- Mostrar posible error -->
                         <?php if (isset($this->errores['city'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -59,7 +61,8 @@
                     <!-- email -->
                     <div class="mb-3">
                         <label for="" class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" value="<?= $this->employee->email ?>">
+                        <input type="email" class="form-control" name="email" value="<?= $this->employee->email ?>"
+                            disabled>
                         <!-- Mostrar posible error -->
                         <?php if (isset($this->errores['email'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -71,7 +74,8 @@
                     <!-- phone -->
                     <div class="mb-3">
                         <label for="" class="form-label">Phone</label>
-                        <input type="number" class="form-control" name="phone" value="<?= $this->employee->phone ?>">
+                        <input type="number" class="form-control" name="phone" value="<?= $this->employee->phone ?>"
+                            disabled>
                         <!-- Mostrar posible error -->
                         <?php if (isset($this->errores['phone'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -83,7 +87,7 @@
                     <!-- dni -->
                     <div class="mb-3">
                         <label for="" class="form-label">DNI</label>
-                        <input type="text" class="form-control" name="dni" value="<?= $this->employee->dni ?>">
+                        <input type="text" class="form-control" name="dni" value="<?= $this->employee->dni ?>" disabled>
                         <!-- Mostrar posible error -->
                         <?php if (isset($this->errores['dni'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -96,7 +100,7 @@
                     <div class="mb-3">
                         <label for="" class="form-label">Total Hours</label>
                         <input type="text" class="form-control" name="total_hours"
-                            value="<?= $this->employee->total_hours ?>">
+                            value="<?= $this->employee->total_hours ?>" disabled>
                         <!-- Mostrar posible error -->
                         <?php if (isset($this->errores['total_hours'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -105,9 +109,9 @@
                         <?php endif; ?>
                     </div>
 
-                    <!-- Projects -->
+                    <!-- Employees -->
                     <div class="mb-3">
-                        <label class="form-label">Projects</label>
+                        <label class="form-label">Project</label>
                         <div class="row">
                             <?php $count = 0; ?>
                             <?php foreach ($this->projects as $project_): ?>
@@ -118,8 +122,9 @@
                                 <div class="col-md-3">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="projects[]"
-                                            value="<?= $project_->id ?>" id="project<?= $project_->id ?>">
-                                        <label class="form-check-label" for="project<?= $project_->id ?>">
+                                            value="<?= $project_->id ?>" id="employee<?= $project_->id ?>"
+                                            <?= (in_array($project_->id, $this->projectEmployees)) ? "checked" : null; ?> disabled>
+                                        <label class="form-check-label" for="employee<?= $project_->id ?>">
                                             <?= $project_->project ?>
                                         </label>
                                     </div>
@@ -128,9 +133,9 @@
                             <?php endforeach; ?>
                         </div>
                         <!-- Show possible error -->
-                        <?php if (isset($this->errores['projects'])): ?>
+                        <?php if (isset($this->errores['employees'])): ?>
                             <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['projects'] ?>
+                                <?= $this->errores['employees'] ?>
                             </span>
                         <?php endif; ?>
                     </div>

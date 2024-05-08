@@ -128,7 +128,7 @@ class Tasks extends Controller
         } else {
 
             # 1. Security: We sanitize the data that is sent by the user
-            $task_ = filter_var($_POST['task'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $task_ = filter_var($_POST['task'] ??= '', FILTER_SANITIZE_STRING);
             $id_project = filter_var($_POST['id_project'] ??= '', FILTER_SANITIZE_NUMBER_INT);
             $description = filter_var($_POST['description'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
 
