@@ -187,6 +187,12 @@ Hay que hacer: (muchas cosas :[)
     --> Hacer que cuando se añada un nuevo project manager con un proyecto, al campo id_projectManager de ese proyecto se le añada el id de ese projectManager, además de al editar y al eliminar.
     --> Hay que añadir a los empleados el poder introfucirlos en un proyecto al crearlo
     --> Hay que hacer que el empleado solo vea las tareas del proyecto en el que se encuentra registrado
+
+    !--> Lo más importante es conseguir arreglar el edit de empleados en caso de que un empleado sea cambiado de un proyecto a otro¡
+
+
+    [Hacer una función que recoja los proyectos de un empleado se comparan con los introducidos por el formulario
+    si alguno es igual se deja, si tenía alguno antes pero ahora no se borra la relación y si no tenía ninguno se crean los nuevo]
     
 
 Día 07/05/24 
@@ -199,3 +205,6 @@ Día 07/05/24
 Día 08/05/24
     - He hecho el editar y borrar de apartados como employee, projectManager y diferentes apartados 
     - Un empleado no puede estar sin proyecto, además hay método para añadir si el empleado no tiene proyecto desde el inicio y para actualizar la relación si el empleado ya lo tuviera y fuese cambiado 
+
+Día 09/05/24
+    - Llevo todo el día intentando completar la actualización del empleado para que en caso de que sea borrado de un proyecto y puesto en otro se pueda pero no lo consigo. (En parte el botón check cuando se despulsa, no envía valor por lo que no podemos saber cual es el proyecto del que ha sido borrado)

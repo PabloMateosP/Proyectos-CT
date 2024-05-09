@@ -21,12 +21,9 @@ class projectManagersModel extends Model
             $sql = "
                 SELECT 
                     pM.id,
-                    concat_ws(', ', pM.last_name, pM.name) pManager_name,
-                    p.project
+                    concat_ws(', ', pM.last_name, pM.name) pManager_name
                 FROM 
                     project_managers pM
-                LEFT JOIN projectManager_project pp ON pM.id = pp.id_project_manager
-                LEFT JOIN projects p ON pp.id_project = p.id
                 ORDER BY pM.id ASC;";
 
             $conexion = $this->db->connect();
@@ -41,12 +38,11 @@ class projectManagersModel extends Model
         }
     }
 
-
     public function getProjectsByManager($managerId)
     {
         try {
 
-            $sql = "SELECT p.id_projectManager, p.project 
+            $sql = "SELECT p.id_projectManager, p.project
                 FROM projects p 
                 LEFT JOIN project_managers pm ON p.id_projectManager = pm.id
                 WHERE pm.id = :manager_id OR pm.id IS NULL";

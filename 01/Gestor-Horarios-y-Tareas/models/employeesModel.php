@@ -231,6 +231,7 @@ class employeesModel extends Model
         try {
 
             $sql = "INSERT INTO project_employee (id_employee, id_project) VALUES (:employeeId, :projectId)";
+            
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->bindParam(':employeeId', $employeeId, PDO::PARAM_INT);
@@ -304,13 +305,14 @@ class employeesModel extends Model
         }
     }
 
-    public function deleteRelation($id_employee)
+    public function deleteRelation($id_project, $id_employee)
     {
         try {
-            $sql = " DELETE FROM project_employee WHERE id_employee = :id_employee;";
+            $sql = " DELETE FROM project_employee WHERE id_employee = :id_employee AND id_project =:id_project ;";
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->bindParam(":id_employee", $id_employee, PDO::PARAM_INT);
+            $pdoSt->bindParam(":id_project", $id_project, PDO::PARAM_INT);
             $pdoSt->execute();
             return $pdoSt;
 
@@ -657,6 +659,9 @@ class employeesModel extends Model
         }
     }
 
+    # ---------------------------------------------------------------------------------
+
+    # ---------------------------------------------------------------------------------
     public function isEmployeeRelatedToProject($employeeId, $projectId)
     {
         try {

@@ -465,22 +465,18 @@ class Employees extends Controller
 
             } else {
 
-                # Clean the array and update or create the relation between employee and project
-                $projects = array_filter($_POST['projects']);
-                if (!empty($projects)) {
-                    foreach ($projects as $project_id) {
-                        // Verificar si el empleado ya tiene este proyecto relacionado
-                        $isEmployeeRelatedToProject = $this->model->isEmployeeRelatedToProject($id, $project_id);
+                # Recogemos los proyectos a los que el empleado se encuentra relacionado 
+                $projectEmployeeRelated = $this->model->getProjectEmployees($id);
 
-                        if ($isEmployeeRelatedToProject) {
-                            // Si el empleado ya tiene este proyecto relacionado, actualizar la relación
-                            $this->model->updateRelationPR($id, $project_id);
-                        } else {
-                            // Si el empleado no tiene este proyecto relacionado, crear la relación
-                            $this->model->createRelationPR($id, $project_id);
+                foreach ($projectEmployeeRelated as $project) {
+                    foreach ($_POST['projects'] as $project_id) {
+                        if ($project == $project_id) {
+                            
                         }
                     }
                 }
+
+
 
                 # Update employee
                 $this->model->update($employee, $id);

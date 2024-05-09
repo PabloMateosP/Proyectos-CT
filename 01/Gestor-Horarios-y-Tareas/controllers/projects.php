@@ -499,34 +499,33 @@ class Projects extends Controller
             } else {
 
                 // Check if there's a project manager relationship
-                $hasProjectManagerRelation = $this->model->hasProjectManagerRelation($id);
+                $hasProjectManagerRelation = !empty($project->id_projectManager) ? $this->model->hasProjectManagerRelation($id) : false;
 
-                if ($hasProjectManagerRelation) {
-                    
-                    // Update existing project manager relationship
-                    $this->model->updateProjectManagerRelation($project->id_projectManager, $id);
-
-                } else {
-
-                    // Create new project manager relationship
-                    $this->model->insertProjectManagerRelationship($id, $project->id_projectManager);
-
+                if (!empty($project->id_projectManager)) {
+                    if ($hasProjectManagerRelation) {
+                        // Update existing project manager relationship
+                        $this->model->updateProjectManagerRelation($project->id_projectManager, $id);
+                    } else {
+                        // Create new project manager relationship
+                        $this->model->insertProjectManagerRelationship($id, $project->id_projectManager);
+                    }
                 }
 
                 // Check if there's a customer relationship
-                $hasCustomerRelation = $this->model->hasCustomerRelation($id);
+                $hasCustomerRelation = !empty($project->id_customer) ? $this->model->hasCustomerRelation($id) : false;
 
-                if ($hasCustomerRelation) {
-
-                    // Update existing customer relationship
-                    $this->model->updateCustomerRelation($project->id_customer, $id);
-
-                } else {
-
-                    // Create new customer relationship
-                    $this->model->insertCustomerProjectRelationship($id, $project->id_customer);
-
+                if (!empty($project->id_customer)) {
+                    if ($hasCustomerRelation) {
+                        // Update existing customer relationship
+                        $this->model->updateCustomerRelation($project->id_customer, $id);
+                    } else {
+                        // Create new customer relationship
+                        $this->model->insertCustomerProjectRelationship($id, $project->id_customer);
+                    }
                 }
+
+                // Update project data
+                $this->model->update($project, $id);
 
                 // Update project data
                 $this->model->update($project, $id);

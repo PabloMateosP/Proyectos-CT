@@ -35,8 +35,6 @@
                             <th>Project</th>
                             <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
                                 <th>Actions</th>
-                            <?php else: ?>
-
                             <?php endif; ?>
                         </tr>
                     </thead>
@@ -50,9 +48,12 @@
                                 <td>
                                     <?= $projectManager->pManager_name ?>
                                 </td>
-
                                 <td>
-                                    <?= $projectManager->project ?>
+                                    <?php foreach ($this->projects as $project): ?>
+                                        <?php if ($project['id_projectManager'] == $projectManager->id): ?>
+                                            <?= $project['project'] ?> |
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
                                 </td>
                                 <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
                                     <td style="display:flex; gap: 5px;">

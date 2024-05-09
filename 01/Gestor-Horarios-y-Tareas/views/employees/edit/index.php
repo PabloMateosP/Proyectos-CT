@@ -104,6 +104,7 @@
                                 <?php endif; ?>
                                 <div class="col-md-3">
                                     <div class="form-check">
+                                        <!-- Campo oculto para enviar un valor nulo solo cuando el checkbox no está marcado -->
                                         <input class="form-check-input" type="checkbox" name="projects[]"
                                             value="<?= $project_->id ?>" id="employee<?= $project_->id ?>"
                                             <?= (in_array($project_->id, $this->projectEmployees)) ? "checked" : null; ?>>
@@ -122,6 +123,8 @@
                             </span>
                         <?php endif; ?>
                     </div>
+
+
 
                     <!-- Total_hours -->
                     <div class="mb-3">
