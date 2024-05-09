@@ -384,7 +384,7 @@ class projectsModel extends Model
     public function deleteRelationE($id_project)
     {
         try {
-            
+
             $sql = " DELETE FROM project_employee WHERE id_project = :id_project;";
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
@@ -559,13 +559,99 @@ class projectsModel extends Model
 
     public function getProjectEmployees($projectId)
     {
-        $sql = "SELECT id_employee FROM project_employee WHERE id_project = :id_project";
-        $pdoSt = $this->db->connect()->prepare($sql);
-        $pdoSt->bindParam(':id_project', $projectId, PDO::PARAM_INT);
-        $pdoSt->execute();
-        $result = $pdoSt->fetchAll(PDO::FETCH_COLUMN);
-        return $result;
+        try {
+
+            $sql = "SELECT id_employee FROM project_employee WHERE id_project = :id_project";
+            $pdoSt = $this->db->connect()->prepare($sql);
+            $pdoSt->bindParam(':id_project', $projectId, PDO::PARAM_INT);
+            $pdoSt->execute();
+            $result = $pdoSt->fetchAll(PDO::FETCH_COLUMN);
+            return $result;
+
+        } catch (PDOException $e) {
+
+            require_once ("template/partials/errorDB.php");
+            exit();
+
+        }
+        
     }
 
 
+    public function hasProjectManagerRelation($projectId)
+    {
+        try {
+
+            $sql = "SELECT COUNT(*) AS count FROM projectManager_project WHERE id_project = :projectId";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':projectId', $projectId, PDO::PARAM_INT);
+            $pdoSt->execute();
+            $result = $pdoSt->fetch(PDO::FETCH_ASSOC);
+            return $result['count'] > 0;
+
+        } catch (PDOException $e) {
+
+            require_once ("template/partials/errorDB.php");
+            exit();
+
+        }
+    }
+
+    public function updateProjectManagerRelation($projectManagerId, $projectId)
+    {
+        try {
+
+            $sql = "UPDATE projectManager_project SET id_project_manager = :projectManagerId WHERE id_project = :projectId";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':projectManagerId', $projectManagerId, PDO::PARAM_INT);
+            $pdoSt->bindParam(':projectId', $projectId, PDO::PARAM_INT);
+            $pdoSt->execute();
+
+        } catch (PDOException $e) {
+
+            require_once ("template/partials/errorDB.php");
+            exit();
+
+        }
+    }
+
+    public function hasCustomerRelation($projectId)
+    {
+        try {
+            $sql = "SELECT COUNT(*) AS count FROM customer_project WHERE id_project = :projectId";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':projectId', $projectId, PDO::PARAM_INT);
+            $pdoSt->execute();
+            $result = $pdoSt->fetch(PDO::FETCH_ASSOC);
+            return $result['count'] > 0;
+
+        } catch (PDOException $e) {
+
+            require_once ("template/partials/errorDB.php");
+            exit();
+
+        }
+    }
+
+    public function updateCustomerRelation($customerId, $projectId)
+    {
+        try {
+
+            $sql = "UPDATE customer_project SET id_customer = :customerId WHERE id_project = :projectId";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':customerId', $customerId, PDO::PARAM_INT);
+            $pdoSt->bindParam(':projectId', $projectId, PDO::PARAM_INT);
+            $pdoSt->execute();
+
+        } catch (PDOException $e) {
+
+            require_once ("template/partials/errorDB.php");
+            exit();
+
+        }
+    }
 }

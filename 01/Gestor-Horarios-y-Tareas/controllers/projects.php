@@ -44,11 +44,11 @@ class Projects extends Controller
                 $this->view->projects = $this->model->getEmpProj($_SESSION['employee_id']);
 
             } else {
-                
+
                 $this->view->projects = $this->model->get();
 
             }
-            
+
             $this->view->render("projects/main/index");
 
         }
@@ -309,7 +309,7 @@ class Projects extends Controller
 
             # We delete the tasks from the project delete 
             $this->model->deleteTasks($id);
-            
+
             # We delete the project
             $this->model->delete($id);
 
@@ -390,33 +390,27 @@ class Projects extends Controller
     #                                               
     # ---------------------------------------------------------------------------------
     # Método update.
-    # Update the table of the table workinhours 
+    # Update the table of the table project
     public function update($param = [])
     {
-
-        #Iniciar Sesión
+        // Iniciar Sesión
         session_start();
 
         if (!isset($_SESSION['id'])) {
             $_SESSION['mensaje'] = "User must be authenticated";
-
             header("location:" . URL . "login");
-
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
-
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
             $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "project");
-
         } else {
+            // Sanitize data
+            $project_ = filter_var($_POST['project'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $description = filter_var($_POST['description'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $id_Manager = filter_var($_POST['id_project_manager'] ?? '', FILTER_SANITIZE_NUMBER_INT);
+            $id_customer = filter_var($_POST['id_customer'] ?? '', FILTER_SANITIZE_NUMBER_INT);
+            $finish_date = filter_var($_POST['finish_date'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
 
-            # 1. Security: We sanitize the data that is sent by the user
-            $project_ = filter_var($_POST['project'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $description = filter_var($_POST['description'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $id_Manager = filter_var($_POST['id_project_manager'] ??= '', FILTER_SANITIZE_NUMBER_INT);
-            $id_customer = filter_var($_POST['id_customer'] ??= '', FILTER_SANITIZE_NUMBER_INT);
-            $finish_date = filter_var($_POST['finish_date'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-
-            # 2. Create an object of the class
+            // Create a project object
             $project = new classProject(
                 null,
                 $project_,
@@ -430,9 +424,11 @@ class Projects extends Controller
 
             $id = $param[0];
 
-            #Take the original data
+            // Get original project data
             $project_orig = $this->model->read($id);
 
+            // Validation
+            // Check if each field is modified and validate
             # 3. Validation
             # Only if is necessary
             # Only in case when the field is modified 
@@ -502,7 +498,37 @@ class Projects extends Controller
 
             } else {
 
-                # Adding the data to the table working hours
+                // Check if there's a project manager relationship
+                $hasProjectManagerRelation = $this->model->hasProjectManagerRelation($id);
+
+                if ($hasProjectManagerRelation) {
+                    
+                    // Update existing project manager relationship
+                    $this->model->updateProjectManagerRelation($project->id_projectManager, $id);
+
+                } else {
+
+                    // Create new project manager relationship
+                    $this->model->insertProjectManagerRelationship($id, $project->id_projectManager);
+
+                }
+
+                // Check if there's a customer relationship
+                $hasCustomerRelation = $this->model->hasCustomerRelation($id);
+
+                if ($hasCustomerRelation) {
+
+                    // Update existing customer relationship
+                    $this->model->updateCustomerRelation($project->id_customer, $id);
+
+                } else {
+
+                    // Create new customer relationship
+                    $this->model->insertCustomerProjectRelationship($id, $project->id_customer);
+
+                }
+
+                // Update project data
                 $this->model->update($project, $id);
 
                 # Message
@@ -510,9 +536,11 @@ class Projects extends Controller
 
                 # Redirect to Working Hours main
                 header('location:' . URL . 'projects');
+
             }
         }
     }
+
 
     # ---------------------------------------------------------------------------------
     #    ____   _____   _____   ______  _____  
