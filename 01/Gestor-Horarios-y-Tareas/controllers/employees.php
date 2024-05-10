@@ -465,18 +465,41 @@ class Employees extends Controller
 
             } else {
 
-                # Recogemos los proyectos a los que el empleado se encuentra relacionado 
+                // Verificar si $_POST['projects'] está definido y no es null
+                if (isset($_POST['projects'])) {
+                    // Si tiene algún valor, asignarlo a $formProjects
+                    $formProjects = $_POST['projects'];
+                } else {
+                    // Si no tiene ningún valor, asignar un array vacío a $formProjects
+                    $formProjects = [];
+                }
+
+                // Recoger los proyectos actuales del empleado
                 $projectEmployeeRelated = $this->model->getProjectEmployees($id);
 
-                foreach ($projectEmployeeRelated as $project) {
-                    foreach ($_POST['projects'] as $project_id) {
-                        if ($project == $project_id) {
-                            
-                        }
+                // Proyectos a eliminar (los que estaban antes pero no están en el formulario)
+                $projectsToDelete = array_diff($projectEmployeeRelated, $formProjects);
+
+                // Proyectos a crear (los que están en el formulario pero no estaban antes)
+                $projectsToCreate = array_diff($formProjects, $projectEmployeeRelated);
+
+                // Verificar si hay proyectos que deben mantenerse en la relación
+                foreach ($formProjects as $projectId) {
+                    if (in_array($projectId, $projectEmployeeRelated)) {
+                        // Este proyecto ya estaba relacionado, lo eliminamos de los proyectos a crear
+                        unset($projectsToCreate[array_search($projectId, $projectsToCreate)]);
                     }
                 }
 
+                // Eliminar relaciones de proyectos que ya no están en el formulario
+                foreach ($projectsToDelete as $projectId) {
+                    $this->model->deleteRelation($projectId, $id);
+                }
 
+                // Crear relaciones para los proyectos del formulario que no estaban previamente relacionados
+                foreach ($projectsToCreate as $projectId) {
+                    $this->model->createRelationPR($id, $projectId);
+                }
 
                 # Update employee
                 $this->model->update($employee, $id);

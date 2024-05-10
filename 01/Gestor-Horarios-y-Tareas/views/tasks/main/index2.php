@@ -41,31 +41,29 @@
                         <?php foreach ($this->tasks as $task_): ?>
                             <tr>
                                 <td>
-                                    <?= $task_['task'] ?>
+                                    <?= $task_->task ?>
                                 </td>
                                 <td>
-                                    <?= $task_['description'] ?>
+                                    <?= $task_->description ?>
                                 </td>
                                 <td>
-                                    <?= $task_['project'] ?>
+                                    <?= $task_->project ?>
                                 </td>
                                 <td>
-                                    <?= $task_['projectDescription'] ?>
+                                    <?= $task_->projectDescription ?>
                                 </td>
                                 <td>
-                                    <?= $task_['created_at'] ?>
+                                    <?= $task_->created_at ?>
                                 </td>
                                 <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['all'])): ?>
                                     <td style="display:flex; gap: 5px;">
-                                        <a href="<?= URL ?>tasks/edit/<?= $task_['id'] ?>" title="edit" class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['all'])) ?
+                                        <a href="<?= URL ?>tasks/edit/<?= $task_->id ?>" title="edit" class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['all'])) ?
                                                 'disabled' : null ?>"> <i class="bi bi-pencil"></i> </a>
-                                        <a href="<?= URL ?>tasks/delete/<?= $task_['id'] ?>" title="Eliminar"
+                                        <a href="<?= URL ?>tasks/delete/<?= $task_->id ?>" title="Eliminar"
                                             onclick="return confirm('Confirm task deletion') " class="btn btn-danger"
                                             <?= (!in_array($_SESSION['id_rol'], $GLOBALS['all'])) ?
                                                 'disabled' : null ?>> <i class="bi bi-trash"></i></a>
                                     </td>
-                                <?php else: ?>
-
                                 <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>
@@ -73,7 +71,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="6">Nº:
-                                <?= count($this->tasks) ?>
+                                <?= $this->tasks->rowCount()?>
                             </td>
                         </tr>
                     </tfoot>

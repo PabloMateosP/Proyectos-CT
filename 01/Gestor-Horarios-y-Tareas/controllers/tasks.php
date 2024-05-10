@@ -21,7 +21,7 @@ class Tasks extends Controller
             $_SESSION['notify'] = "Unauthenticated user";
 
             header("location:" . URL . "login");
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
             $_SESSION['mensaje'] = "Unauthenticated user";
             header("location:" . URL . "index");
 
@@ -35,9 +35,31 @@ class Tasks extends Controller
 
             $this->view->title = "Tasks";
 
-            $this->view->tasks = $this->model->get();
+            if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['employee'])) {
+                // Recogemos los proyectos donde el empleado se encuentra asignado 
+                $projects = $this->model->getProjectEmployee($_SESSION['employee_id']);
 
-            $this->view->render("tasks/main/index");
+                // Creamos un array para almacenar todas las tareas de los proyectos
+                $allTasks = [];
+
+                // Recorremos los proyectos
+                foreach ($projects as $project) {
+                    // Recogemos las tareas según el proyecto al que el empleado se encuentra asignado
+                    $tasks = $this->model->getProjTask($project['id']);
+
+                    // Agregamos las tareas al array general
+                    $allTasks = array_merge($allTasks, $tasks);
+                }
+
+                // Asignamos todas las tareas al atributo "tasks" de la vista
+                $this->view->tasks = $allTasks;
+                $this->view->render("tasks/main/index");
+                
+            } else {
+                // Si el empleado no tiene asignado ningún proyecto, mostramos todas las tareas
+                $this->view->tasks = $this->model->get();
+                $this->view->render("tasks/main/index2");
+            }
         }
     }
 
@@ -63,7 +85,7 @@ class Tasks extends Controller
 
             header("location:" . URL . "login");
 
-        # user with privileges
+            # user with privileges
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
             $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "tasks");
@@ -151,7 +173,7 @@ class Tasks extends Controller
             } else if (strlen($task_) > 10) {
                 $errores['task'] = 'The field task is too long';
             }
-            
+
             # Description
             if (empty($description)) {
                 $errores['description'] = 'The field description is required';
@@ -225,7 +247,7 @@ class Tasks extends Controller
             $this->view->projects = $this->model->get_projects($this->view->id);
 
             if (isset($_SESSION['error'])) {
-                
+
                 $this->view->error = $_SESSION['error'];
 
                 $this->view->task = unserialize($_SESSION['task']);

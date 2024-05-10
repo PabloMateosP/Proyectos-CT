@@ -44,6 +44,69 @@ class tasksModel extends Model
         }
     }
 
+    public function getProjectEmployee($employee_id)
+    {
+        try {
+            $sql = "SELECT 
+                    pr.id 
+                FROM 
+                    projects pr
+                LEFT JOIN 
+                    project_employee ep ON pr.id = ep.id_project
+                LEFT JOIN 
+                    employees e ON ep.id_employee = e.id
+                WHERE 
+                    e.id = :employee_id
+                ORDER BY pr.id asc";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":employee_id", $employee_id, PDO::PARAM_INT);
+            $pdoSt->fetchAll(PDO::FETCH_ASSOC);
+            $pdoSt->execute();
+            // Devolver todas las filas como un array de arrays asociativos
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+
+    public function getProjTask($id_project)
+    {
+        try {
+            $sql = "
+        SELECT 
+            tk.id,
+            tk.task,
+            tk.description,
+            pr.project,
+            pr.description projectDescription,
+            tk.created_at
+        FROM 
+            tasks tk
+        JOIN 
+            projects pr ON tk.id_project = pr.id
+        WHERE 
+            tk.id_project = :id_project
+        ORDER by tk.id asc;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":id_project", $id_project, PDO::PARAM_INT);
+            $pdoSt->execute();
+            // Devolver los resultados como un array asociativo
+            return $pdoSt->fetchAll(PDO::FETCH_ASSOC);
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+
     # ---------------------------------------------------------------------------------  
     #  
     #    _____ ______ _______   _____  _____   ____       _ ______ _____ _______ _____ 
@@ -171,7 +234,7 @@ class tasksModel extends Model
 
             include_once ('template/partials/errorDB.php');
             exit();
-            
+
         }
     }
 

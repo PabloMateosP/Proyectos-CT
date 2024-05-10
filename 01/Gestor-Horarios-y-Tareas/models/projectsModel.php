@@ -55,26 +55,30 @@ class projectsModel extends Model
     public function getEmpProj($employee_id)
     {
         try {
-            $sql = "
-                SELECT 
-                    pr.id,
-                    pr.project,
-                    pr.description,
-                    concat_ws(', ', pm.last_name, pm.name) manager_name,
-                    c.name customerName,
-                    pr.finish_date
-                FROM 
-                    projects pr
-                LEFT JOIN 
-                    projectManager_project ppm ON pr.id = ppm.id_project
-                LEFT JOIN
-                    project_managers pm ON ppm.id_project_manager = pm.id
-                LEFT JOIN 
-                    customer_project cp ON pr.id = cp.id_project
-                LEFT JOIN 
-                    customers c ON cp.id_customer = c.id 
-                WHERE pr.id = :employee_id
-                ORDER by pr.id asc;";
+            $sql = " SELECT 
+                        pr.id,
+                        pr.project,
+                        pr.description,
+                        concat_ws(', ', pm.last_name, pm.name) manager_name,
+                        c.name customerName,
+                        pr.finish_date
+                    FROM 
+                        projects pr
+                    LEFT JOIN 
+                        projectManager_project ppm ON pr.id = ppm.id_project
+                    LEFT JOIN
+                        project_managers pm ON ppm.id_project_manager = pm.id
+                    LEFT JOIN 
+                        customer_project cp ON pr.id = cp.id_project
+                    LEFT JOIN 
+                        customers c ON cp.id_customer = c.id 
+                    LEFT JOIN 
+                        project_employee ep ON pr.id = ep.id_project
+                    LEFT JOIN 
+                        employees e ON ep.id_employee = e.id
+                    WHERE 
+                        e.id = :employee_id
+                    ORDER by pr.id asc;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
