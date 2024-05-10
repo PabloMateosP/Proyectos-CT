@@ -575,4 +575,51 @@ class Projects extends Controller
         }
 
     }
+
+    # ---------------------------------------------------------------------------------
+    #
+    #     _______        _____ _  __ _____ 
+    #    |__   __|/\    / ____| |/ // ____|
+    #       | |  /  \  | (___ | ' /| (___  
+    #       | | / /\ \  \___ \|  <  \___ \ 
+    #       | |/ ____ \ ____) | . \ ____) |
+    #       |_/_/    \_\_____/|_|\_\_____/ 
+    #
+    # ---------------------------------------------------------------------------------
+    public function tasks($param = [])
+    {
+        # Start or continue the session
+        session_start();
+        if (!isset($_SESSION['id'])) {
+
+            $_SESSION['notify'] = "Usuario sin autentificar";
+
+            header("location:" . URL . "login");
+
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
+
+            $_SESSION['mensaje'] = "Usuario sin autentificar";
+            header("location:" . URL . "index");
+
+        } else {
+
+            # Probing if exist some message
+            if (isset($_SESSION['mensaje'])) {
+
+                $this->view->mensaje = $_SESSION['mensaje'];
+                unset($_SESSION['mensaje']);
+
+            }
+
+            $id = $param[0];
+
+            $this->view->title = "Tasks Project";
+
+            $this->view->tasks = $this->model->getProjTask($id);
+
+            $this->view->render("projects/tasks/index");
+
+        }
+    }
+
 }

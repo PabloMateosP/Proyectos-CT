@@ -50,12 +50,10 @@ class projectsModel extends Model
         }
     }
 
-    # Method get 
-    # Select form table project for the view except employee
     public function getEmpProj($employee_id)
     {
         try {
-            $sql = " SELECT 
+            $sql = "SELECT 
                         pr.id,
                         pr.project,
                         pr.description,
@@ -121,6 +119,50 @@ class projectsModel extends Model
             $pdoSt->setFetchMode(PDO::FETCH_OBJ);
             $pdoSt->execute();
             return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #
+    #     _____ ______ _______   _____  _____   ____       _    _______        _____ _  __
+    #    / ____|  ____|__   __| |  __ \|  __ \ / __ \     | | |__   __|/\    / ____| |/ /
+    #   | |  __| |__     | |    | |__) | |__) | |  | |    | |    | |  /  \  | (___ | ' / 
+    #   | | |_ |  __|    | |    |  ___/|  _  /| |  | |_   | |    | | / /\ \  \___ \|  <  
+    #   | |__| | |____   | |    | |    | | \ \| |__| | |__| |    | |/ ____ \ ____) | . \ 
+    #    \_____|______|  |_|    |_|    |_|  \_\\____/ \____/|    |_/_/    \_\_____/|_|\_\
+    #
+    # ---------------------------------------------------------------------------------
+    public function getProjTask($id_project)
+    {
+        try {
+            $sql = "SELECT 
+                        tk.id,
+                        tk.task,
+                        tk.description,
+                        pr.project,
+                        pr.description projectDescription,
+                        concat_ws(', ', emp.last_name, emp.name) employee,
+                        tk.created_at
+                    FROM 
+                        tasks tk
+                    JOIN 
+                        projects pr ON tk.id_project = pr.id
+                    LEFT JOIN 
+                        employees emp ON tk.id_employee = emp.id
+                    WHERE 
+                        tk.id_project = :id_project
+                    ORDER by tk.id asc;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":id_project", $id_project, PDO::PARAM_INT);
+            $pdoSt->execute();
+
+            return $pdoSt->fetchAll(PDO::FETCH_ASSOC);
 
         } catch (PDOException $e) {
             require_once ("template/partials/errorDB.php");
@@ -578,7 +620,7 @@ class projectsModel extends Model
             exit();
 
         }
-        
+
     }
 
 

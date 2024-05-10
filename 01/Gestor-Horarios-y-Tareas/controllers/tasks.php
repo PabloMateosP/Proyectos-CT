@@ -86,7 +86,7 @@ class Tasks extends Controller
             header("location:" . URL . "login");
 
             # user with privileges
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
             $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "tasks");
         } else {
@@ -113,9 +113,11 @@ class Tasks extends Controller
                 # If these variables exist when there are no errors, we will enter the error blocks in the conditionals
             }
 
+            $id = $_SESSION['employee_id'];
+
             $this->view->title = "Form new task";
 
-            $this->view->projects = $this->model->get_projects();
+            $this->view->projects = $this->model->get_projectsRelated($id);
 
             $this->view->render("tasks/new/index");
         }
@@ -142,7 +144,7 @@ class Tasks extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
 
             $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "workingHours");
@@ -232,7 +234,7 @@ class Tasks extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
             $_SESSION['mensaje'] = "Operation without privileges";
 
             header('location:' . URL . 'tasks');
@@ -244,7 +246,17 @@ class Tasks extends Controller
             $this->view->id = $id;
             $this->view->title = "Formulario editar task";
             $this->view->task = $this->model->read($id);
-            $this->view->projects = $this->model->get_projects($this->view->id);
+
+            if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) {
+
+                $this->view->projects = $this->model->get_projects();
+
+            } else {
+
+                $this->view->projects = $this->model->get_projectsRelated($_SESSION['employee_id']);
+                
+            }
+            
 
             if (isset($_SESSION['error'])) {
 
@@ -287,7 +299,7 @@ class Tasks extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
             $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "tasks");
         } else {

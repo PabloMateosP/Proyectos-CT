@@ -8,22 +8,24 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']) ?: 'disabled' ?>"
+                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['all']) ?: 'disabled' ?>"
                         href="<?= URL ?>tasks/new">New</a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']) ?: 'disabled' ?>"
-                        href="<?= URL ?>tasks/exportar">Exportar CSV</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']) ?: 'disabled' ?>"
-                        href="#" data-bs-toggle="modal" data-bs-target="#importar">Importar CSV</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']) ?: 'disabled' ?>"
-                        href="<?= URL ?>tasks/pdf">Exportar PDF</a>
-                </li>
+                <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
+                    <li class="nav-item">
+                        <a class="nav-link active"
+                            href="<?= URL ?>tasks/exportar">Exportar CSV</a>
+                    </li>
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
+                    <li class="nav-item">
+                        <a class="nav-link active"
+                            href="#" data-bs-toggle="modal" data-bs-target="#importar">Importar CSV</a>
+                    </li>
+                <?php endif; ?>
+
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">

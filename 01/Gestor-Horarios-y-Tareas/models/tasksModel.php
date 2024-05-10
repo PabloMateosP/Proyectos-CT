@@ -18,19 +18,21 @@ class tasksModel extends Model
     public function get()
     {
         try {
-            $sql = "
-            SELECT 
-                tk.id,
-                tk.task,
-                tk.description,
-                pr.project,
-                pr.description projectDescription,
-                tk.created_at
-            FROM 
-                tasks tk
-            JOIN 
-                projects pr ON tk.id_project = pr.id
-            ORDER by tk.id asc;";
+            $sql = "SELECT 
+                        tk.id,
+                        tk.task,
+                        tk.description,
+                        pr.project,
+                        pr.description projectDescription,
+                        concat_ws(', ', emp.last_name, emp.name) employee,
+                        tk.created_at
+                    FROM 
+                        tasks tk
+                    JOIN 
+                        projects pr ON tk.id_project = pr.id
+                    LEFT JOIN 
+                        employees emp ON tk.id_employee = emp.id
+                    ORDER by tk.id asc;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
@@ -44,6 +46,16 @@ class tasksModel extends Model
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #
+    #     _____ ______ _______   _____  _____   ____       _ ______ _____ _______ _____    ______ __  __ _____  _      ______     ________ ______ 
+    #    / ____|  ____|__   __| |  __ \|  __ \ / __ \     | |  ____/ ____|__   __/ ____|  |  ____|  \/  |  __ \| |    / __ \ \   / /  ____|  ____|
+    #   | |  __| |__     | |    | |__) | |__) | |  | |    | | |__ | |       | | | (___    | |__  | \  / | |__) | |   | |  | \ \_/ /| |__  | |__   
+    #   | | |_ |  __|    | |    |  ___/|  _  /| |  | |_   | |  __|| |       | |  \___ \   |  __| | |\/| |  ___/| |   | |  | |\   / |  __| |  __|  
+    #   | |__| | |____   | |    | |    | | \ \| |__| | |__| | |___| |____   | |  ____) |  | |____| |  | | |    | |___| |__| | | |  | |____| |____ 
+    #    \_____|______|  |_|    |_|    |_|  \_\\____/ \____/|______\_____|  |_| |_____/   |______|_|  |_|_|    |______\____/  |_|  |______|______|
+    #
+    # ---------------------------------------------------------------------------------
     public function getProjectEmployee($employee_id)
     {
         try {
@@ -73,31 +85,39 @@ class tasksModel extends Model
         }
     }
 
-
+    # ---------------------------------------------------------------------------------
+    #
+    #     _____ ______ _______   _____  _____   ____       _    _______        _____ _  __
+    #    / ____|  ____|__   __| |  __ \|  __ \ / __ \     | | |__   __|/\    / ____| |/ /
+    #   | |  __| |__     | |    | |__) | |__) | |  | |    | |    | |  /  \  | (___ | ' / 
+    #   | | |_ |  __|    | |    |  ___/|  _  /| |  | |_   | |    | | / /\ \  \___ \|  <  
+    #   | |__| | |____   | |    | |    | | \ \| |__| | |__| |    | |/ ____ \ ____) | . \ 
+    #    \_____|______|  |_|    |_|    |_|  \_\\____/ \____/|    |_/_/    \_\_____/|_|\_\
+    #
+    # ---------------------------------------------------------------------------------
     public function getProjTask($id_project)
     {
         try {
-            $sql = "
-        SELECT 
-            tk.id,
-            tk.task,
-            tk.description,
-            pr.project,
-            pr.description projectDescription,
-            tk.created_at
-        FROM 
-            tasks tk
-        JOIN 
-            projects pr ON tk.id_project = pr.id
-        WHERE 
-            tk.id_project = :id_project
-        ORDER by tk.id asc;";
+            $sql = "SELECT 
+                        tk.id,
+                        tk.task,
+                        tk.description,
+                        pr.project,
+                        pr.description projectDescription,
+                        tk.created_at
+                    FROM 
+                        tasks tk
+                    JOIN 
+                        projects pr ON tk.id_project = pr.id
+                    WHERE 
+                        tk.id_project = :id_project
+                    ORDER by tk.id asc;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->bindParam(":id_project", $id_project, PDO::PARAM_INT);
             $pdoSt->execute();
-            // Devolver los resultados como un array asociativo
+
             return $pdoSt->fetchAll(PDO::FETCH_ASSOC);
 
         } catch (PDOException $e) {
@@ -147,6 +167,42 @@ class tasksModel extends Model
             exit();
         }
     }
+
+    public function get_projectsRelated($id_employee) 
+    {
+        try {
+            $sql = "SELECT 
+                        pr.id,
+                        pr.project,
+                        pr.description,
+                        concat_ws(', ', pm.last_name, pm.name) manager_name
+                    FROM 
+                        projects pr
+                    LEFT JOIN 
+                        projectManager_project ppm ON pr.id = ppm.id_project
+                    LEFT JOIN
+                        project_managers pm ON ppm.id_project_manager = pm.id
+                    LEFT JOIN 
+                        project_employee ep ON pr.id = ep.id_project
+                    LEFT JOIN 
+                        employees e ON ep.id_employee = e.id
+                    WHERE 
+                        e.id = :employee_id
+                    ORDER by pr.id asc;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":employee_id", $id_employee, PDO::PARAM_INT);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+    
 
     # ---------------------------------------------------------------------------------
     #    
@@ -210,7 +266,7 @@ class tasksModel extends Model
     public function read($id)
     {
         try {
-            $sql = " SELECT
+            $sql = "SELECT
                         id,
                         task, 
                         description,

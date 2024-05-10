@@ -208,3 +208,8 @@ Día 08/05/24
 
 Día 09/05/24
     - Llevo todo el día intentando completar la actualización del empleado para que en caso de que sea borrado de un proyecto y puesto en otro se pueda pero no lo consigo. (En parte el botón check cuando se despulsa, no envía valor por lo que no podemos saber cual es el proyecto del que ha sido borrado)
+
+Día 10/05/24
+    - He hecho que el empleado solo vea el proyecto en el que se encuentra registrado así como las tareas 
+    - Por otra parte hemos completado el edit de empleado para que se pueda cambiar el proyecto elegido cuando sea necesario
+    - Añadimos que cuando un empleado quiere crear una tarea solo la pueda crear de los proyectos en los que el ha sido añadido.

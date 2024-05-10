@@ -34,7 +34,7 @@
                             <th>Project Manager</th>
                             <th>Customer</th>
                             <th>Finish Date</th>
-                            <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
+                            <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['all'])): ?>
                                 <th>Acciones</th>
                             <?php endif; ?>
                         </tr>
@@ -57,26 +57,32 @@
                                 <td>
                                     <?= $project_->finish_date ?>
                                 </td>
-                                <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
+                                <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['all'])): ?>
                                     <td style="display:flex; gap: 5px;">
                                         <div class="btn-group" role="group" aria-label="Project Actions">
-                                            <a href="<?= URL ?>projects/show/<?= $project_->id ?>" title="View"
-                                                class="btn btn-secondary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ? 'disabled' : null ?>">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                            <a href="<?= URL ?>projects/edit/<?= $project_->id ?>" title="Edit"
-                                                class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ? 'disabled' : null ?>">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
+                                            <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
+                                                <a href="<?= URL ?>projects/show/<?= $project_->id ?>" title="View"
+                                                    class="btn btn-secondary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ? 'disabled' : null ?>">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                            <?php endif; ?>
+                                            <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
+                                                <a href="<?= URL ?>projects/edit/<?= $project_->id ?>" title="Edit"
+                                                    class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ? 'disabled' : null ?>">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                            <?php endif; ?>  
                                             <a href="<?= URL ?>projects/tasks/<?= $project_->id ?>" title="Tasks"
-                                                class="btn btn-success <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ? 'disabled' : null ?>">
+                                                class="btn btn-success <?= (!in_array($_SESSION['id_rol'], $GLOBALS['all'])) ? 'disabled' : null ?>">
                                                 <i class="bi bi-list-task"></i>
                                             </a>
-                                            <a href="<?= URL ?>projects/delete/<?= $project_->id ?>" title="Delete"
-                                                onclick="return confirm('Confirm project deletion, that will do that the children tasks will be deleted')"
-                                                class="btn btn-danger <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ? 'disabled' : null ?>">
-                                                <i class="bi bi-trash"></i>
-                                            </a>
+                                            <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])): ?>
+                                                <a href="<?= URL ?>projects/delete/<?= $project_->id ?>" title="Delete"
+                                                    onclick="return confirm('Confirm project deletion, that will do that the children tasks will be deleted')"
+                                                    class="btn btn-danger <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ? 'disabled' : null ?>">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                            <?php endif; ?>
 
                                         </div>
                                     </td>
