@@ -193,7 +193,9 @@ Hay que hacer: (muchas cosas :[)
 
     [Hacer una función que recoja los proyectos de un empleado se comparan con los introducidos por el formulario
     si alguno es igual se deja, si tenía alguno antes pero ahora no se borra la relación y si no tenía ninguno se crean los nuevo]
-    
+
+------------------------------------------------------------------------------------------------------------------------------------------
+## SEMANA 4     
 
 Día 07/05/24 
     - He hecho el añadir proyectos con los empleados necesarios, el manager del proyecto y tengo que probar con el cliente 
@@ -213,3 +215,8 @@ Día 10/05/24
     - He hecho que el empleado solo vea el proyecto en el que se encuentra registrado así como las tareas 
     - Por otra parte hemos completado el edit de empleado para que se pueda cambiar el proyecto elegido cuando sea necesario
     - Añadimos que cuando un empleado quiere crear una tarea solo la pueda crear de los proyectos en los que el ha sido añadido.
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+## SEMANA 5 ##
