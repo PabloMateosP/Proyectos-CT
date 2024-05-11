@@ -194,6 +194,8 @@ Hay que hacer: (muchas cosas :[)
     [Hacer una función que recoja los proyectos de un empleado se comparan con los introducidos por el formulario
     si alguno es igual se deja, si tenía alguno antes pero ahora no se borra la relación y si no tenía ninguno se crean los nuevo]
 
+    Hay que mirar porque cuando entras como admin al crear una tarea no puedes ver los proyectos al igual que otros usuarios excepto empleados 
+
 ------------------------------------------------------------------------------------------------------------------------------------------
 ## SEMANA 4     
 
