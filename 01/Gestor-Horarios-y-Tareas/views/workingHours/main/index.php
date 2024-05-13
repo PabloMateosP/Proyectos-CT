@@ -64,7 +64,7 @@
                                     <?= $workingHour->duration ?>
                                 </td>
                                 <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['emp_admin'])): ?>   
-                                    <td style="display:flex; gap: 5px;">
+                                    <td>
                                        <a href="<?= URL ?>workingHours/edit/<?= $workingHour->id ?>" title="edit" class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['emp_admin'])) ?
                                             'disabled' : null ?>"> <i class="bi bi-pencil"></i> </a>
                                         <a href="<?= URL ?>workingHours/delete/<?= $workingHour->id ?>" title="Eliminar" onclick="return confirm('Confirm work hour deletion') " class="btn btn-danger" <?= (!in_array($_SESSION['id_rol'], $GLOBALS['emp_admin'])) ?
