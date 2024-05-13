@@ -4,47 +4,40 @@
 <head>
     <!-- bootstrap  -->
     <?php require_once ("template/partials/head.php"); ?>
-    <title>Detalles de user - Gesbank</title>
+    <title>Users Details</title>
 </head>
 
 <body>
-    <!-- menu fijo superior -->
+
     <?php require_once "template/partials/menuAut.php"; ?>
 
-    <!-- capa principal -->
-    <div class="container" style="margin-top: 5%;">
+    <div class="container" style="margin-top: 5%; margin-bottom: 5%;">
         <div class="card">
             <div class="card-header">
-                <!-- cabecera -->
+
                 <?php include "views/users/partials/header.php" ?>
             </div>
             <div class="card-body">
-                <!-- Mensaje de Error -->
                 <?php include 'template/partials/error.php' ?>
 
-                <!-- Formulario -->
                 <form>
-                    <!-- Nombre -->
                     <div class="mb-3">
-                        <label for="" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" value="<?= $this->user->name ?>" readonly>
+                        <label for="" class="form-label">Name</label>
+                        <input type="text" class="form-control" value="<?= $this->user->name ?>" disabled>
                     </div>
 
-                    <!-- Email -->
                     <div class="mb-3">
                         <label for="" class="form-label">Email</label>
-                        <input type="email" class="form-control" value="<?= $this->user->email ?>" readonly>
+                        <input type="email" class="form-control" value="<?= $this->user->email ?>" disabled>
                     </div>
 
-                    <!-- Roles -->
                     <div class="mb-3">
                         <label for="" class="form-label">Rol</label>
-                        <input type="text" class="form-control" value="<?= $this->rol->name ?>" readonly>
+                        <input type="text" class="form-control" value="<?= $this->rol->name ?>" disabled>
                     </div>
 
-                    <!-- Botón de volver atrás -->
                     <div class="mb-3">
-                        <a name="" id="" class="btn btn-secondary" href="<?= URL ?>users" role="button">Volver</a>
+                        <a name="" id="" class="btn btn-secondary" href="<?= URL ?>users/" role="button">Go back</a>
                     </div>
                 </form>
             </div>

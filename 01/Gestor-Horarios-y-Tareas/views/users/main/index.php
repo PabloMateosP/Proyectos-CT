@@ -55,17 +55,18 @@
                                     <?= $user->update_at ?>
                                 </td>
                                 <td>
-                                    <!-- botones de acción -->
-                                    <a href="<?= URL ?>users/mostrar/<?= $user->id ?>" title="Mostrar" class="btn btn-warning<?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
-                                            'disabled' : null ?>"> <i class="bi bi-eye"></i> </a>
-                                    <a href="<?= URL ?>users/delete/<?= $user->id ?>" title="Eliminar"
-                                        onclick="return confirm('¿Quieres Borrar?')" class="btn btn-danger"
-                                        <?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
-                                            'disabled' : null ?>>
-                                        <i class="bi bi-trash"></i> </a>
-                                    <a href="<?= URL ?>users/editar/<?= $user->id ?>" title="Editar" class="btn btn-primary
+                                    <div class="btn-group" role="group">
+                                        <a href="<?= URL ?>users/show/<?= $user->id ?>" title="show" class="btn btn-warning<?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
+                                                'disabled' : null ?>"> <i class="bi bi-eye"></i> </a>
+                                        <a href="<?= URL ?>users/edit/<?= $user->id ?>" title="edit" class="btn btn-primary
                                         <?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
                                             'disabled' : null ?>"> <i class="bi bi-pencil"></i> </a>
+                                        <a href="<?= URL ?>users/delete/<?= $user->id ?>" title="delete"
+                                            onclick="return confirm('Want to delete the user?')" class="btn btn-danger"
+                                            <?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
+                                                'disabled' : null ?>>
+                                            <i class="bi bi-trash"></i> </a>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

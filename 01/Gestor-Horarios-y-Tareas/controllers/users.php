@@ -3,19 +3,26 @@
 class Users extends Controller
 {
 
-    # Método principal. Muestra todos los users registrados
+    # ---------------------------------------------------------------------------------
+    #   _____  ______ _   _ _____  ______ _____  
+    #  |  __ \|  ____| \ | |  __ \|  ____|  __ \ 
+    #  | |__) | |__  |  \| | |  | | |__  | |__) |
+    #  |  _  /|  __| | . ` | |  | |  __| |  _  / 
+    #  | | \ \| |____| |\  | |__| | |____| | \ \ 
+    #  |_|  \_\______|_| \_|_____/|______|_|  \_\
+    # 
+    # ---------------------------------------------------------------------------------
+    # Main method. Charge all the users in the database.
     public function render()
     {
-
-        # Inicio sesión o continuo sesión
         session_start();
 
         if (!isset($_SESSION['id'])) {
-            $_SESSION['notify'] = "Usuario sin autentificar";
+            $_SESSION['notify'] = "Unauthenticated user";
 
             header("location:" . URL . "login");
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
-            $_SESSION['mensaje'] = "Usuario sin autentificar";
+            $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "index");
 
         } else {
@@ -26,94 +33,111 @@ class Users extends Controller
 
             }
 
-            $this->view->title = "Tabla users";
+            $this->view->title = "Users";
             $this->view->users = $this->model->get();
             $this->view->render("users/main/index");
         }
     }
 
-    # Método mostrar
-    # Mostramos los detalles de un usuario seleccionado
-    function mostrar($param = [])
+    # ---------------------------------------------------------------------------------
+    #    
+    #    _____ _    _  ______          __
+    #   / ____| |  | |/ __ \ \        / /
+    #  | (___ | |__| | |  | \ \  /\  / / 
+    #   \___ \|  __  | |  | |\ \/  \/ /  
+    #   ____) | |  | | |__| | \  /\  /   
+    #  |_____/|_|  |_|\____/   \/  \/    
+    #
+    # ---------------------------------------------------------------------------------
+    # Method show 
+    # Show a form to watch the information about a user
+    function show($param = [])
     {
 
-        //Iniciar o continuar sesión
         session_start();
 
-        # id del usuario
         $id = $param[0];
 
-        //Comprobar si el usuario está identificado
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario No Autentificado";
-
-            header("location:" . URL . "login");
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']['mostrar']))) {
-            $_SESSION['mensaje'] = "Operación sin privilegios";
-            header('location:' . URL . 'users');
-        } else {
-
-            $this->view->title = "Formulario Mostrar Usuario";
-            $this->view->user = $this->model->getUser($id);
-            $this->view->rol = $this->model->getUserRole($id);
-
-            $this->view->render("users/mostrar/index");
-        }
-    }
-
-    # Método nuevo
-    # Cargamos formulario nuevo usuario
-    function nuevo($param = [])
-    {
-        # Iniciamos o continuamos la sesión
-        session_start();
-
-        //Comprobar si el usuario está identificado
-        if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario No Autentificado";
+            $_SESSION['mensaje'] = "Unauthenticated user";
 
             header("location:" . URL . "login");
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
-            $_SESSION['mensaje'] = "Operación sin privilegios";
+
+            $_SESSION['mensaje'] = "Unprivileged operation";
+            header('location:' . URL . 'users');
+
+        } else {
+
+            $this->view->title = "Form Show Users Detail";
+            $this->view->user = $this->model->getUser($id);
+            $this->view->rol = $this->model->getUserRole($id);
+
+            $this->view->render("users/show/index");
+        }
+    }
+
+    # ---------------------------------------------------------------------------------    
+    #   _   _ ________          __
+    #  | \ | |  ____\ \        / /
+    #  |  \| | |__   \ \  /\  / / 
+    #  | . ` |  __|   \ \/  \/ /  
+    #  | |\  | |____   \  /\  /   
+    #  |_| \_|______|   \/  \/    
+    #                          
+    # ---------------------------------------------------------------------------------
+    # "New" method. Form to add an new user
+    # Show a form to create a new user
+    function new($param = [])
+    {
+        session_start();
+
+        if (!isset($_SESSION['id'])) {
+            $_SESSION['mensaje'] = "Unauthenticated user";
+
+            header("location:" . URL . "login");
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
+            $_SESSION['mensaje'] = "Unprivileged operation";
             header('location:' . URL . 'users');
         } else {
 
-            # Creamos un objeto vacío
             $this->view->usuario = new classUser();
 
-            # Comprobamos si existen errores
             if (isset($_SESSION['error'])) {
-                //Añadimos a la vista el mensaje de error
+
                 $this->view->error = $_SESSION['error'];
 
-                //Autorellenamos el formulario
                 $this->view->usuario = unserialize($_SESSION['usuario']);
                 $this->view->roles = $this->model->getRoles();
 
-                //Recuperamos el array con los errores
                 $this->view->errores = $_SESSION['errores'];
 
-                //Recuperamos el valor del rol de la sesión y lo pasamos a la vista
                 $this->view->rolSeleccionado = isset($_SESSION['roles']) ? $_SESSION['roles'] : null;
 
-                //Una vez usadas las variables de sesión, las liberamos
                 unset($_SESSION['error']);
                 unset($_SESSION['errores']);
                 unset($_SESSION['usuario']);
             }
 
-            //Añadimos a la vista la propiedad title
-            $this->view->title = "Añadir - Gestión users";
-            //Para generar la lista select dinámica de clientes
+            $this->view->title = "Add User";
+
             $this->view->roles = $this->model->getRoles();
 
-            //Cargamos la vista del formulario para añadir un nuevo usuario
-            $this->view->render("users/nuevo/index");
+            $this->view->render("users/new/index");
         }
     }
 
-    # Método create
-    # Creamos una nuevo usuario
+    # ---------------------------------------------------------------------------------
+    #    _____  _____   ______         _______  ______ 
+    #   / ____||  __ \ |  ____|    /\ |__   __||  ____|
+    #  | |     | |__) || |__      /  \   | |   | |__   
+    #  | |     |  _  / |  __|    / /\ \  | |   |  __|  
+    #  | |____ | | \ \ | |____  / ____ \ | |   | |____ 
+    #   \_____||_|  \_\|______|/_/    \_\|_|   |______|
+    #
+    # ---------------------------------------------------------------------------------
+    # Method create. 
+    # Allow to add a new user
     function create($param = [])
     {
         //Iniciar sesión
@@ -121,84 +145,84 @@ class Users extends Controller
 
         //Comprobar si el usuario está identificado
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario No Autentificado";
+            $_SESSION['mensaje'] = "Unauthenticated user";
 
             header("location:" . URL . "login");
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
-            $_SESSION['mensaje'] = "Operación sin privilegios";
+            $_SESSION['mensaje'] = "Unprivileged operation";
             header('location:' . URL . 'users');
         } else {
 
             //1. Seguridad. Saneamos los datos del formulario
 
             //Si se introduce un campo vacío, se le otorga "nulo"
-            $nombre = filter_var($_POST['nombre'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $name = filter_var($_POST['name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $email = filter_var($_POST['email'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $roles = filter_var($_POST['roles'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $contraseña = filter_var($_POST['contraseña'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $confirmarContraseña = filter_var($_POST['confirmarContraseña'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $password = filter_var($_POST['password'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $passwordConfirm = filter_var($_POST['passwordConfirm'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
 
             //2. Creamos el cliente con los datos saneados
             //Cargamos los datos del formulario
             $usuario = new classUser(
                 null,
-                $nombre,
+                $name,
                 $email,
-                $contraseña,
-                $confirmarContraseña
+                $password,
+                $passwordConfirm
             );
 
             # 3. Validación
             $errores = [];
 
-            //nombre: required
-            if (empty($nombre)) {
-                $errores['nombre'] = 'El campo nombre es required';
+            //name: required
+            if (empty($name)) {
+                $errores['name'] = 'The name field is required';
             }
 
             //Email: required and unique	
             if (empty($email)) {
-                $errores['email'] = 'El campo email es required';
+                $errores['email'] = 'The email field is required';
             } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errores['email'] = 'El formato del email no es correcto';
+                $errores['email'] = 'The email format is not correct';
             } else if (!$this->model->validateUniqueEmail($email)) {
-                $errores['email'] = 'El email ya existe';
+                $errores['email'] = 'The email has already been registered';
             }
 
-            //Id User: Required
-            if (empty($nombre)) {
-                $errores['nombre'] = 'El campo nombre es required';
+            //Roles: required
+            if (empty($roles)) {
+                $errores['roles'] = 'The roles email is required';
             }
 
-            //Contraseña: required
-            if (empty($contraseña)) {
-                $errores['contraseña'] = 'El campo contraseña es required';
-            } else if ($contraseña != $confirmarContraseña) {
-                $errores['contraseña'] = 'Las contraseñas no coinciden';
+            //password: required
+            if (empty($password)) {
+                $errores['password'] = 'The field password is required';
+            } else if ($password != $passwordConfirm) {
+                $errores['password'] = 'Both passwords do not match';
             }
 
-            //confirmarContraseña: required, tiene que coincidir con el campo contraseña
-            if (empty($confirmarContraseña)) {
-                $errores['confirmarContraseña'] = 'El campo confirmar contraseña es required';
-            } else if ($contraseña != $confirmarContraseña) {
-                $errores['confirmarContraseña'] = 'Las contraseñas no coinciden';
+            //passwordConfirm: required, must match with password Confirm
+            if (empty($passwordConfirm)) {
+                $errores['passwordConfirm'] = 'The field confirm password is required';
+            } else if ($password != $passwordConfirm) {
+                $errores['passwordConfirm'] = 'Both passwords do not match';
             }
 
             # 4. Comprobar validación
             if (!empty($errores)) {
-                //Errores de validación
+
                 $_SESSION['usuario'] = serialize($usuario);
                 $_SESSION['error'] = 'Formulario no validado';
                 $_SESSION['errores'] = $errores;
                 $_SESSION['roles'] = $roles;
 
-                //Redireccionamos de nuevo al formulario
-                header('location:' . URL . 'users/nuevo/index/');
+                header('location:' . URL . 'users/new/index/');
+
             } else {
                 # Añadimos el registro a la tabla
-                $this->model->create($nombre, $email, $contraseña, $roles);
+                $this->model->create($name, $email, $password, $roles);
 
-                $_SESSION['mensaje'] = "Se ha creado el usuario correctamente.";
+                $_SESSION['mensaje'] = "User has been created correctly.";
 
                 // Redireccionamos a la vista users
                 header("Location:" . URL . "users/");
@@ -206,19 +230,32 @@ class Users extends Controller
         }
     }
 
-
-    # Method delete: we can delete an user.
+    # ---------------------------------------------------------------------------------   
+    #  
+    #   _____  ______ _      ______ _______ ______ 
+    #  |  __ \|  ____| |    |  ____|__   __|  ____|
+    #  | |  | | |__  | |    | |__     | |  | |__   
+    #  | |  | |  __| | |    |  __|    | |  |  __|  
+    #  | |__| | |____| |____| |____   | |  | |____ 
+    #  |_____/|______|______|______|  |_|  |______|    
+    #                               
+    # ---------------------------------------------------------------------------------
+    # Method delete. 
+    # Allow to delete an user
     public function delete($param = [])
     {
         session_start();
         if (!isset($_SESSION['id'])) {
+
             $_SESSION['mensaje'] = "User must authenticated";
 
             header("location:" . URL . "login/");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
+
             $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "users/");
+
         } else {
             $id = $param[0];
             $this->model->delete($id);
@@ -228,17 +265,28 @@ class Users extends Controller
         }
     }
 
-    public function editar($param = [])
+    # ---------------------------------------------------------------------------------
+    #  ______  _____  _____  _______ 
+    #  |  ____||  __ \|_   _||__   __|
+    #  | |__   | |  | | | |     | |   
+    #  |  __|  | |  | | | |     | |   
+    #  | |____ | |__| |_| |_    | |   
+    #  |______||_____/|_____|   |_|
+    #
+    # ---------------------------------------------------------------------------------
+    # Method edit. 
+    # Show a form to edit an user
+    public function edit($param = [])
     {
         session_start();
 
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario debe autentificarse";
+            $_SESSION['mensaje'] = "Unauthenticated user";
 
             header("location:" . URL . "login");
 
-        } else if (!in_array($_SESSION['id_rol'], $GLOBALS['admin']['editar'])) {
-            $_SESSION['mensaje'] = "Operación sin privilegios";
+        } else if (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) {
+            $_SESSION['mensaje'] = "Unprivileged operation";
 
             header('location:' . URL . 'users');
 
@@ -246,49 +294,51 @@ class Users extends Controller
 
             $this->view->roles = $this->model->getRoles();
 
-            # obtengo el id del usuario que voy a editar
             $id = $param[0];
 
             $this->view->id = $id;
-            $this->view->title = "Formulario  editar usuario";
+            $this->view->title = "Form edit user";
             $this->view->user = $this->model->read($id);
 
             $this->view->user = $this->model->getUser($this->view->id);
 
             $this->view->rol = $this->model->getUserRole($this->view->id);
 
-            # Comprobamos si hay errores -> esta variable se crea al lanzar un error de validacion
             if (isset($_SESSION['error'])) {
-                // rescatemos el mensaje
                 $this->view->error = $_SESSION['error'];
 
-                // Autorellenamos el formulario
                 $this->view->user = unserialize($_SESSION['user']);
 
-                // Recupero array de errores específicos
                 $this->view->errores = $_SESSION['errores'];
 
-                // debemos liberar las variables de sesión ya que su cometido ha sido resuelto
                 unset($_SESSION['error']);
                 unset($_SESSION['errores']);
                 unset($_SESSION['user']);
-                // Si estas variables existen cuando no hay errores, entraremos en los bloques de error en las condicionales
             }
 
-            $this->view->render("users/editar/index");
+            $this->view->render("users/edit/index");
         }
     }
 
+
+    # ---------------------------------------------------------------------------------
+    #
+    #   _    _  _____   _____         _______  ______ 
+    #  | |  | ||  __ \ |  __ \    /\ |__   __||  ____|
+    #  | |  | || |__) || |  | |  /  \   | |   | |__   
+    #  | |  | ||  ___/ | |  | | / /\ \  | |   |  __|  
+    #  | |__| || |     | |__| |/ ____ \ | |   | |____ 
+    #   \____/ |_|     |_____//_/    \_\|_|   |______|
+    #                                               
+    # ---------------------------------------------------------------------------------
     # Método update.
-    # Actualiza los detalles de un cliente a partir de los datos del formulario de edición
+    # Update the table of the table users
     public function update($param = [])
     {
-
-        #Iniciar Sesión
         session_start();
 
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario debe autentificarse";
+            $_SESSION['mensaje'] = "Unauthenticated user";
 
             header("location:" . URL . "login");
 
@@ -297,7 +347,7 @@ class Users extends Controller
             header("location:" . URL . "clientes");
         } else {
 
-            #1.Seguridad. Saneamos los datos del formulario
+            #1.Security. 
             $password = filter_var($_POST['password'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $name = filter_var($_POST['name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $email = filter_var($_POST['email'] ??= '', FILTER_SANITIZE_EMAIL);
@@ -314,31 +364,30 @@ class Users extends Controller
             );
             $id = $param[0];
 
-            #Obtengo el objeto cliente original
             $user_orig = $this->model->read($id);
 
             $errores = [];
 
-            //Name: required, maximo 20 caracteres
+            //Name: required
             if (strcmp($user->name, $user_orig->name) !== 0) {
 
                 if (empty($name)) {
-                    $errores['name'] = 'El campo nombre es required';
+                    $errores['name'] = 'The field name is required';
                 } else if (strlen($name) > 20) {
-                    $errores['name'] = 'El campo nombre es demasiado largo';
+                    $errores['name'] = 'The field name is too long';
 
                 }
             }
 
-            //Email: required, formato válido y clave secundaria
+            //Email: required, valide format and sencondary key
             if (strcmp($user->email, $user_orig->email) !== 0) {
 
                 if (empty($email)) {
-                    $errores['email'] = 'El campo email es required';
+                    $errores['email'] = 'The field email is required';
                 } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    $errores['email'] = 'El formato introducido es incorrecto';
+                    $errores['email'] = 'The email format is not correct';
                 } else if (!$this->model->validateUniqueEmail($email)) {
-                    $errores['email'] = 'Email ya registrado';
+                    $errores['email'] = 'The email has already been registered';
 
                 }
             }
@@ -355,14 +404,14 @@ class Users extends Controller
                 $_SESSION['errores'] = $errores;
 
                 # Redirigimos al main de clientes
-                header('location:' . URL . 'users/editar/' . $id);
+                header('location:' . URL . 'users/edit/' . $id);
             } else {
                 //crear alumno
                 # Añadir registro a la tabla
                 $this->model->update($user, $id, $idRol);
 
                 #Mensaje
-                $_SESSION['mensaje'] = "Usuario actualizado correctamente";
+                $_SESSION['mensaje'] = "User update correctly";
 
                 # Redirigimos al main de alumnos
                 header('location:' . URL . 'users');
@@ -370,43 +419,63 @@ class Users extends Controller
         }
     }
 
-    public function ordenar($param = [])
+    # ---------------------------------------------------------------------------------
+    #    ____   _____   _____   ______  _____  
+    #   / __ \ |  __ \ |  __ \ |  ____||  __ \ 
+    #  | |  | || |__) || |  | || |__   | |__) |
+    #  | |  | ||  _  / | |  | ||  __|  |  _  / 
+    #  | |__| || | \ \ | |__| || |____ | | \ \ 
+    #   \____/ |_|  \_\|_____/ |______||_|  \_\
+    #
+    # ---------------------------------------------------------------------------------
+    # Method order
+    # Allow order the table users
+    public function order($param = [])
     {
         session_start();
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario debe autentificarse";
+            $_SESSION['mensaje'] = "Unauthenticated user";
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']['order']))) {
-            $_SESSION['mensaje'] = "Operación sin privilegio";
-            header("location:" . URL . "clientes");
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
+            $_SESSION['mensaje'] = "Unprivileged operation";
+            header("location:" . URL . "users");
         } else {
             $criterio = $param[0];
-            $this->view->title = "Tabla users";
+            $this->view->title = "Table users";
             $this->view->users = $this->model->order($criterio);
             $this->view->render("users/main/index");
         }
 
     }
 
-    # Método buscar
-    # Permite buscar los registros de users que cumplan con el patrón especificado en la expresión
-    # de búsqueda
-    public function buscar($param = [])
+    # ---------------------------------------------------------------------------------
+    #
+    #     _____ ______          _____   _____ _    _ 
+    #    / ____|  ____|   /\   |  __ \ / ____| |  | |
+    #   | (___ | |__     /  \  | |__) | |    | |__| |
+    #    \___ \|  __|   / /\ \ |  _  /| |    |  __  |
+    #    ____) | |____ / ____ \| | \ \| |____| |  | |
+    #   |_____/|______/_/    \_\_|  \_\\_____|_|  |_|
+    #
+    # ---------------------------------------------------------------------------------
+    # Method buscar
+    # Search for user records that match the pattern specified in the search expression
+    public function search($param = [])
     {
         session_start();
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "Usuario debe autentificarse";
+            $_SESSION['mensaje'] = "Unauthenticated user";
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']['filter']))) {
-            $_SESSION['mensaje'] = "Operación sin privilegio";
-            header("location:" . URL . "clientes");
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
+            $_SESSION['mensaje'] = "Unprivileged operation";
+            header("location:" . URL . "users");
         } else {
             $expresion = $_GET["expresion"];
-            $this->view->title = "Tabla users";
+            $this->view->title = "Users";
             $this->view->users = $this->model->filter($expresion);
             $this->view->render("users/main/index");
         }

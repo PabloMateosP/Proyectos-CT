@@ -56,16 +56,17 @@
                                     <?= $task_['created_at'] ?>
                                 </td>
                                 <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['all'])): ?>
-                                    <td style="display:flex; gap: 5px;">
-                                        <a href="<?= URL ?>tasks/edit/<?= $task_['id'] ?>" title="edit" class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['all'])) ?
-                                                'disabled' : null ?>"> <i class="bi bi-pencil"></i> </a>
-                                        <a href="<?= URL ?>tasks/delete/<?= $task_['id'] ?>" title="Eliminar"
-                                            onclick="return confirm('Confirm task deletion') " class="btn btn-danger"
-                                            <?= (!in_array($_SESSION['id_rol'], $GLOBALS['all'])) ?
-                                                'disabled' : null ?>> <i class="bi bi-trash"></i></a>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="<?= URL ?>tasks/edit/<?= $task_['id'] ?>" title="edit"
+                                                class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['all'])) ? 'disabled' : null ?>">
+                                                <i class="bi bi-pencil"></i> Edit </a>
+                                            <a href="<?= URL ?>tasks/delete/<?= $task_['id'] ?>" title="Eliminar"
+                                                onclick="return confirm('Confirmar eliminación de tarea')"
+                                                class="btn btn-danger <?= (!in_array($_SESSION['id_rol'], $GLOBALS['all'])) ? 'disabled' : null ?>">
+                                                <i class="bi bi-trash"></i> Delete </a>
+                                        </div>
                                     </td>
-                                <?php else: ?>
-
                                 <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>

@@ -2,34 +2,27 @@
 <html lang="es">
 
 <head>
-    <!-- bootstrap  -->
     <?php require_once ("template/partials/head.php"); ?>
 
-    <title>Editar Usuario · Gesbank</title>
+    <title>User Edit</title>
 </head>
 
 <body>
-    <!-- menú principal -->
     <?php require_once "template/partials/menuAut.php"; ?>
-    <!-- capa principal -->
     <div class="container" style="margin-top: 5%;">
         <div class="card">
             <div class="card-header">
-                <!-- cabecera  -->
                 <?php include "views/users/partials/header.php" ?>
             </div>
             <div class="card-body">
 
-                <!-- Formulario -->
                 <form action="<?= URL ?>users/update/<?= $this->id ?>" method="POST">
-                    <!-- nombre -->
                     <div class="mb-3">
-                        <label for="" class="form-label">Nombre</label>
+                        <label for="" class="form-label">Name</label>
                         <input type="text" class="form-control" name="name" value="<?= $this->user->name ?>">
-                        <!-- Mostrar posible error -->
-                        <?php if (isset($this->errores['nombre'])): ?>
+                        <?php if (isset($this->errores['name'])): ?>
                             <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['nombre'] ?>
+                                <?= $this->errores['name'] ?>
                             </span>
                         <?php endif; ?>
                     </div>
@@ -59,10 +52,10 @@
 
                     <!-- password -->
                     <div class="mb-3">
-                        <label for="" class="form-label">Contraseña</label>
+                        <label for="" class="form-label">Password</label>
                         <input type="password" class="form-control" name="password"
-                            placeholder="Añada una nueva contraseña"">
-                <?php if (isset($this->errores['password'])): ?>
+                            placeholder="Add a new password">
+                        <?php if (isset($this->errores['password'])): ?>
                     <span class=" form-text text-danger" role="alert">
                             <?= $this->errores['password'] ?>
                             </span>

@@ -61,13 +61,16 @@
                                     <?= $employee->total_hours ?>
                                 </td>
                                 <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])): ?>
-                                    <td style="display:flex; gap: 5px;">
-                                        <a href="<?= URL ?>employees/show/<?= $employee->id ?>" title="Mostrar" class="btn btn-warning"> <i class="bi bi-eye"></i></a>
-                                        <a href="<?= URL ?>employees/delete/<?= $employee->id ?>" title="Delete"
-                                            onclick="return confirm('Confirm employee deletion') " class="btn btn-danger"> <i
-                                                class="bi bi-trash"></i></a>
-                                        <a href="<?= URL ?>employees/edit/<?= $employee->id ?>" title="edit"
-                                            class="btn btn-success"> <i class="bi bi-pencil-square"></i></a>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="<?= URL ?>employees/show/<?= $employee->id ?>" title="Mostrar"
+                                                class="btn btn-warning"> <i class="bi bi-eye"></i></a>
+                                            <a href="<?= URL ?>employees/delete/<?= $employee->id ?>" title="Delete"
+                                                onclick="return confirm('Confirm employee deletion') " class="btn btn-danger">
+                                                <i class="bi bi-trash"></i></a>
+                                            <a href="<?= URL ?>employees/edit/<?= $employee->id ?>" title="edit"
+                                                class="btn btn-success"> <i class="bi bi-pencil-square"></i></a>
+                                        </div>
                                     </td>
                                 <?php else: ?>
                                     <!-- No permitido -->

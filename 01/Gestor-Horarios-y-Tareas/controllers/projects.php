@@ -11,20 +11,20 @@ class Projects extends Controller
     #  |_|  \_\______|_| \_|_____/|______|_|  \_\
     # 
     # ---------------------------------------------------------------------------------
-    # Main method. Charge all the working hours in the database.
+    # Main method. Charge all the projects in the database.
     public function render($param = [])
     {
         # Start or continue the session
         session_start();
         if (!isset($_SESSION['id'])) {
 
-            $_SESSION['notify'] = "Usuario sin autentificar";
+            $_SESSION['notify'] = "Unauthenticated user";
 
             header("location:" . URL . "login");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
 
-            $_SESSION['mensaje'] = "Usuario sin autentificar";
+            $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "index");
 
         } else {
@@ -63,8 +63,8 @@ class Projects extends Controller
     #  |_| \_|______|   \/  \/    
     #                          
     # ---------------------------------------------------------------------------------
-    # "New" method. Form to add an new working Hours
-    # Show a form to create a new working hour
+    # "New" method. Form to add an new projects
+    # Show a form to create a new project
     public function new($param = [])
     {
         # Continue session if exists
@@ -123,7 +123,7 @@ class Projects extends Controller
     #
     # ---------------------------------------------------------------------------------
     # Method create. 
-    # Allow to add a new working hour
+    # Allow to add a new project
     public function create($param = [])
     {
         # Session start
@@ -351,7 +351,7 @@ class Projects extends Controller
             $id = $param[0];
 
             $this->view->id = $id;
-            $this->view->title = "Formulario editar project";
+            $this->view->title = "Form project edit";
             $this->view->project_ = $this->model->read($id);
 
             $this->view->project_managers = $this->model->get_projectManagers();
@@ -533,7 +533,7 @@ class Projects extends Controller
                 # Message
                 $_SESSION['mensaje'] = "project update correctly";
 
-                # Redirect to Working Hours main
+                # Redirect to projects main
                 header('location:' . URL . 'projects');
 
             }
@@ -578,6 +578,42 @@ class Projects extends Controller
 
     # ---------------------------------------------------------------------------------
     #
+    #     _____ ______          _____   _____ _    _ 
+    #    / ____|  ____|   /\   |  __ \ / ____| |  | |
+    #   | (___ | |__     /  \  | |__) | |    | |__| |
+    #    \___ \|  __|   / /\ \ |  _  /| |    |  __  |
+    #    ____) | |____ / ____ \| | \ \| |____| |  | |
+    #   |_____/|______/_/    \_\_|  \_\\_____|_|  |_|
+    #
+    # ---------------------------------------------------------------------------------
+    # Method search 
+    # Search for projects records that match the pattern specified in the search expression
+    public function search($param = [])
+    {
+        session_start();
+        if (!isset($_SESSION['id'])) {
+            $_SESSION['mensaje'] = "User must be authenticated";
+
+            header("location:" . URL . "login/");
+
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
+
+            $_SESSION['mensaje'] = "Unprivileged operation";
+            header("location:" . URL . "projects/");
+
+        } else {
+
+            $expresion = $_GET["expresion"];
+            $this->view->title = "Projects";
+            $this->view->projects = $this->model->filter($expresion);
+            $this->view->render("projects/main/index");
+
+        }
+    }
+
+
+    # ---------------------------------------------------------------------------------
+    #
     #     _______        _____ _  __ _____ 
     #    |__   __|/\    / ____| |/ // ____|
     #       | |  /  \  | (___ | ' /| (___  
@@ -592,13 +628,13 @@ class Projects extends Controller
         session_start();
         if (!isset($_SESSION['id'])) {
 
-            $_SESSION['notify'] = "Usuario sin autentificar";
+            $_SESSION['notify'] = "Unauthenticated user";
 
             header("location:" . URL . "login");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
 
-            $_SESSION['mensaje'] = "Usuario sin autentificar";
+            $_SESSION['mensaje'] = "Unauthenticated user";
             header("location:" . URL . "index");
 
         } else {

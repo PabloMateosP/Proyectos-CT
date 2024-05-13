@@ -70,7 +70,7 @@
                     <div class="mb-3">
                         <label for="id_customer" class="form-label">Customer</label>
                         <select class="form-select" name="id_customer" id="id_customer">
-                            <option selected disabled value="null">Select project </option>
+                            <option selected disabled value="null">Select customer </option>
                             <?php foreach ($this->customers as $customer): ?>
                                 <option value="<?= $customer->id ?>" <?= ($this->project_->id_customer == $customer->id) ? "selected" : null; ?>>
                                     <?= $customer->name ?>

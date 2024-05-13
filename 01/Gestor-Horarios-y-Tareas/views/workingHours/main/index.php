@@ -31,7 +31,6 @@
                         <tr>
                             <th>Employee</th>
                             <th>Time Code</th>
-                            <th>Work Order</th>
                             <th>Project</th>
                             <th>Description (Task)</th>
                             <th>Date Worked</th>
@@ -57,9 +56,6 @@
                                 </td>
                                 <td>
                                     <?= $workingHour->task_description ?>
-                                </td>
-                                <td>
-                                    <?= $workingHour->work_order_description ?>
                                 </td>
                                 <td>
                                     <?= $workingHour->date_worked ?>

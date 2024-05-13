@@ -50,7 +50,7 @@ class WorkingHours extends Controller
                     $this->view->total_hours = $this->model->getTotalHours();
 
                 }
-                
+
 
             } else {
 
@@ -151,7 +151,6 @@ class WorkingHours extends Controller
 
             # 1. Security: We sanitize the data that is sent by the user
             $id_time_code = filter_var($_POST['id_time_code'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $id_work_order = filter_var($_POST['id_work_order'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $id_project = filter_var($_POST['id_project'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $id_task = filter_var($_POST['id_task'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $description = filter_var($_POST['description'] ??= '', FILTER_SANITIZE_EMAIL);
@@ -163,7 +162,6 @@ class WorkingHours extends Controller
                 null,
                 $_SESSION['employee_id'],
                 $id_time_code,
-                $id_work_order,
                 $id_project,
                 $id_task,
                 $description,
@@ -181,13 +179,6 @@ class WorkingHours extends Controller
                 $errores['id_time_code'] = 'The field id_time_code is required';
             } else if (strlen($id_time_code) > 10) {
                 $errores['id_time_code'] = 'The field id_time_code is too long';
-            }
-
-            # Id_work_order
-            if (empty($id_work_order)) {
-                $errores['id_work_order'] = 'The field id_work_order is required';
-            } else if (strlen($id_work_order) > 10) {
-                $errores['id_work_order'] = 'The field id_work_order is too long';
             }
 
             # Id_project
@@ -320,15 +311,15 @@ class WorkingHours extends Controller
             $id = $param[0];
 
             $this->view->id = $id;
-            $this->view->title = "Formulario  editar workingHours";
+            $this->view->title = "Form edit Working Hour";
             $this->view->workingHours = $this->model->read($id);
 
-            # $this->view->employees = $this->model->getEmployeeDetails($this->view->id);
             $this->view->employees = $this->model->getEmployeeDetails($this->view->id)->fetch(PDO::FETCH_OBJ);
 
             $this->view->time_codes = $this->model->get_times_codes($this->view->id);
-            $this->view->work_orders = $this->model->get_work_ordes($this->view->id);
+
             $this->view->projects = $this->model->get_projects($this->view->id);
+
             $this->view->tasks = $this->model->get_tasks($this->view->id);
 
             # Comprobamos si hay errores -> esta variable se crea al lanzar un error de validacion
@@ -383,7 +374,6 @@ class WorkingHours extends Controller
 
             #1.Security. 
             $id_time_code = filter_var($_POST['id_time_code'] ??= '', FILTER_SANITIZE_NUMBER_INT);
-            $id_work_order = filter_var($_POST['id_work_order'] ??= '', FILTER_SANITIZE_NUMBER_INT);
             $id_project = filter_var($_POST['id_project'] ??= '', FILTER_SANITIZE_NUMBER_INT);
             $id_task = filter_var($_POST['id_task'] ??= '', FILTER_SANITIZE_NUMBER_INT);
             $description = filter_var($_POST['description'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -394,7 +384,6 @@ class WorkingHours extends Controller
                 null,
                 null,
                 $id_time_code,
-                $id_work_order,
                 $id_project,
                 $id_task,
                 $description,
@@ -421,17 +410,6 @@ class WorkingHours extends Controller
                     $errores['id_time_code'] = 'The field id_time_code is required';
                 } else if (strlen($id_time_code) > 10) {
                     $errores['id_time_code'] = 'The field id_time_code is too long';
-
-                }
-            }
-
-            # id_work_order
-            if (strcmp($workingHours->id_work_order, $workingHours_orig->id_work_order) !== 0) {
-
-                if (empty($id_work_order)) {
-                    $errores['id_work_order'] = 'The field id_work_order is required ';
-                } else if (strlen($id_work_order) > 10) {
-                    $errores['id_work_order'] = 'The field id_work_order is too long';
 
                 }
             }
@@ -500,11 +478,32 @@ class WorkingHours extends Controller
 
             } else {
 
+                $employee_id = $_SESSION['employee_id'];
+
+                $email = $this->model->get_employee_email($employee_id);
+
+                # Obtengo las horas totales del empleado
+                $employee_total_hours_result = $this->model->get_employeeHours($email);
+
+                # Extraer el valor numérico real de la consulta
+                $employee_total_hours_row = $employee_total_hours_result->fetch(PDO::FETCH_ASSOC);
+                $employee_total_hours = $employee_total_hours_row['total_hours'];
+
+                # Calcula la diferencia entre la duración original y la nueva duración
+                $difference = $workingHours->duration - $workingHours_orig->duration;
+
+                # Si la nueva duración es mayor que la original, suma la diferencia a las horas totales del empleado
+                # Si la nueva duración es menor que la original, resta la diferencia de las horas totales del empleado
+                $new_employee_total_hours = $employee_total_hours + $difference;
+
+                # Actualizamos las horas totales
+                $this->model->sumTHoursWHour($new_employee_total_hours, $employee_id);
+
                 # Adding the data to the table working hours
                 $this->model->update($workingHours, $id);
 
                 # Message
-                $_SESSION['mensaje'] = "workingHours actualizado correctamente";
+                $_SESSION['mensaje'] = "Working hour update correctly";
 
                 # Redirect to Working Hours main
                 header('location:' . URL . 'workingHours');
@@ -565,7 +564,7 @@ class WorkingHours extends Controller
 
             if ((in_array($_SESSION['id_rol'], $GLOBALS['employee']))) {
 
-                $this->view->workingHours = $this->model->orderEmp($criterio , $_SESSION['employee_id']);
+                $this->view->workingHours = $this->model->orderEmp($criterio, $_SESSION['employee_id']);
                 $this->view->total_hours = $this->model->getTotalHours();
 
 
@@ -610,7 +609,7 @@ class WorkingHours extends Controller
 
             if ((in_array($_SESSION['id_rol'], $GLOBALS['employee']))) {
 
-                $this->view->workingHours = $this->model->filterEmp($_SESSION['employee_id'],$expresion);
+                $this->view->workingHours = $this->model->filterEmp($_SESSION['employee_id'], $expresion);
                 $this->view->total_hours = $this->model->getTotalHours();
 
 
@@ -634,8 +633,8 @@ class WorkingHours extends Controller
     #  |______|/_/ \_\|_|      \____/ |_|  \_\  |_|   
     #
     # ---------------------------------------------------------------------------------
-    # Método exportar
-    # Permite exportar los registros de workingHours a un archivo CSV
+    # Method export
+    # Allow to export the data to a csv
     public function export($param = [])
     {
         # Validar la sesión del usuario
@@ -686,7 +685,7 @@ class WorkingHours extends Controller
                 ], ';');
             }
 
-        } else if ((in_array($_SESSION['id_rol'], $GLOBALS['admin'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['manager'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['organiser']))) {
+        } else if ((in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
 
             $workingHours = $this->model->get()->fetchAll(PDO::FETCH_ASSOC);
 
@@ -694,7 +693,6 @@ class WorkingHours extends Controller
             foreach ($workingHours as $workingHour) {
                 # Escribir la fila en el archivo
                 fputcsv($archivo, [
-                    $workingHour['id'],
                     $workingHour['employee_name'],
                     $workingHour['time_code'],
                     $workingHour['project_name'],

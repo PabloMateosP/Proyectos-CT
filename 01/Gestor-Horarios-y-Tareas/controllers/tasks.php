@@ -54,7 +54,7 @@ class Tasks extends Controller
                 // Asignamos todas las tareas al atributo "tasks" de la vista
                 $this->view->tasks = $allTasks;
                 $this->view->render("tasks/main/index");
-                
+
             } else {
                 // Si el empleado no tiene asignado ningún proyecto, mostramos todas las tareas
                 $this->view->tasks = $this->model->get();
@@ -113,11 +113,18 @@ class Tasks extends Controller
                 # If these variables exist when there are no errors, we will enter the error blocks in the conditionals
             }
 
-            $id = $_SESSION['employee_id'];
+            if (in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])) {
+
+                $this->view->projects = $this->model->get_projects();
+                
+            } else {
+
+                $id = $_SESSION['employee_id'];
+                $this->view->projects = $this->model->get_projectsRelated($id);
+
+            }
 
             $this->view->title = "Form new task";
-
-            $this->view->projects = $this->model->get_projectsRelated($id);
 
             $this->view->render("tasks/new/index");
         }
@@ -254,9 +261,9 @@ class Tasks extends Controller
             } else {
 
                 $this->view->projects = $this->model->get_projectsRelated($_SESSION['employee_id']);
-                
+
             }
-            
+
 
             if (isset($_SESSION['error'])) {
 

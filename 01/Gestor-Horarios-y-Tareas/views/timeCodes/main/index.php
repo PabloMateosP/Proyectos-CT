@@ -50,13 +50,15 @@
                                     <?= $timeCode->description ?>
                                 </td>
                                 <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])): ?>
-                                    <td style="display:flex; gap: 5px;">
-                                        <a href="<?= URL ?>timeCodes/edit/<?= $timeCode->id ?>" title="edit" class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ?
-                                                'disabled' : null ?>"> <i class="bi bi-pencil"></i> </a>
-                                        <a href="<?= URL ?>timeCodes/delete/<?= $timeCode->id ?>" title="Eliminar"
-                                            onclick="return confirm('Confirmar project deletion') " class="btn btn-danger"
-                                            <?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])) ?
-                                                'disabled' : null ?>> <i class="bi bi-trash"></i></a>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="<?= URL ?>timeCodes/edit/<?= $timeCode->id ?>" title="edit" class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp'])) ?
+                                                    'disabled' : null ?>"> <i class="bi bi-pencil"></i> </a>
+                                            <a href="<?= URL ?>timeCodes/delete/<?= $timeCode->id ?>" title="Eliminar"
+                                                onclick="return confirm('Confirmar project deletion') " class="btn btn-danger"
+                                                <?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])) ?
+                                                    'disabled' : null ?>> <i class="bi bi-trash"></i></a>
+                                        </div>
                                     </td>
                                 <?php endif; ?>
                             </tr>

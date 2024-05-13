@@ -55,12 +55,14 @@
                                     <?= $customer->email ?>
                                 </td>
                                 <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])): ?>
-                                    <td style="display:flex; gap: 5px;">
-                                        <a href="<?= URL ?>customers/delete/<?= $customer->id ?>" title="delete"
-                                            onclick="return confirm('Confirm customer deletion') " class="btn btn-danger"> <i
-                                                class="bi bi-trash"></i></a>
-                                        <a href="<?= URL ?>customers/edit/<?= $customer->id ?>" title="edit"
-                                            class="btn btn-success"> <i class="bi bi-pencil-square"></i></a>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="<?= URL ?>customers/edit/<?= $customer->id ?>" title="edit"
+                                                class="btn btn-primary"> <i class="bi bi-pencil"></i></a>
+                                            <a href="<?= URL ?>customers/delete/<?= $customer->id ?>" title="delete"
+                                                onclick="return confirm('Confirm customer deletion') " class="btn btn-danger">
+                                                <i class="bi bi-trash"></i></a>
+                                        </div>
                                     </td>
                                 <?php endif; ?>
                             </tr>

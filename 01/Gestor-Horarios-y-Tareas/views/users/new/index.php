@@ -2,57 +2,46 @@
 <html lang="es">
 
 <head>
-    <!-- bootstrap  -->
     <?php require_once ("template/partials/head.php"); ?>
-    <title>Nuevo Usuario - Gesbank</title>
+    <title>New User</title>
 </head>
 
 <body>
 
-    <!-- menu fijo superior -->
     <?php require_once "template/partials/menuAut.php"; ?>
-    <br><br><br>
 
-    <!-- capa principal -->
-    <div class="container">
+    <div class="container" style="margin-top: 5%; margin-bottom: 5%;">
 
         <div class="card">
             <div class="card-header">
-                <!-- cabecera -->
                 <?php include "views/users/partials/header.php" ?>
             </div>
 
             <div class="card-body">
 
-                <!-- Mensaje de Error -->
                 <?php include 'template/partials/error.php' ?>
 
-                <!-- Formulario -->
                 <form action="<?= URL ?>users/create" method="POST">
 
-                    <!-- Nombre -->
                     <div class="mb-3">
-                        <label for="" class="form-label">Nombre</label>
+                        <label for="" class="form-label">Name</label>
                         <input type="text"
-                            class="form-control <?= (isset($this->errores['nombre'])) ? 'is-invalid' : null ?>"
-                            name="nombre" value="<?= $this->usuario->name ?>">
+                            class="form-control <?= (isset($this->errores['name'])) ? 'is-invalid' : null ?>"
+                            name="name" value="<?= $this->usuario->name ?>">
 
-                        <!-- Mostrar posible error -->
-                        <?php if (isset($this->errores['nombre'])): ?>
+                        <?php if (isset($this->errores['name'])): ?>
                             <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['nombre'] ?>
+                                <?= $this->errores['name'] ?>
                             </span>
                         <?php endif; ?>
                     </div>
 
-                    <!-- Email -->
                     <div class="mb-3">
                         <label for="" class="form-label">Email</label>
                         <input type="email"
                             class="form-control <?= (isset($this->errores['email'])) ? 'is-invalid' : null ?>"
                             name="email" value="<?= $this->usuario->email ?>">
 
-                        <!-- Mostrar posible error -->
                         <?php if (isset($this->errores['email'])): ?>
                             <span class="form-text text-danger" role="alert">
                                 <?= $this->errores['email'] ?>
@@ -60,12 +49,11 @@
                         <?php endif; ?>
                     </div>
 
-                    <!-- Roles -->
                     <div class="mb-3">
                         <label for="" class="form-label">Roles</label>
                         <select class="form-select <?= (isset($this->errores['roles'])) ? 'is-invalid' : null ?>"
                             name="roles">
-                            <option selected disabled>Seleccione un rol </option>
+                            <option selected disabled>Select rol </option>
                             <?php foreach ($this->roles as $rol): ?>
                                 <div class="form-check">
                                     <?php
@@ -78,7 +66,6 @@
                             <?php endforeach; ?>
                         </select>
 
-                        <!-- Mostrar posible error -->
                         <?php if (isset($this->errores['roles'])): ?>
                             <span class="form-text text-danger" role="alert">
                                 <?= $this->errores['roles'] ?>
@@ -86,41 +73,36 @@
                         <?php endif; ?>
                     </div>
 
-                    <!-- Contraseña -->
                     <div class="mb-3">
-                        <label for="" class="form-label">Contraseña</label>
+                        <label for="" class="form-label">Password</label>
                         <input type="password"
-                            class="form-control <?= (isset($this->errores['contraseña'])) ? 'is-invalid' : null ?>"
-                            name="contraseña">
+                            class="form-control <?= (isset($this->errores['password'])) ? 'is-invalid' : null ?>"
+                            name="password">
 
-                        <!-- Mostrar posible error -->
-                        <?php if (isset($this->errores['contraseña'])): ?>
+                        <?php if (isset($this->errores['password'])): ?>
                             <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['contraseña'] ?>
+                                <?= $this->errores['password'] ?>
                             </span>
                         <?php endif; ?>
                     </div>
 
-                    <!-- Confirmar Contraseña -->
                     <div class="mb-3">
-                        <label for="" class="form-label">Confirmar Contraseña</label>
+                        <label for="" class="form-label">Password Confirm</label>
                         <input type="password"
-                            class="form-control <?= (isset($this->errores['confirmarContraseña'])) ? 'is-invalid' : null ?>"
-                            name="confirmarContraseña">
+                            class="form-control <?= (isset($this->errores['passwordConfirm'])) ? 'is-invalid' : null ?>"
+                            name="passwordConfirm">
 
-                        <!-- Mostrar posible error -->
-                        <?php if (isset($this->errores['confirmarContraseña'])): ?>
+                        <?php if (isset($this->errores['passwordConfirm'])): ?>
                             <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['confirmarContraseña'] ?>
+                                <?= $this->errores['passwordConfirm'] ?>
                             </span>
                         <?php endif; ?>
                     </div>
 
-                    <!-- Botones de acción -->
                     <div class="mb-3">
-                        <a name="" id="" class="btn btn-secondary" href="<?= URL ?>users/" role="button">Cancelar</a>
-                        <button type="button" class="btn btn-danger">Borrar</button>
-                        <button type="submit" class="btn btn-primary">Crear</button>
+                        <a name="" id="" class="btn btn-secondary" href="<?= URL ?>users/" role="button">Cancel</a>
+                        <button type="button" class="btn btn-danger">Clear</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
                     </div>
                 </form>
             </div>

@@ -26,11 +26,11 @@
                     </ul>
                 </li>
             </ul>
-            <form class="d-flex" method="get" action="<?= URL ?>projects/buscar">
+            <form class="d-flex" method="get" action="<?= URL ?>projects/search">
                 <input class="form-control me-2" type="search" placeholder="Buscar..." aria-label="Search"
                     name="expresion">
                 <button
-                    class="btn btn-outline-secondary <?= in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee']) && in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']) ? 'null' : 'disabled' ?>"
+                    class="btn btn-outline-secondary"
                     type="submit">Buscar</button>
             </form>
         </div>

@@ -36,9 +36,8 @@
                         <?php endif; ?>
                         <li><a class="dropdown-item" href="<?= URL ?>workingHours/order/5">Nombre Proyecto</a></li>
                         <li><a class="dropdown-item" href="<?= URL ?>workingHours/order/6">Tarea</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/order/7">Orden de Trabajo</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/order/8">Fecha de Trabajo</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/order/9">Duración</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/order/7">Fecha de Trabajo</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>workingHours/order/8">Duración</a></li>
                     </ul>
 
                 </li>

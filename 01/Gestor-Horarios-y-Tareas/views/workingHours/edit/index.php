@@ -38,26 +38,6 @@
                         <?php endif; ?>
                     </div>
 
-                    <!-- Work Order -->
-                    <div class="mb-3">
-                        <label for="id_work_order" class="form-label">Work Order</label>
-                        <select class="form-select" name="id_work_order" id="id_work_order">
-                            <option selected disabled>Select a work order </option>
-                            <?php foreach ($this->work_orders as $work_order_): ?>
-                                <option value="<?= $work_order_->id ?>"
-                                    <?= ($this->workingHours->id_work_order == $work_order_->id) ? "selected" : null; ?>>
-                                    <?= $work_order_->work_order ?> (<?= $work_order_->description ?>) - Work Order Manager:
-                                    <?= $work_order_->order_responsible ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <?php if (isset($this->errores['id_work_order'])): ?>
-                            <span class="form-text text-danger" role="alert">
-                                <?= $this->errores['id_work_order'] ?>
-                            </span>
-                        <?php endif; ?>
-                    </div>
-
                     <!-- Project  -->
                     <div class="mb-3">
                         <label for="id_project" class="form-label">Project</label>

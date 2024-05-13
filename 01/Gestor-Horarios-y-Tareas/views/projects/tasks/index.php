@@ -40,7 +40,7 @@
                                     <?= $task_['project'] ?>
                                 </td>
                                 <td>
-                                    <?= $task_['projectDescription']?>
+                                    <?= $task_['projectDescription'] ?>
                                 </td>
                                 <td>
                                     <?= $task_['created_at'] ?>
@@ -51,11 +51,12 @@
                     <tfoot>
                         <tr>
                             <td colspan="6">Nº:
-                                <?= count($this->tasks)?>
+                                <?= count($this->tasks) ?>
                             </td>
                         </tr>
                     </tfoot>
                 </table>
+                <a href="<?= URL ?>projects/" class="btn btn-primary">Go Back</a>
             </div>
         </div>
     </div>

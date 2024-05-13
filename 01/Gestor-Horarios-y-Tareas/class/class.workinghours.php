@@ -6,7 +6,6 @@ class classWorkingHours
     public $id;
     public $id_employee;
     public $id_time_code;
-    public $id_work_order;
     public $id_project;
     public $id_task;
     public $description;
@@ -20,7 +19,6 @@ class classWorkingHours
         $id = null,
         $id_employee = null,
         $id_time_code = null,
-        $id_work_order = null,
         $id_project = null,
         $id_task = null,
         $description = null,
@@ -34,7 +32,6 @@ class classWorkingHours
 
         $this->id_employee = $id_employee;
         $this->id_time_code = $id_time_code;
-        $this->id_work_order = $id_work_order;
         $this->id_project = $id_project;
         $this->id_task = $id_task;
         $this->description = $description;

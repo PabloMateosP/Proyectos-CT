@@ -195,8 +195,44 @@ class workingHoursModel extends Model
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->bindParam(':user_id', $user_id);
             $pdoSt->execute();
-            $result = $pdoSt->fetch(PDO::FETCH_ASSOC);
-            return $result['email'];
+
+            # Verificar si la consulta encontró resultados
+            if ($pdoSt->rowCount() > 0) {
+
+                $result = $pdoSt->fetch(PDO::FETCH_ASSOC);
+                return $result['email'];
+
+            } else {
+                return null;
+            }
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+
+    # ---------------------------------------------------------------------------------
+    public function get_employee_email($employee_id)
+    {
+        try {
+            $sql = "SELECT email FROM employees WHERE id = :employee_id";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':employee_id', $employee_id);
+            $pdoSt->execute();
+
+            # Verificar si la consulta encontró resultados
+            if ($pdoSt->rowCount() > 0) {
+
+                $result = $pdoSt->fetch(PDO::FETCH_ASSOC);
+                return $result['email'];
+
+            } else {
+                return null;
+            }
 
         } catch (PDOException $e) {
             require_once ("template/partials/errorDB.php");
@@ -276,9 +312,9 @@ class workingHoursModel extends Model
     # function get_projects 
     # function to get the information about all the projects
     public function get_projects()
-{
-    try {
-        $sql = "SELECT 
+    {
+        try {
+            $sql = "SELECT 
                     pr.id,
                     pr.project,
                     pr.description,
@@ -291,17 +327,17 @@ class workingHoursModel extends Model
                 JOIN 
                     project_managers pm ON ppm.id_project_manager = pm.id";
 
-        $conexion = $this->db->connect();
-        $result = $conexion->prepare($sql);
-        $result->setFetchMode(PDO::FETCH_OBJ);
-        $result->execute();
+            $conexion = $this->db->connect();
+            $result = $conexion->prepare($sql);
+            $result->setFetchMode(PDO::FETCH_OBJ);
+            $result->execute();
 
-        return $result->fetchAll();
-    } catch (PDOException $e) {
-        require_once ("template/partials/errorDB.php");
-        exit();
+            return $result->fetchAll();
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
     }
-}
 
 
 
@@ -354,23 +390,43 @@ class workingHoursModel extends Model
     # ---------------------------------------------------------------------------------
     # Método update para las horas totales del usuario
     # Permite actualizar las horas totales de un usuario mediante la suma de la duración de las horas laborales 
-    #
-    public function update_total_hours($id)
+    public function update_total_hours($employee_id)
     {
         try {
             $sql = "
-                UPDATE employees e
-                SET e.total_hours = (
-                    SELECT SUM(wh.duration)
-                    FROM working_hours wh
-                    WHERE wh.id_employee = e.id
-                );
-            ";
+            UPDATE employees e
+            SET e.total_hours = (
+                SELECT SUM(wh.duration)
+                FROM working_hours wh
+                WHERE wh.id_employee = :employee_id
+            )
+            WHERE e.id = :employee_id
+        ";
+
+            # Preparar la consulta
+            $statement = $this->db->prepare($sql);
+
+            # Bind de los parámetros
+            $statement->bindParam(':employee_id', $employee_id, PDO::PARAM_INT);
+
+            # Ejecutar la consulta
+            $statement->execute();
+
+            # Comprobar si se realizó la actualización correctamente
+            if ($statement->rowCount() > 0) {
+                return true; // Actualización exitosa
+            } else {
+                return false; // No se pudo actualizar (el empleado puede no existir)
+            }
+
         } catch (PDOException $error) {
+
             require_once ("template/partials/errorDB.php");
             exit();
+
         }
     }
+
 
     # ---------------------------------------------------------------------------------
     #    
@@ -392,7 +448,6 @@ class workingHoursModel extends Model
                         (
                             id_employee, 
                             id_time_code, 
-                            id_work_order, 
                             id_project, 
                             id_task, 
                             description,
@@ -403,7 +458,6 @@ class workingHoursModel extends Model
                         ( 
                             :id_employee, 
                             :id_time_code, 
-                            :id_work_order, 
                             :id_project, 
                             :id_task, 
                             :description_,
@@ -418,7 +472,6 @@ class workingHoursModel extends Model
             //-----------------------------------------------------------------------------------
             $pdoSt->bindParam(":id_employee", $workingHours->id_employee, PDO::PARAM_STR, 10);
             $pdoSt->bindParam(":id_time_code", $workingHours->id_time_code, PDO::PARAM_STR, 10);
-            $pdoSt->bindParam(":id_work_order", $workingHours->id_work_order, PDO::PARAM_STR, 10);
             $pdoSt->bindParam(":id_project", $workingHours->id_project, PDO::PARAM_STR, 10);
             $pdoSt->bindParam(":id_task", $workingHours->id_task, PDO::PARAM_STR, 10);
             $pdoSt->bindParam(":description_", $workingHours->description, PDO::PARAM_STR, 50);
@@ -449,20 +502,19 @@ class workingHoursModel extends Model
     public function sumTHoursWHour($duration, $employee_id)
     {
         try {
-            // Consulta SQL para actualizar las total_hours del empleado sumando la duración de la nueva working hour
+
             $sql = "UPDATE employees SET total_hours = total_hours + :duration WHERE id = :employee_id";
 
-            // Preparar la consulta
             $pdoSt = $this->db->connect()->prepare($sql);
 
-            // Vincular los parámetros
             $pdoSt->bindParam(":duration", $duration, PDO::PARAM_INT);
             $pdoSt->bindParam(":employee_id", $employee_id, PDO::PARAM_INT);
 
-            // Ejecutar la consulta
             $pdoSt->execute();
+
         } catch (PDOException $e) {
             require_once ("template/partialS/errorDB.php");
+            exit();
         }
     }
 
@@ -537,7 +589,6 @@ class workingHoursModel extends Model
             id,
             id_employee, 
             id_time_code,
-            id_work_order,
             id_project,
             id_task,
             description,
@@ -583,7 +634,6 @@ class workingHoursModel extends Model
                     UPDATE working_hours
                     SET
                         id_time_code=:id_time_code,
-                        id_work_order=:id_work_order,
                         id_project=:id_project,
                         id_task=:id_task,
                         description=:description,
@@ -598,7 +648,6 @@ class workingHoursModel extends Model
             $pdoSt = $conexion->prepare($sql);
 
             $pdoSt->bindParam(":id_time_code", $workingHours->id_time_code, PDO::PARAM_INT, 10);
-            $pdoSt->bindParam(":id_work_order", $workingHours->id_work_order, PDO::PARAM_INT, 10);
             $pdoSt->bindParam(":id_project", $workingHours->id_project, PDO::PARAM_INT, 10);
             $pdoSt->bindParam(":id_task", $workingHours->id_task, PDO::PARAM_INT, 10);
             $pdoSt->bindParam(":description", $workingHours->description, PDO::PARAM_STR, 50);
@@ -638,7 +687,6 @@ class workingHoursModel extends Model
                 tc.time_code, 
                 p.project AS project_name,  
                 t.description AS task_description,  
-                wo.description AS work_order_description, 
                 wh.date_worked, 
                 wh.duration 
             FROM 
@@ -651,8 +699,6 @@ class workingHoursModel extends Model
                 projects p ON wh.id_project = p.id
             JOIN 
                 tasks t ON wh.id_task = t.id
-            JOIN 
-                work_orders wo ON wh.id_work_order = wo.id
             ORDER by :criterio;";
 
             $conexion = $this->db->connect();

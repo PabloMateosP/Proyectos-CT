@@ -523,9 +523,9 @@ class projectsModel extends Model
                 FROM 
                     projects pr
                 LEFT JOIN 
-                    projectManager prM ON pr.id_projectManager = prM.id
+                    project_managers prM ON pr.id_projectManager = prM.id
                 LEFT JOIN 
-                    customer c ON pr.id_customer = c.id
+                    customers c ON pr.id_customer = c.id
                 ORDER by :criterio;";
 
             $conexion = $this->db->connect();
@@ -542,6 +542,57 @@ class projectsModel extends Model
             require_once ("template/partials/errorDB.php");
             exit();
 
+        }
+    }
+
+    # Método filter
+    # Permite filtar la tabla employees a partir de una expresión de búsqueda
+    public function filter($expresion)
+    {
+        try {
+
+            $sql = "SELECT 
+                        pr.id,
+                        pr.project,
+                        pr.description,
+                        concat_ws(', ', prM.last_name, prM.name) manager_name,
+                        c.name customerName,
+                        pr.finish_date
+                    FROM 
+                        projects pr
+                    LEFT JOIN 
+                        project_managers prM ON pr.id_projectManager = prM.id
+                    LEFT JOIN 
+                        customers c ON pr.id_customer = c.id
+                    WHERE 
+                        concat_ws(  
+                                    ' ',
+                                    pr.id,
+                                    pr.project,
+                                    pr.description,
+                                    prM.last_name,
+                                    prM.name,
+                                    c.name,
+                                    pr.finish_date
+                                )
+                        LIKE 
+                        :expresion
+                    ORDER BY id ASC";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+
+            # enlazamos parámetros con variable
+            $expresion = "%" . $expresion . "%";
+            $pdoSt->bindValue(':expresion', $expresion, PDO::PARAM_STR);
+
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
         }
     }
 
