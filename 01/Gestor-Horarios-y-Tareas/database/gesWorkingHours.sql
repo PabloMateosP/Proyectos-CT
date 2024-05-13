@@ -243,3 +243,24 @@ CREATE TABLE IF NOT EXISTS `roles_users`(
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `update_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- POSIBLES FUNCIONES PARA MEJORAR EL RENDIMIENTO DEL SERVIDOR --
+-- ----------------------------------------------------------- --
+
+-- 1. Función para sumar a las horas totales cuando se añada una nueva working hour
+-- ----------------------------------------------------------- --
+
+-- DELIMITER //
+
+-- CREATE TRIGGER update_total_hours AFTER INSERT ON working_hours
+-- FOR EACH ROW
+-- BEGIN
+--     UPDATE employees 
+--     SET total_hours = total_hours + NEW.duration 
+--     WHERE id = NEW.employee_id;
+-- END;
+-- //
+
+-- DELIMITER ;
+
+-- ----------------------------------------------------------- --

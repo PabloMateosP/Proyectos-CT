@@ -320,7 +320,7 @@ class Projects extends Controller
     }
 
     # ---------------------------------------------------------------------------------
-    #  ______  _____  _____  _______ 
+    #   ______  _____  _____  _______ 
     #  |  ____||  __ \|_   _||__   __|
     #  | |__   | |  | | | |     | |   
     #  |  __|  | |  | | | |     | |   
@@ -354,8 +354,11 @@ class Projects extends Controller
             $this->view->title = "Form project edit";
             $this->view->project_ = $this->model->read($id);
 
+            $this->view->projectEmployees = $this->model->getProjectEmployees($id);
             $this->view->project_managers = $this->model->get_projectManagers();
             $this->view->customers = $this->model->get_customers();
+
+            $this->view->employees = $this->model->get_Employees();
 
             # Comprobamos si hay errores -> esta variable se crea al lanzar un error de validacion
             if (isset($_SESSION['error'])) {
@@ -498,34 +501,34 @@ class Projects extends Controller
 
             } else {
 
-                // Check if there's a project manager relationship
-                $hasProjectManagerRelation = !empty($project->id_projectManager) ? $this->model->hasProjectManagerRelation($id) : false;
+                if (isset($_POST['employees'])) {
+                    $formEmployees = $_POST['employees'];
+                } else {
+                    $formEmployees = [];
+                }
 
-                if (!empty($project->id_projectManager)) {
-                    if ($hasProjectManagerRelation) {
-                        // Update existing project manager relationship
-                        $this->model->updateProjectManagerRelation($project->id_projectManager, $id);
-                    } else {
-                        // Create new project manager relationship
-                        $this->model->insertProjectManagerRelationship($id, $project->id_projectManager);
+                $projectEmployeeRelated = $this->model->getProjectEmployees($id);
+
+                $employeesToDelete = array_diff($projectEmployeeRelated, $formEmployees);
+
+                $employeesToCreate = array_diff($formEmployees, $projectEmployeeRelated);
+
+                foreach ($formEmployees as $employeeId) {
+                    if (in_array($employeeId, $projectEmployeeRelated)) {
+                        // Este empleado ya estaba relacionado, lo eliminamos de los empleados a crear relación
+                        unset($employeesToCreate[array_search($employeeId, $employeesToCreate)]);
                     }
                 }
 
-                // Check if there's a customer relationship
-                $hasCustomerRelation = !empty($project->id_customer) ? $this->model->hasCustomerRelation($id) : false;
-
-                if (!empty($project->id_customer)) {
-                    if ($hasCustomerRelation) {
-                        // Update existing customer relationship
-                        $this->model->updateCustomerRelation($project->id_customer, $id);
-                    } else {
-                        // Create new customer relationship
-                        $this->model->insertCustomerProjectRelationship($id, $project->id_customer);
-                    }
+                // Eliminar relaciones de empleados que ya no están en el formulario
+                foreach ($employeesToDelete as $employeeId) {
+                    $this->model->deleteRelationEP($id, $employeeId);
                 }
 
-                // Update project data
-                $this->model->update($project, $id);
+                // Crear relaciones para los empleados del formulario que no estaban previamente relacionados
+                foreach ($employeesToCreate as $employeeId) {
+                    $this->model->insertProjectEmployeeRelationship($employeeId, $id);
+                }
 
                 // Update project data
                 $this->model->update($project, $id);

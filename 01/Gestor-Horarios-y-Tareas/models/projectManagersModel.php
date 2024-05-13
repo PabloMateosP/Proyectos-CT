@@ -207,11 +207,10 @@ class projectManagersModel extends Model
     {
         try {
             $sql = " 
-                    UPDATE projectManagers
+                    UPDATE project_managers
                     SET
                         last_name=:last_name,
                         name=:name,
-                        id_project=:id_project,
                         update_at = now()
                     WHERE
                         id=:id
@@ -222,7 +221,6 @@ class projectManagersModel extends Model
 
             $pdoSt->bindParam(":last_name", $projectManager->last_name, PDO::PARAM_STR, 8);
             $pdoSt->bindParam(":name", $projectManager->name, PDO::PARAM_STR, 50);
-            $pdoSt->bindParam(":id_project", $projectManager->id_project, PDO::PARAM_INT, 10);
             $pdoSt->bindParam(":id", $id, PDO::PARAM_STR);
 
             $pdoSt->execute();
@@ -306,6 +304,50 @@ class projectManagersModel extends Model
             require_once ("template/partials/errorDB.php");
             exit();
         }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #    
+    #  _____  ______          _____  
+    # |  __ \|  ____|   /\   |  __ \ 
+    # | |__) | |__     /  \  | |  | |
+    # |  _  /|  __|   / /\ \ | |  | |
+    # | | \ \| |____ / ____ \| |__| |
+    # |_|  \_\______/_/    \_\_____/ 
+    #
+    # ---------------------------------------------------------------------------------
+    # function read
+    # take the info of an project Manager
+    public function read($id)
+    {
+        try {
+            $sql = " 
+                SELECT
+                    id,
+                    last_name, 
+                    name,
+                    created_at,
+                    update_at
+                FROM 
+                    project_managers
+                WHERE id =  :id;";
+
+            # Connect with the database
+            $conexion = $this->db->connect();
+
+            $pdoSt = $conexion->prepare($sql);
+
+            $pdoSt->bindParam(':id', $id, PDO::PARAM_INT);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+
+            return $pdoSt->fetch();
+
+        } catch (PDOException $e) {
+            include_once ('template/partials/errorDB.php');
+            exit();
+        }
+
     }
 
 }

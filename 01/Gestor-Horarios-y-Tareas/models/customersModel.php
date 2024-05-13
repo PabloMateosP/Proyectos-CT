@@ -229,4 +229,48 @@ class customersModel extends Model
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #    
+    #  _____  ______          _____  
+    # |  __ \|  ____|   /\   |  __ \ 
+    # | |__) | |__     /  \  | |  | |
+    # |  _  /|  __|   / /\ \ | |  | |
+    # | | \ \| |____ / ____ \| |__| |
+    # |_|  \_\______/_/    \_\_____/ 
+    #
+    # ---------------------------------------------------------------------------------
+    # function read
+    # take the info of an project
+    public function read($id)
+    {
+        try {
+            $sql = " 
+                SELECT
+                    name, 
+                    phone,
+                    city,
+                    address,
+                    email
+                FROM 
+                    customers
+                WHERE id =  :id;";
+
+            # Connect with the database
+            $conexion = $this->db->connect();
+
+            $pdoSt = $conexion->prepare($sql);
+
+            $pdoSt->bindParam(':id', $id, PDO::PARAM_INT);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+
+            return $pdoSt->fetch();
+
+        } catch (PDOException $e) {
+            include_once ('template/partials/errorDB.php');
+            exit();
+        }
+
+    }
+
 }

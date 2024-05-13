@@ -39,6 +39,15 @@ class Employees extends Controller
         }
     }
 
+    # ---------------------------------------------------------------------------------    
+    #   _   _ ________          __
+    #  | \ | |  ____\ \        / /
+    #  |  \| | |__   \ \  /\  / / 
+    #  | . ` |  __|   \ \/  \/ /  
+    #  | |\  | |____   \  /\  /   
+    #  |_| \_|______|   \/  \/    
+    #                          
+    # ---------------------------------------------------------------------------------
     # "New" Method. Show a formulary to add new employees
     public function new($param = [])
     {
@@ -88,6 +97,15 @@ class Employees extends Controller
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #    _____  _____   ______         _______  ______ 
+    #   / ____||  __ \ |  ____|    /\ |__   __||  ____|
+    #  | |     | |__) || |__      /  \   | |   | |__   
+    #  | |     |  _  / |  __|    / /\ \  | |   |  __|  
+    #  | |____ | | \ \ | |____  / ____ \ | |   | |____ 
+    #   \_____||_|  \_\|______|/_/    \_\|_|   |______|
+    #
+    # ---------------------------------------------------------------------------------
     # Method create.
     # Allows adding a new employee based on the form details.
     public function create($param = [])
@@ -233,7 +251,17 @@ class Employees extends Controller
         }
     }
 
-    # Method delet. 
+    # ---------------------------------------------------------------------------------   
+    #  
+    #   _____  ______ _      ______ _______ ______ 
+    #  |  __ \|  ____| |    |  ____|__   __|  ____|
+    #  | |  | | |__  | |    | |__     | |  | |__   
+    #  | |  | |  __| | |    |  __|    | |  |  __|  
+    #  | |__| | |____| |____| |____   | |  | |____ 
+    #  |_____/|______|______|______|  |_|  |______|    
+    #                               
+    # ---------------------------------------------------------------------------------
+    # Method delete. 
     # Allow the elimination of an employee
     public function delete($param = [])
     {
@@ -258,8 +286,17 @@ class Employees extends Controller
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #  ______  _____  _____  _______ 
+    #  |  ____||  __ \|_   _||__   __|
+    #  | |__   | |  | | | |     | |   
+    #  |  __|  | |  | | | |     | |   
+    #  | |____ | |__| |_| |_    | |   
+    #  |______||_____/|_____|   |_|
+    #
+    # ---------------------------------------------------------------------------------
     # Method edit. 
-    # Show an form that allow to change the data of an employee
+    # Show a form to edit an employee
     public function edit($param = [])
     {
         session_start();
@@ -493,7 +530,7 @@ class Employees extends Controller
 
                 // Eliminar relaciones de proyectos que ya no están en el formulario
                 foreach ($projectsToDelete as $projectId) {
-                    $this->model->deleteRelation($projectId, $id);
+                    $this->model->deleteRelationEP($projectId, $id);
                 }
 
                 // Crear relaciones para los proyectos del formulario que no estaban previamente relacionados
@@ -514,9 +551,18 @@ class Employees extends Controller
         }
     }
 
-
-    # Método mostrar
-    # Muestra en un formulario de solo lectura los detalles de un employee
+    # ---------------------------------------------------------------------------------
+    #    
+    #    _____ _    _  ______          __
+    #   / ____| |  | |/ __ \ \        / /
+    #  | (___ | |__| | |  | \ \  /\  / / 
+    #   \___ \|  __  | |  | |\ \/  \/ /  
+    #   ____) | |  | | |__| | \  /\  /   
+    #  |_____/|_|  |_|\____/   \/  \/    
+    #
+    # ---------------------------------------------------------------------------------
+    # Method show 
+    # Show a form to watch the information about an employee
     public function show($param = [])
     {
         session_start();
@@ -526,7 +572,7 @@ class Employees extends Controller
             header("location:" . URL . "login");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
-            $_SESSION['mensaje'] = "unprivileged operation";
+            $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "employees");
         } else {
             $id = $param[0];
@@ -538,8 +584,17 @@ class Employees extends Controller
         }
     }
 
-    # Método ordenar
-    # Permite ordenar la tabla de employees por cualquiera de las columnas de la tabla
+    # ---------------------------------------------------------------------------------
+    #    ____   _____   _____   ______  _____  
+    #   / __ \ |  __ \ |  __ \ |  ____||  __ \ 
+    #  | |  | || |__) || |  | || |__   | |__) |
+    #  | |  | ||  _  / | |  | ||  __|  |  _  / 
+    #  | |__| || | \ \ | |__| || |____ | | \ \ 
+    #   \____/ |_|  \_\|_____/ |______||_|  \_\
+    #
+    # ---------------------------------------------------------------------------------
+    # Method order
+    # Allow order the table employee
     public function order($param = [])
     {
         session_start();
@@ -560,9 +615,18 @@ class Employees extends Controller
 
     }
 
-    # Método buscar
-    # Permite buscar los registros de employees que cumplan con el patrón especificado en la expresión
-    # de búsqueda
+    # ---------------------------------------------------------------------------------
+    #
+    #     _____ ______          _____   _____ _    _ 
+    #    / ____|  ____|   /\   |  __ \ / ____| |  | |
+    #   | (___ | |__     /  \  | |__) | |    | |__| |
+    #    \___ \|  __|   / /\ \ |  _  /| |    |  __  |
+    #    ____) | |____ / ____ \| | \ \| |____| |  | |
+    #   |_____/|______/_/    \_\_|  \_\\_____|_|  |_|
+    #
+    # ---------------------------------------------------------------------------------
+    # Method search 
+    # Search for employee records that match the pattern specified in the search expression
     public function search($param = [])
     {
         session_start();
@@ -650,7 +714,6 @@ class Employees extends Controller
             exit();
         }
 
-
         # Validar si se ha subido un archivo
         if (!isset($_FILES['archivos']) || $_FILES['archivos']['error'] != UPLOAD_ERR_OK) {
             $_SESSION['mensaje'] = "Error al subir el archivo CSV. ";
@@ -694,38 +757,5 @@ class Employees extends Controller
         $_SESSION['mensaje'] = "Datos importados correctamente.";
         header("location:" . URL . "employees");
         exit();
-    }
-
-    function pdf($param = [])
-    {
-        # Validar la sesión del usuario
-        session_start();
-        if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "User must authenticated";
-            header("location:" . URL . "login");
-            exit();
-        } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['employees']['export'])) {
-            $_SESSION['mensaje'] = "unprivileged operation";
-            header("location:" . URL . "cuentas");
-            exit();
-        }
-
-        $data = $this->model->get()->fetchAll(PDO::FETCH_ASSOC);
-
-        $columnas = [
-            ['header' => 'employee', 'field' => 'employee', 'width' => 60],
-            ['header' => 'Telefono', 'field' => 'telefono', 'width' => 40],
-            ['header' => 'Ciudad', 'field' => 'ciudad', 'width' => 30],
-            ['header' => 'DNI', 'field' => 'dni', 'width' => 25],
-            ['header' => 'Email', 'field' => 'email', 'width' => 40],
-        ];
-
-        $pdf = new PDFemployees();
-        $pdf->AliasNbPages();
-        $pdf->AddPage();
-        $pdf->TituloInforme();
-        $pdf->EncabezadoListado($columnas);
-        $pdf->ContenidoListado($data, $columnas);
-        $pdf->Output();
     }
 }

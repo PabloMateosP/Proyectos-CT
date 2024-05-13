@@ -56,7 +56,7 @@
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="<?= URL ?>users/show/<?= $user->id ?>" title="show" class="btn btn-warning<?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
+                                        <a href="<?= URL ?>users/show/<?= $user->id ?>" title="show" class="btn btn-secondary<?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?
                                                 'disabled' : null ?>"> <i class="bi bi-eye"></i> </a>
                                         <a href="<?= URL ?>users/edit/<?= $user->id ?>" title="edit" class="btn btn-primary
                                         <?= (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])) ?

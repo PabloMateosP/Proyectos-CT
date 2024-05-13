@@ -144,8 +144,6 @@
                     <!-- botones de acción -->
                     <div class="mb-3">
                         <a class="btn btn-secondary" href="<?= URL ?>employees/" role="button">Cancelar</a>
-                        <button type="reset" class="btn btn-danger">Borrar</button>
-                        <button type="submit" class="btn btn-primary">Crear</button>
                     </div>
                 </form>
             </div>

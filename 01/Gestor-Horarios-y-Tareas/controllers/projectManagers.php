@@ -229,13 +229,13 @@ class ProjectManagers extends Controller
 
             $this->view->id = $id;
             $this->view->title = "Formulario editar project";
-            $this->view->projectManagers = $this->model->read($id);
+            $this->view->projectManager = $this->model->read($id);
 
             if (isset($_SESSION['error'])) {
 
                 $this->view->error = $_SESSION['error'];
 
-                $this->view->project_ = unserialize($_SESSION['projectManager']);
+                $this->view->projectManager = unserialize($_SESSION['projectManager']);
 
                 $this->view->errores = $_SESSION['errores'];
 
@@ -304,9 +304,9 @@ class ProjectManagers extends Controller
 
             # Last Name
             if (strcmp($projectManager->last_name, $projectManager_orig->last_name) !== 0) {
-                if (empty($projectManager)) {
+                if (empty($last_name)) {
                     $errores['projectManager'] = 'The field project Manager is required';
-                } else if (strlen($projectManager) > 10) {
+                } else if (strlen($last_name) > 45) {
                     $errores['projectManager'] = 'The field project Manager is too long';
 
                 }
@@ -317,7 +317,7 @@ class ProjectManagers extends Controller
 
                 if (empty($name)) {
                     $errores['name'] = 'The field name is required';
-                } else if (strlen($name) > 50) {
+                } else if (strlen($name) > 20) {
                     $errores['name'] = 'The field name is too long';
                 }
             }

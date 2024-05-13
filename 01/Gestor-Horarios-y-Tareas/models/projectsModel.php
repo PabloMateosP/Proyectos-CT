@@ -90,6 +90,7 @@ class projectsModel extends Model
             exit();
         }
     }
+    
 
     # ---------------------------------------------------------------------------------
     #    
@@ -275,6 +276,7 @@ class projectsModel extends Model
             exit();
         }
     }
+    
 
 
     # ---------------------------------------------------------------------------------
@@ -432,6 +434,24 @@ class projectsModel extends Model
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->bindParam(":id_project", $id_project, PDO::PARAM_INT);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    public function deleteRelationEP($id_project, $id_employee)
+    {
+        try {
+
+            $sql = " DELETE FROM project_employee WHERE id_project = :id_project AND id_employee = :id_employee;";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":id_project", $id_project, PDO::PARAM_INT);
+            $pdoSt->bindParam(":id_employee", $id_employee, PDO::PARAM_INT);
             $pdoSt->execute();
             return $pdoSt;
 

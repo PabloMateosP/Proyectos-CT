@@ -262,4 +262,58 @@ class Customers extends Controller
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #   ______  _____  _____  _______ 
+    #  |  ____||  __ \|_   _||__   __|
+    #  | |__   | |  | | | |     | |   
+    #  |  __|  | |  | | | |     | |   
+    #  | |____ | |__| |_| |_    | |   
+    #  |______||_____/|_____|   |_|
+    #
+    # ---------------------------------------------------------------------------------
+    # Method edit. 
+    # Show a form to edit a project
+    public function edit($param = [])
+    {
+        session_start();
+
+        if (!isset($_SESSION['id'])) {
+            $_SESSION['mensaje'] = "User must be authenticated";
+
+            header("location:" . URL . "login");
+
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
+            $_SESSION['mensaje'] = "Operation without privileges";
+
+            header('location:' . URL . 'projects');
+
+        } else {
+            $id = $param[0];
+
+            $this->view->id = $id;
+            $this->view->title = "Form customer edit";
+            $this->view->customer = $this->model->read($id);
+
+            # Comprobamos si hay errores -> esta variable se crea al lanzar un error de validacion
+            if (isset($_SESSION['error'])) {
+                # rescatemos el mensaje
+                $this->view->error = $_SESSION['error'];
+
+                # Autorellenamos el formulario
+                $this->view->project_ = unserialize($_SESSION['employee']);
+
+                # Recupero array de errores específicos
+                $this->view->errores = $_SESSION['errores'];
+
+                # debemos liberar las variables de sesión ya que su cometido ha sido resuelto
+                unset($_SESSION['error']);
+                unset($_SESSION['errores']);
+                unset($_SESSION['projects']);
+                # Si estas variables existen cuando no hay errores, entraremos en los bloques de error en las condicionales
+            }
+
+            $this->view->render("customers/edit/index");
+        }
+    }
+
 }

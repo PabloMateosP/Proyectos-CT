@@ -22,7 +22,7 @@
                     <!-- name -->
                     <div class="mb-3">
                         <label for="" class="form-label">Name</label>
-                        <input type="text" class="form-control" name="name">
+                        <input type="text" class="form-control" name="name" value="<?= $this->customer->name ?>">
                         <!-- Show error -->
                         <?php if (isset($this->errores['name'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -34,7 +34,7 @@
                     <!-- phone -->
                     <div class="mb-3">
                         <label for="" class="form-label">Phone</label>
-                        <input type="text" class="form-control" name="phone">
+                        <input type="text" class="form-control" name="phone" value="<?= $this->customer->phone ?>">
                         <!-- Show error -->
                         <?php if (isset($this->errores['phone'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -46,7 +46,7 @@
                     <!-- city -->
                     <div class="mb-3">
                         <label for="" class="form-label">City</label>
-                        <input type="text" class="form-control" name="city">
+                        <input type="text" class="form-control" name="city" value="<?= $this->customer->city ?>">
                         <!-- Show error -->
                         <?php if (isset($this->errores['city'])): ?>
                             <span class="form-text text-danger" role="alert">
@@ -71,7 +71,7 @@
                     <!-- email -->
                     <div class="mb-3">
                         <label for="" class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email">
+                        <input type="email" class="form-control" name="email" value="<?= $this->customer->email ?>">
                         <!-- Show error -->
                         <?php if (isset($this->errores['email'])): ?>
                             <span class="form-text text-danger" role="alert">
