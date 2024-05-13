@@ -69,14 +69,6 @@ CREATE TABLE `project_managers` (
     PRIMARY KEY (`id`)
 );
 
--- INSERT INTO
---     `projectManager` (`last_name`, `name`, `id_project`)
--- VALUES
---     ('Gomez', 'Juan', 1),
---     ('Perez', 'Ana', NULL),
---     ('Rodriguez', 'Carlos', 3),
---     ('Fernandez', 'Maria', NULL),
---     ('Martinez', 'Pedro', 5);
 -- Table structure for table `projectManager_project`
 -- Table to establish the relationship between project managers and projects
 -- [Tabla para relacionar un manager de proyecto con uno o más proyecto]
@@ -128,12 +120,10 @@ CREATE TABLE `tasks` (
     `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `task` VARCHAR(20) DEFAULT NULL,
     `description` VARCHAR(50) DEFAULT NULL,
-    `id_employee` INT(10) UNSIGNED DEFAULT NULL,
     `id_project` INT(10) UNSIGNED DEFAULT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `update_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`id_employee`) REFERENCES `employees`(`id`),
     FOREIGN KEY (`id_project`) REFERENCES `projects`(`id`)
 );
 

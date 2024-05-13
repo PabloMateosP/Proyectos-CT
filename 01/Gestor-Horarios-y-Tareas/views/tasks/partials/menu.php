@@ -32,13 +32,11 @@
                         Ordenar
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="<?= URL ?>tasks/order/4">Time Code</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>tasks/order/3">Nombre Empleado</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>tasks/order/5">Nombre Proyecto</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>tasks/order/6">Tarea</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>tasks/order/7">Orden de Trabajo</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>tasks/order/8">Fecha de Trabajo</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>tasks/order/9">Duración</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>tasks/order/1">Task</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>tasks/order/2">Description</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>tasks/order/3">Project</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>tasks/order/4">Project Description</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>tasks/order/5">Creation Date</a></li>
                     </ul>
                 </li>
             </ul>

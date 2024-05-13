@@ -24,14 +24,11 @@ class tasksModel extends Model
                         tk.description,
                         pr.project,
                         pr.description projectDescription,
-                        concat_ws(', ', emp.last_name, emp.name) employee,
                         tk.created_at
                     FROM 
                         tasks tk
                     JOIN 
                         projects pr ON tk.id_project = pr.id
-                    LEFT JOIN 
-                        employees emp ON tk.id_employee = emp.id
                     ORDER by tk.id asc;";
 
             $conexion = $this->db->connect();
@@ -365,4 +362,91 @@ class tasksModel extends Model
             exit();
         }
     }
+
+    # ---------------------------------------------------------------------------------
+    #    
+    #    ____  _____  _____  ______ _____  
+    #   / __ \|  __ \|  __ \|  ____|  __ \ 
+    #  | |  | | |__) | |  | | |__  | |__) |
+    #  | |  | |  _  /| |  | |  __| |  _  / 
+    #  | |__| | | \ \| |__| | |____| | \ \ 
+    #   \____/|_|  \_\_____/|______|_|  \_\
+    #                             
+    # ---------------------------------------------------------------------------------
+    # Method order
+    # Permit execute command ORDER BY at the table tasks
+    public function order($criterio){
+        try {
+            $sql = "SELECT 
+                        tk.task,
+                        tk.description,
+                        pr.project,
+                        pr.description projectDescription,
+                        tk.created_at
+                    FROM 
+                        tasks tk
+                    JOIN 
+                        projects pr ON tk.id_project = pr.id
+                    ORDER by :criterio ;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":criterio", $criterio, PDO::PARAM_INT);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+
+            $pdoSt->execute();
+
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+
+            require_once ("template/partials/errorDB.php");
+            exit();
+
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #
+    #     ____  _____  _____  ______ _____    _______        _____ _  __   ______ __  __ _____  
+    #    / __ \|  __ \|  __ \|  ____|  __ \  |__   __|/\    / ____| |/ /  |  ____|  \/  |  __ \ 
+    #   | |  | | |__) | |  | | |__  | |__) |    | |  /  \  | (___ | ' /   | |__  | \  / | |__) |
+    #   | |  | |  _  /| |  | |  __| |  _  /     | | / /\ \  \___ \|  <    |  __| | |\/| |  ___/ 
+    #   | |__| | | \ \| |__| | |____| | \ \     | |/ ____ \ ____) | . \   | |____| |  | | |     
+    #    \____/|_|  \_\_____/|______|_|  \_\    |_/_/    \_\_____/|_|\_\  |______|_|  |_|_|      
+    #                             
+    # ---------------------------------------------------------------------------------
+    # Method order
+    # Permit execute command ORDER BY at the table tasks
+    public function orderTaskEmp($criterio){
+        try {
+            $sql = "SELECT 
+                        tk.id,
+                        tk.task,
+                        tk.description,
+                        pr.project,
+                        pr.description projectDescription,
+                        tk.created_at
+                    FROM 
+                        tasks tk
+                    JOIN 
+                        projects pr ON tk.id_project = pr.id
+                    ORDER by :criterio ;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":criterio", $criterio, PDO::PARAM_INT);
+
+            $pdoSt->execute();
+
+            return $pdoSt->fetchAll(PDO::FETCH_ASSOC);
+            
+        } catch (PDOException $e) {
+
+            require_once ("template/partials/errorDB.php");
+            exit();
+
+        }
+    }
+
 }

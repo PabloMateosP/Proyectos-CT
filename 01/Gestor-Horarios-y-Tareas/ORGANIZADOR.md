@@ -222,3 +222,7 @@ Día 10/05/24
 -------------------------------------------------------------------------------------------------------------------------------------------
 
 ## SEMANA 5 ##
+
+Día 13/05/24
+    - He arreglado fallos generales como ordenar y buscar en varias tablas y otros fallos al quitar la tabla work ordes de la base de datos.
+    - He añadido la funcionalidad de sumar o restar horas totales si la duración de una working hour es modificada (Método update)

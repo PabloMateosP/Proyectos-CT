@@ -145,14 +145,11 @@ class projectsModel extends Model
                         tk.description,
                         pr.project,
                         pr.description projectDescription,
-                        concat_ws(', ', emp.last_name, emp.name) employee,
                         tk.created_at
                     FROM 
                         tasks tk
                     JOIN 
                         projects pr ON tk.id_project = pr.id
-                    LEFT JOIN 
-                        employees emp ON tk.id_employee = emp.id
                     WHERE 
                         tk.id_project = :id_project
                     ORDER by tk.id asc;";
@@ -542,6 +539,48 @@ class projectsModel extends Model
             require_once ("template/partials/errorDB.php");
             exit();
 
+        }
+    }
+
+    public function orderProjEmp($id_employee, $criterio)
+    {
+        try {
+            $sql = "SELECT 
+                        pr.id,
+                        pr.project,
+                        pr.description,
+                        concat_ws(', ', pm.last_name, pm.name) manager_name,
+                        c.name customerName,
+                        pr.finish_date
+                    FROM 
+                        projects pr
+                    LEFT JOIN 
+                        projectManager_project ppm ON pr.id = ppm.id_project
+                    LEFT JOIN
+                        project_managers pm ON ppm.id_project_manager = pm.id
+                    LEFT JOIN 
+                        customer_project cp ON pr.id = cp.id_project
+                    LEFT JOIN 
+                        customers c ON cp.id_customer = c.id 
+                    LEFT JOIN 
+                        project_employee ep ON pr.id = ep.id_project
+                    LEFT JOIN 
+                        employees e ON ep.id_employee = e.id
+                    WHERE 
+                        e.id = :employee_id
+                    ORDER by :criterio ;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":employee_id", $id_employee, PDO::PARAM_INT);
+            $pdoSt->bindParam(":criterio", $criterio, PDO::PARAM_INT);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
         }
     }
 

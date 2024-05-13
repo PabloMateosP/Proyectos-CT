@@ -560,7 +560,7 @@ class Projects extends Controller
 
             header("location:" . URL . "login/");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
 
             $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "projects/");
@@ -568,8 +568,20 @@ class Projects extends Controller
         } else {
 
             $criterio = $param[0];
+
+            if (in_array($_SESSION['id_rol'], $GLOBALS['employee'])){
+
+                $id_employee = $_SESSION['employee_id'];
+
+                $this->view->projects = $this->model->orderProjEmp($id_employee, $criterio);
+
+            } elseif (in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])) {
+
+                $this->view->projects = $this->model->order($criterio);
+
+            }
             $this->view->title = "Table Projects";
-            $this->view->projects = $this->model->order($criterio);
+            
             $this->view->render("projects/main/index");
 
         }

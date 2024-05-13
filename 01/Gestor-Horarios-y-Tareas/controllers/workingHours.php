@@ -259,19 +259,24 @@ class WorkingHours extends Controller
             header("location:" . URL . "login");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
+
             $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "workingHours");
+
         } else {
-            $id = $param[0];
+
+            $id_workingHour = $param[0];
+
+            $id = $_SESSION['employee_id'];
 
             # We take the working hour by employee id
-            $duration = $this->model->getWHours($id);
+            $duration = $this->model->getWHours($id_workingHour);
 
             # We delete the working hour from the total hours in the table employee
             $this->model->subtractTH($duration, $id);
 
             # We delete the working hour
-            $this->model->delete($id);
+            $this->model->delete($id_workingHour);
 
             $_SESSION['mensaje'] = 'Working hour delete correctly';
 
@@ -307,7 +312,6 @@ class WorkingHours extends Controller
         } else {
 
             # obtengo el id del workingHours que voy a editar
-
             $id = $param[0];
 
             $this->view->id = $id;
@@ -367,9 +371,11 @@ class WorkingHours extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
+            
             $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "workingHours");
+
         } else {
 
             #1.Security. 

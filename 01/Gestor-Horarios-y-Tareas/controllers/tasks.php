@@ -116,7 +116,7 @@ class Tasks extends Controller
             if (in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])) {
 
                 $this->view->projects = $this->model->get_projects();
-                
+
             } else {
 
                 $id = $_SESSION['employee_id'];
@@ -425,4 +425,66 @@ class Tasks extends Controller
             header("Location:" . URL . "tasks/");
         }
     }
+
+    # ---------------------------------------------------------------------------------
+    #    
+    #    ____  _____  _____  ______ _____  
+    #   / __ \|  __ \|  __ \|  ____|  __ \ 
+    #  | |  | | |__) | |  | | |__  | |__) |
+    #  | |  | |  _  /| |  | |  __| |  _  / 
+    #  | |__| | | \ \| |__| | |____| | \ \ 
+    #   \____/|_|  \_\_____/|______|_|  \_\
+    #                             
+    # ---------------------------------------------------------------------------------
+    # Method order
+    # Permit execute command ORDER BY at the table tasks
+    public function order($param = [])
+    {
+        session_start();
+
+        if (!isset($_SESSION['id'])) {
+
+            $_SESSION['mensaje'] = "User must be authenticated";
+
+            header("location:" . URL . "login");
+
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
+
+            $_SESSION['mensaje'] = "Operation without privileges";
+            header("location:" . URL . "tasks");
+
+        } else {
+            $criterio = $param[0];
+
+            $this->view->title = "Table tasks";
+
+            if ((in_array($_SESSION['id_rol'], $GLOBALS['employee']))) {
+
+                $employee_id = $_SESSION['employee_id'];
+
+                // Obtener todos los proyectos del empleado
+                $projects = $this->model->getProjectEmployee($employee_id);
+
+                // Inicializar un array para almacenar las tareas ordenadas de todos los proyectos
+                $allTasks = [];
+
+                foreach ($projects as $project) {
+                    // Obtener las tareas ordenadas del proyecto actual y agregarlas al array
+                    $tasks = $this->model->orderTaskEmp($criterio, $project['id']);
+                    $allTasks = array_merge($allTasks, $tasks);
+                }
+
+                $this->view->workingHours = $allTasks;
+                $this->view->render("tasks/main/index");
+
+            } else {
+
+                $this->view->tasks = $this->model->order($criterio);
+                $this->view->render("tasks/main/index2");
+            }
+
+            
+        }
+    }
+
 }

@@ -119,7 +119,7 @@ class workingHoursModel extends Model
     public function getTotalHours()
     {
         try {
-            $sql = "SELECT id, total_hours FROM employees WHERE id = :employee_id";
+            $sql = "SELECT total_hours FROM employees WHERE id = :employee_id";
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->bindParam(':employee_id', $_SESSION['employee_id']);
@@ -255,14 +255,14 @@ class workingHoursModel extends Model
     public function getWHours($id)
     {
         try {
-            $sql = "SELECT id, total_hours FROM employees WHERE id = :user_id";
+            $sql = "SELECT duration FROM working_hours WHERE id = :id";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
-            $pdoSt->bindParam(':user_id', $id);
+            $pdoSt->bindParam(':id', $id);
             $pdoSt->execute();
             $result = $pdoSt->fetch(PDO::FETCH_ASSOC);
-            return $result['total_hours'];
+            return $result['duration'];
 
         } catch (PDOException $e) {
             require_once ("template/partials/errorDB.php");
@@ -740,7 +740,6 @@ class workingHoursModel extends Model
                 tc.time_code, 
                 p.project AS project_name,  
                 t.description AS task_description,  
-                wo.description AS work_order_description, 
                 wh.date_worked, 
                 wh.duration 
             FROM 
@@ -753,8 +752,6 @@ class workingHoursModel extends Model
                 projects p ON wh.id_project = p.id
             JOIN 
                 tasks t ON wh.id_task = t.id
-            JOIN 
-                work_orders wo ON wh.id_work_order = wo.id
             WHERE wh.id_employee = :id
             ORDER by :criterio;";
 
@@ -869,7 +866,6 @@ class workingHoursModel extends Model
                     tc.time_code, 
                     p.project AS project_name,  
                     t.description AS task_description,  
-                    wo.description AS work_order_description, 
                     wh.date_worked, 
                     wh.duration 
                 FROM 
@@ -882,8 +878,6 @@ class workingHoursModel extends Model
                     projects p ON wh.id_project = p.id
                 JOIN 
                     tasks t ON wh.id_task = t.id
-                JOIN 
-                    work_orders wo ON wh.id_work_order = wo.id
                 WHERE 
                     wh.id_employee = :empId AND
                     concat_ws(

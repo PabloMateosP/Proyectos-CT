@@ -60,11 +60,11 @@
                                         <div class="btn-group" role="group">
                                             <a href="<?= URL ?>tasks/edit/<?= $task_['id'] ?>" title="edit"
                                                 class="btn btn-primary <?= (!in_array($_SESSION['id_rol'], $GLOBALS['all'])) ? 'disabled' : null ?>">
-                                                <i class="bi bi-pencil"></i> Edit </a>
+                                                <i class="bi bi-pencil"></i> </a>
                                             <a href="<?= URL ?>tasks/delete/<?= $task_['id'] ?>" title="Eliminar"
                                                 onclick="return confirm('Confirmar eliminación de tarea')"
                                                 class="btn btn-danger <?= (!in_array($_SESSION['id_rol'], $GLOBALS['all'])) ? 'disabled' : null ?>">
-                                                <i class="bi bi-trash"></i> Delete </a>
+                                                <i class="bi bi-trash"></i> </a>
                                         </div>
                                     </td>
                                 <?php endif; ?>

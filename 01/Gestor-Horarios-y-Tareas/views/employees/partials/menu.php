@@ -29,16 +29,15 @@
                         Ordenar
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="<?= URL ?>employees/ordenar/1">ID</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>employees/ordenar/2">Cliente</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>employees/ordenar/6">Email</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>employees/ordenar/3">Telefono</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>employees/ordenar/5">dni</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>employees/ordenar/4">ciudad</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>employees/order/1">Name</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>employees/order/2">Phone</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>employees/order/3">City</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>employees/order/4">Email</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>employees/order/5">Total Hours</a></li>                    
                     </ul>
                 </li>
             </ul>
-            <form class="d-flex" method="get" action="<?= URL ?>employees/buscar">
+            <form class="d-flex" method="get" action="<?= URL ?>employees/search">
                 <input class="form-control me-2" type="search" placeholder="Buscar..." aria-label="Search"
                     name="expresion">
                 <button

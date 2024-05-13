@@ -540,7 +540,7 @@ class Employees extends Controller
 
     # Método ordenar
     # Permite ordenar la tabla de employees por cualquiera de las columnas de la tabla
-    public function ordenar($param = [])
+    public function order($param = [])
     {
         session_start();
         if (!isset($_SESSION['id'])) {
@@ -548,12 +548,12 @@ class Employees extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['employees']['order']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
             $_SESSION['mensaje'] = "unprivileged operation";
             header("location:" . URL . "employees");
         } else {
             $criterio = $param[0];
-            $this->view->title = "Tabla employees";
+            $this->view->title = "Table employees";
             $this->view->employees = $this->model->order($criterio);
             $this->view->render("employees/main/index");
         }
@@ -563,7 +563,7 @@ class Employees extends Controller
     # Método buscar
     # Permite buscar los registros de employees que cumplan con el patrón especificado en la expresión
     # de búsqueda
-    public function buscar($param = [])
+    public function search($param = [])
     {
         session_start();
         if (!isset($_SESSION['id'])) {
@@ -571,12 +571,12 @@ class Employees extends Controller
 
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['employees']['filter']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
             $_SESSION['mensaje'] = "unprivileged operation";
             header("location:" . URL . "employees");
         } else {
             $expresion = $_GET["expresion"];
-            $this->view->title = "Tabla employees";
+            $this->view->title = "Table employees";
             $this->view->employees = $this->model->filter($expresion);
             $this->view->render("employees/main/index");
         }

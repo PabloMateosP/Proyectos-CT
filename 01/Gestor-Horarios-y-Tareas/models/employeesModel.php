@@ -305,14 +305,13 @@ class employeesModel extends Model
         }
     }
 
-    public function deleteRelation($id_project, $id_employee)
+    public function deleteRelation($id_employee)
     {
         try {
-            $sql = " DELETE FROM project_employee WHERE id_employee = :id_employee AND id_project =:id_project ;";
+            $sql = " DELETE FROM project_employee WHERE id_employee = :id_employee;";
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->bindParam(":id_employee", $id_employee, PDO::PARAM_INT);
-            $pdoSt->bindParam(":id_project", $id_project, PDO::PARAM_INT);
             $pdoSt->execute();
             return $pdoSt;
 
@@ -448,22 +447,31 @@ class employeesModel extends Model
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #    
+    #    ____  _____  _____  ______ _____  
+    #   / __ \|  __ \|  __ \|  ____|  __ \ 
+    #  | |  | | |__) | |  | | |__  | |__) |
+    #  | |  | |  _  /| |  | |  __| |  _  / 
+    #  | |__| | | \ \| |__| | |____| | \ \ 
+    #   \____/|_|  \_\_____/|______|_|  \_\
+    #                             
+    # ---------------------------------------------------------------------------------
     # Method order
     # Allows you to sort the employee table by any of the main columns
     # The sort order was established by the number of the select column
-    public function order(int $criterio)
+    public function order($criterio)
     {
         try {
             $sql = "
                     SELECT 
-                        id,
-                        concat_ws(', ', last_name, name) employee,
-                        telefono,
-                        ciudad,
-                        dni,
-                        email
+                        concat_ws(', ', emp.last_name, emp.name) employee,
+                        emp.phone,
+                        emp.city,
+                        emp.email,
+                        emp.total_hours
                     FROM 
-                        employees 
+                        employees emp
                     ORDER BY
                         :criterio";
 
@@ -471,16 +479,25 @@ class employeesModel extends Model
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->bindParam(":criterio", $criterio, PDO::PARAM_INT);
             $pdoSt->setFetchMode(PDO::FETCH_OBJ);
-
             $pdoSt->execute();
-
             return $pdoSt;
+
         } catch (PDOException $e) {
             require_once ("template/partials/errorDB.php");
             exit();
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #    
+    #     ______ _____ _   _______ ______ _____  
+    #    |  ____|_   _| | |__   __|  ____|  __ \ 
+    #    | |__    | | | |    | |  | |__  | |__) |
+    #    |  __|   | | | |    | |  |  __| |  _  / 
+    #    | |     _| |_| |____| |  | |____| | \ \ 
+    #    |_|    |_____|______|_|  |______|_|  \_\
+    #                               
+    # ---------------------------------------------------------------------------------
     # Método filter
     # Permite filtar la tabla employees a partir de una expresión de búsqueda
     public function filter($expresion)
@@ -489,24 +506,23 @@ class employeesModel extends Model
 
             $sql = "
                     SELECT 
-                        id,
-                        concat_ws(', ', last_name, name) employee,
-                        telefono,
-                        ciudad,
-                        dni,
-                        email
+                        concat_ws(', ', emp.last_name, emp.name) employee,
+                        emp.phone,
+                        emp.city,
+                        emp.email,
+                        emp.total_hours
                     FROM 
-                        employees 
+                        employees emp
                     WHERE 
                         concat_ws(  
                                     ' ',
                                     id,
                                     last_name,
                                     name,
-                                    telefono,
-                                    ciudad,
-                                    dni,
-                                    email
+                                    phone,
+                                    city,
+                                    email,
+                                    total_hours
                                 )
                         LIKE 
                                 :expresion
