@@ -87,4 +87,46 @@ class timeCodesModel extends Model
 
         }
     }
+
+    # ---------------------------------------------------------------------------------
+    #    
+    #   _____  ______          _____  
+    #  |  __ \|  ____|   /\   |  __ \ 
+    #  | |__) | |__     /  \  | |  | |
+    #  |  _  /|  __|   / /\ \ | |  | |
+    #  | | \ \| |____ / ____ \| |__| |
+    #  |_|  \_\______/_/    \_\_____/ 
+    #
+    # ---------------------------------------------------------------------------------
+    # Method read 
+    # Get the data of a time codes
+    public function read($id)
+    {
+        try {
+            $sql = "SELECT
+                        id,
+                        time_code, 
+                        description
+                    FROM 
+                        time_codes
+                    WHERE id =  :id;";
+
+            # Connect with the database
+            $conexion = $this->db->connect();
+
+            $pdoSt = $conexion->prepare($sql);
+
+            $pdoSt->bindParam(':id', $id, PDO::PARAM_INT);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+
+            return $pdoSt->fetch();
+
+        } catch (PDOException $e) {
+
+            include_once ('template/partials/errorDB.php');
+            exit();
+
+        }
+    }
 }
