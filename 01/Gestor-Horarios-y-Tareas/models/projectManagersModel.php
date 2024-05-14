@@ -370,10 +370,10 @@ class projectManagersModel extends Model
 
             $sql = "UPDATE projects
                     SET
-                        id_projectManager=null
+                        id_projectManager = null
                     WHERE
                         id=:id_project
-                    LIMIT 1";
+                    LIMIT 1;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
@@ -428,7 +428,6 @@ class projectManagersModel extends Model
             include_once ('template/partials/errorDB.php');
             exit();
         }
-
     }
 
 }

@@ -3,7 +3,6 @@
 
 <head>
     <?php require_once ("template/partials/head.php"); ?>
-
     <title>User Edit</title>
 </head>
 

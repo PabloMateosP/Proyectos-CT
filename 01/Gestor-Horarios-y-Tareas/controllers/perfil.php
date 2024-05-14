@@ -1,14 +1,5 @@
 <?php
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-require 'auth.php';
-
-require 'PHPMailer/src/Exception.php';
-require 'PHPMailer/src/PHPMailer.php';
-require 'PHPMailer/src/SMTP.php';
-
 class Perfil extends Controller
 {
 
@@ -33,7 +24,7 @@ class Perfil extends Controller
 
         # Obtenemos objeto con los detalles del usuario
         $this->view->user = $this->model->getUserId($_SESSION['id']);
-        $this->view->title = 'Perfil Usuario - Gesbank - MVC';
+        $this->view->title = 'User';
 
         $this->view->render('perfil/main/index');
 
@@ -83,7 +74,7 @@ class Perfil extends Controller
 
 
 
-        $this->view->title = 'Modificar Perfil Usuario - Gesbank';
+        $this->view->title = 'Modify User';
         $this->view->render('perfil/edit/index');
 
 
@@ -156,52 +147,8 @@ class Perfil extends Controller
             # Actualizamos perfil
             $this->model->update($user);
 
-            // Código para enviar el correo de registro ---------------------------------------------
-            // Creamos un objeto de la clase PHPMailer
-            $mail = new PHPMailer(true);
-
-            // Configuración de PHPMailer
-            $mail->CharSet = "UTF-8";
-            $mail->Encoding = "quoted-printable";
-            $mail->Username = USERNAME;
-            $mail->Password = PASSWD;
-
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // tls Habilita el cifrado TLS implícito
-            $mail->Port = 587;
-
-            $destinatario = $email;
-            $remitente = USERNAME;
-            $asunto = "Perfil editado correctamente";
-            $mensaje = "
-            <h1>Hola!! $name</h1>
-            <p>Usuario registrado con éxito</p>
-            <p>Datos: </p>
-            <ul>
-                <li><b>Nombre: </b>" . $name . "</li>
-                <li><b>Correo Electrónico: </b>" . $email . "</li>
-            </ul>";
-
-            // Configuración del correo con PHPMailer
-            $mail->setFrom($remitente, 'Pablo');
-            $mail->addAddress($destinatario, $name);
-            $mail->addReplyTo($remitente, 'Pablo Mateos');
-
-            // Configuración del contenido del correo
-            $mail->isHTML(true);
-            $mail->Subject = $asunto;
-            $mail->Body = $mensaje;
-
-            // Esta línea la he tenido que añadir para mi pc en casa porque me daba fallo el certificado SSL
-            $mail->SMTPOptions = array('ssl' => array('verify_peer' => false, 'verify_peer_name' => false, 'allow_self_signed' => true));
-            $mail->send();
-
-            // -------------------------------------------------------------------------------
-
             $_SESSION['name_user'] = $name;
-            $_SESSION['mensaje'] = 'Usuario modificado correctamente y notificación enviada';
+            $_SESSION['mensaje'] = 'User modify correctly';
 
             header('location:' . URL . 'perfil');
 
@@ -245,7 +192,7 @@ class Perfil extends Controller
         }
 
         # título página
-        $this->view->title = "Modificar password";
+        $this->view->title = "Modify Password";
         $this->view->render('perfil/pass/index');
 
 
@@ -311,59 +258,11 @@ class Perfil extends Controller
             # Actualiza password
             $this->model->updatePass($user);
 
-
-            // Código para enviar el correo de registro ---------------------------------------------
-            // Creamos un objeto de la clase PHPMailer
-            $mail = new PHPMailer(true);
-
-            // Configuración de PHPMailer
-            $mail->CharSet = "UTF-8";
-            $mail->Encoding = "quoted-printable";
-            $mail->Username = USERNAME;
-            $mail->Password = PASSWD;
-
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // tls Habilita el cifrado TLS implícito
-            $mail->Port = 587;
-
-            $destinatario = $user1->email;
-            $remitente = USERNAME;
-            $asunto = "Contraseña Modificada";
-            $mensaje = "
-            <h1>Hola!! $user1->name</h1>
-            <p>Contraseña Modificada con éxito</p>
-            <p>Datos: </p>
-            <ul>
-                <li><b>Password Modificada: </b>" . $user->password . "</li>
-            </ul>";
-
-            // Configuración del correo con PHPMailer
-            $mail->setFrom($remitente, 'Pablo');
-            $mail->addAddress($destinatario, $user->name);
-            $mail->addReplyTo($remitente, 'Pablo Mateos');
-
-            // Configuración del contenido del correo
-            $mail->isHTML(true);
-            $mail->Subject = $asunto;
-            $mail->Body = $mensaje;
-
-            // Esta línea la he tenido que añadir para mi pc en casa porque me daba fallo el certificado SSL
-            $mail->SMTPOptions = array('ssl' => array('verify_peer' => false, 'verify_peer_name' => false, 'allow_self_signed' => true));
-            $mail->send();
-
-
-            // -------------------------------------------------------------------------------
-
-            $_SESSION['mensaje'] = "Password modificado correctamente y notificación enviada";
+            $_SESSION['mensaje'] = "Password modify correctly";
 
             #Vuelve corredores
-            header("location:" . URL . "clientes");
+            header("location:" . URL . "workingHours");
         }
-
-
-
     }
 
     # Elimina definitivamente el perfil
@@ -382,53 +281,6 @@ class Perfil extends Controller
 
             # Obtenemos objeto con los detalles del usuario
             $user1 = $this->model->getUserId($_SESSION['id']);
-
-            // Código para enviar el correo de registro ---------------------------------------------
-            // Creamos un objeto de la clase PHPMailer
-            $mail = new PHPMailer(true);
-
-            // Configuración de PHPMailer
-            $mail->CharSet = "UTF-8";
-            $mail->Encoding = "quoted-printable";
-            $mail->Username = USERNAME;
-            $mail->Password = PASSWD;
-
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // tls Habilita el cifrado TLS implícito
-            $mail->Port = 587;
-
-            $destinatario = $user1->email;
-            $remitente = USERNAME;
-            $asunto = "Usuario Eliminado";
-            $mensaje = "
-            <p>Estimado <?php echo $user1->name; ?>,</p>
-
-            <p>Lamentamos saber que has decidido cerrar tu cuenta en GesBank. Agradecemos tu tiempo y confianza en nuestro servicio. Si hay alguna razón específica por la que has tomado esta decisión, nos encantaría recibir tus comentarios para mejorar nuestros servicios. Estamos comprometidos en brindar la mejor experiencia a nuestros usuarios.</p>
-            <p>Recuerda que siempre serás bienvenido/a de vuelta en caso de que cambies de opinión en el futuro. ¡Te deseamos mucho éxito en tus futuros proyectos! Si necesitas asistencia o tienes alguna pregunta, no dudes en ponerte en contacto con nuestro equipo de soporte.</p>
-            <p>Gracias nuevamente y esperamos que tengas un excelente día.</p>
-
-            <p>Atentamente,<br>
-            El equipo de GesBank</p>";
-
-            // Configuración del correo con PHPMailer
-            $mail->setFrom($remitente, 'Pablo');
-            $mail->addAddress($destinatario, $user1->name);
-            $mail->addReplyTo($remitente, 'Pablo Mateos');
-
-            // Configuración del contenido del correo
-            $mail->isHTML(true);
-            $mail->Subject = $asunto;
-            $mail->Body = $mensaje;
-
-            // Esta línea la he tenido que añadir para mi pc en casa porque me daba fallo el certificado SSL
-            $mail->SMTPOptions = array('ssl' => array('verify_peer' => false, 'verify_peer_name' => false, 'allow_self_signed' => true));
-            $mail->send();
-
-            $_SESSION['mensaje'] = "Mensaje enviado correctamente.";
-
-            // -------------------------------------------------------------------------------
 
             # Elimino perfil de usuario
             $this->model->delete($_SESSION['id']);

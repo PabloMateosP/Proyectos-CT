@@ -19,10 +19,11 @@
                         Order
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="<?= URL ?>projects/order/3/">Description</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>projects/order/4/">Project Manager</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>projects/order/5/">Customer</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>projects/order/6/">Finish Date</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>projects/order/1/">Project</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>projects/order/2/">Description</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>projects/order/3/">Project Manager</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>projects/order/4/">Customer</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>projects/order/5/">Finish Date</a></li>
                     </ul>
                 </li>
             </ul>

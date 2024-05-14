@@ -233,3 +233,4 @@ Día 14/05/24
     - Con los datos del excel procedemos a intentar hacer la función para importar, para ello he tenido que descargar composer y a posterior entrar en el archivo php.ini para descomentar las líneas extension=gd y extension=zip para que el comando require phpoffice/phpspreadsheet funcionase 
     - Tengo la duda sobre si el empleado está registrado en un único proyecto o en más 
     - Voy a modificar el método de update en project manager 
+    - He arreglado el asignar y borrar proyecto a la hora de editar tanto un project manager como un employee

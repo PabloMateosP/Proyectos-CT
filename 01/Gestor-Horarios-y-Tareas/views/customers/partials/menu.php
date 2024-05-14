@@ -15,24 +15,6 @@
                     <a class="nav-link active"
                         href="<?= URL ?>customers/exportar">Exportar CSV</a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link active"
-                        href="#" data-bs-toggle="modal" data-bs-target="#importar">Importar CSV</a>
-                </li> -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Ordenar
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="<?= URL ?>customers/ordenar/1">ID</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>customers/ordenar/2">Cliente</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>customers/ordenar/6">Email</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>customers/ordenar/3">Telefono</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>customers/ordenar/5">dni</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>customers/ordenar/4">ciudad</a></li>
-                    </ul>
-                </li>
             </ul>
             <form class="d-flex" method="get" action="<?= URL ?>customers/buscar">
                 <input class="form-control me-2" type="search" placeholder="Buscar..." aria-label="Search"

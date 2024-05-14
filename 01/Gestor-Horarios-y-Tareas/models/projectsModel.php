@@ -576,7 +576,6 @@ class projectsModel extends Model
 
             $sql = "
                 SELECT 
-                    pr.id,
                     pr.project,
                     pr.description,
                     concat_ws(', ', prM.last_name, prM.name) manager_name,
