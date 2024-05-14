@@ -228,3 +228,6 @@ Día 13/05/24
     - He añadido la funcionalidad de sumar o restar horas totales si la duración de una working hour es modificada (Método update)
     - He añadido el borrado y creacion de relaciones tanto en tabla empleados como en tabla proyecto
     - He creado el actualizar en la tabla project Manager y el borrado y estoy en ello en la tabla customer 
+
+Día 14/05/24
+    - Con los datos del excel procedemos a intentar hacer la función para importar, para ello he tenido que descargar composer y a posterior entrar en el archivo php.ini para descomentar las líneas extension=gd y extension=zip para que el comando require phpoffice/phpspreadsheet funcionase

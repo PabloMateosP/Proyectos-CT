@@ -1,5 +1,9 @@
 <?php
 
+require 'vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 class Employees extends Controller
 {
 
@@ -708,7 +712,7 @@ class Employees extends Controller
             $_SESSION['mensaje'] = "User must authenticated";
             header("location:" . URL . "login");
             exit();
-        } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['employees']['import'])) {
+        } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])) {
             $_SESSION['mensaje'] = "unprivileged operation";
             header("location:" . URL . "employees");
             exit();
@@ -737,13 +741,13 @@ class Employees extends Controller
         # Iterar sobre las filas del archivo CSV
         while (($fila = fgetcsv($archivo, 150, ';')) !== false) {
             # Crear un array asociativo con los datos de la fila
-            $employee = new classemployee();
+            $employee = new classEmployee();
 
             $employee->name = $fila[1];
             $employee->last_name = $fila[0];
             $employee->email = $fila[5];
-            $employee->telefono = $fila[2];
-            $employee->ciudad = $fila[3];
+            $employee->phone = $fila[2];
+            $employee->city = $fila[3];
             $employee->dni = $fila[4];
 
             $this->model->create($employee);
@@ -758,4 +762,30 @@ class Employees extends Controller
         header("location:" . URL . "employees");
         exit();
     }
+
+    function importarDatos()
+    {
+        $spreadsheet = IOFactory::load($_FILES['archivos']['tmp_name']);
+        $worksheet = $spreadsheet->getActiveSheet();
+        $rows = [];
+
+        foreach ($worksheet->getRowIterator() as $row) {
+            $cellIterator = $row->getCellIterator();
+            $cellIterator->setIterateOnlyExistingCells(FALSE);
+            $cells = [];
+            foreach ($cellIterator as $cell) {
+                $cells[] = $cell->getValue();
+            }
+            $rows[] = $cells;
+        }
+
+        var_dump($rows);
+        exit();
+
+        return $rows;
+    }
+
+
 }
+
+

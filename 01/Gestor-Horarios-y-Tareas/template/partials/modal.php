@@ -1,4 +1,4 @@
-<form action="<?= URL . 'cuentas/importar/' ?>" method="POST" enctype="multipart/form-data">
+<form action="<?= URL . 'employees/importar/' ?>" method="POST" enctype="multipart/form-data">
   <div id="importar" class="modal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -10,7 +10,7 @@
           <div class="mb-3">
             <input type="hidden" name="MAX_FILE_SIZE" value="5242880">
             <label for="archivos" class="form-label">Seleccione Archivo</label>
-            <input type="file" class="form-control" id="archivos" name="archivos" accept=".csv">
+            <input type="file" class="form-control" id="archivos" name="archivos" accept=".csv .xslx">
           </div>
         </div>
         <div class="modal-footer justify-content-center">

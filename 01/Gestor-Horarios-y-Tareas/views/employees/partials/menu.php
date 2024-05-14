@@ -15,10 +15,10 @@
                     <a class="nav-link active"
                         href="<?= URL ?>employees/exportar">Exportar CSV</a>
                 </li>
-                <!-- <li class="nav-item">
+                <li class="nav-item">
                     <a class="nav-link active"
                         href="#" data-bs-toggle="modal" data-bs-target="#importar">Importar CSV</a>
-                </li> -->
+                </li>
                 <li class="nav-item">
                     <a class="nav-link active"
                         href="<?= URL ?>employees/pdf">Exportar PDF</a>

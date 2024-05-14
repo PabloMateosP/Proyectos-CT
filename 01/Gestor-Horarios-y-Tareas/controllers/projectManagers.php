@@ -230,6 +230,7 @@ class ProjectManagers extends Controller
             $this->view->id = $id;
             $this->view->title = "Formulario editar project";
             $this->view->projectManager = $this->model->read($id);
+            $this->view->projects = $this->model->get_projects();
 
             if (isset($_SESSION['error'])) {
 
@@ -336,6 +337,8 @@ class ProjectManagers extends Controller
 
                 # Adding the data to the table working hours
                 $this->model->update($projectManager, $id);
+
+                ## Falta actualizar relaciones con proyectos 
 
                 # Message
                 $_SESSION['mensaje'] = "Project Manager update correctly";
