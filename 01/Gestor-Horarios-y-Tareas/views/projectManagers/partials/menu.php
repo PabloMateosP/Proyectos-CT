@@ -11,41 +11,13 @@
                     <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['all']) ?: 'disabled' ?>"
                         href="<?= URL ?>projectManagers/new">New</a>
                 </li>
-
-                <li class="nav-item">
-                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['all']) ?: 'disabled' ?>"
-                        href="<?= URL ?>projectManagers/export">Exportar CSV</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['all']) ?: 'disabled' ?>"
-                        href="#" data-bs-toggle="modal" data-bs-target="#importar">Importar CSV</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['all']) ?: 'disabled' ?>"
-                        href="<?= URL ?>projectManagers/pdf">Exportar PDF</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Ordenar
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="<?= URL ?>projectManagers/order/4">Time Code</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>projectManagers/order/3">Nombre Empleado</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>projectManagers/order/5">Nombre Proyecto</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>projectManagers/order/6">Tarea</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>projectManagers/order/7">Orden de Trabajo</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>projectManagers/order/8">Fecha de Trabajo</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>projectManagers/order/9">Duración</a></li>
-                    </ul>
-                </li>
             </ul>
             <form class="d-flex" method="get" action="<?= URL ?>projectManagers/search">
-                <input class="form-control me-2" type="search" placeholder="Buscar..." aria-label="Search"
+                <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search"
                     name="expresion">
                 <button
-                    class="btn btn-outline-secondary <?= in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']) ? 'null' : 'disabled' ?>"
-                    type="submit">Buscar</button>
+                    class="btn btn-outline-secondary <?= in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']) ? 'null' : 'disabled' ?>"
+                    type="submit">Search</button>
             </form>
         </div>
     </div>

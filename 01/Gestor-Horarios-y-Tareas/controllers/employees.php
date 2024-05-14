@@ -524,21 +524,16 @@ class Employees extends Controller
                 // Proyectos a crear (los que están en el formulario pero no estaban antes)
                 $projectsToCreate = array_diff($formProjects, $projectEmployeeRelated);
 
-                // Verificar si hay proyectos que deben mantenerse en la relación
-                foreach ($formProjects as $projectId) {
-                    if (in_array($projectId, $projectEmployeeRelated)) {
-                        // Este proyecto ya estaba relacionado, lo eliminamos de los proyectos a crear
-                        unset($projectsToCreate[array_search($projectId, $projectsToCreate)]);
-                    }
-                }
 
                 // Eliminar relaciones de proyectos que ya no están en el formulario
-                foreach ($projectsToDelete as $projectId) {
+                $tempProjectsToDelete = $projectsToDelete;
+                foreach ($tempProjectsToDelete as $projectId) {
                     $this->model->deleteRelationEP($projectId, $id);
                 }
 
+                $tempProjectsToCreate = $projectsToCreate;
                 // Crear relaciones para los proyectos del formulario que no estaban previamente relacionados
-                foreach ($projectsToCreate as $projectId) {
+                foreach ($tempProjectsToCreate as $projectId) {
                     $this->model->createRelationPR($id, $projectId);
                 }
 

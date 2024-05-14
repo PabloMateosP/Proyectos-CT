@@ -228,7 +228,7 @@ class ProjectManagers extends Controller
             $id = $param[0];
 
             $this->view->id = $id;
-            $this->view->title = "Formulario editar project";
+            $this->view->title = "Form project manager edit";
             $this->view->projectManager = $this->model->read($id);
             $this->view->projects = $this->model->get_projects();
 
@@ -263,59 +263,33 @@ class ProjectManagers extends Controller
     # Update the table of the table workinhours 
     public function update($param = [])
     {
-
-        #Iniciar Sesión
         session_start();
 
         if (!isset($_SESSION['id'])) {
             $_SESSION['mensaje'] = "User must be authenticated";
-
             header("location:" . URL . "login");
-
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
-
             $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "project");
-
         } else {
-
-            # 1. Security: We sanitize the data that is sent by the user
             $last_name = filter_var($_POST['last_name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $name = filter_var($_POST['name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
 
-            # 2. Create an object of the class
-            $projectManager = new classProjectManagers(
-                null,
-                $last_name,
-                $name,
-                null,
-                null
-            );
-
+            $projectManager = new classProjectManagers(null, $last_name, $name, null, null);
             $id = $param[0];
-
-            #Take the original data
             $projectManager_orig = $this->model->read($id);
-
-            # 3. Validation
-            # Only if is necessary
-            # Only in case when the field is modified 
 
             $errores = [];
 
-            # Last Name
             if (strcmp($projectManager->last_name, $projectManager_orig->last_name) !== 0) {
                 if (empty($last_name)) {
                     $errores['projectManager'] = 'The field project Manager is required';
                 } else if (strlen($last_name) > 45) {
                     $errores['projectManager'] = 'The field project Manager is too long';
-
                 }
             }
 
-            # Name
             if (strcmp($projectManager->name, $projectManager_orig->name) !== 0) {
-
                 if (empty($name)) {
                     $errores['name'] = 'The field name is required';
                 } else if (strlen($name) > 20) {
@@ -324,26 +298,36 @@ class ProjectManagers extends Controller
             }
 
             if (!empty($errores)) {
-
-                # Validation's error
                 $_SESSION['project'] = serialize($projectManager);
                 $_SESSION['error'] = 'Formulario no validado';
                 $_SESSION['errores'] = $errores;
-
-                # Redirect to workingHour's main
                 header('location:' . URL . 'projectManagers/edit/' . $id);
-
             } else {
+                if (isset($_POST['projects'])) {
+                    $formProjects = $_POST['projects'];
+                } else {
+                    $formProjects = [];
+                }
 
-                # Adding the data to the table working hours
+                $projectManagerRelated = $this->model->getProjectsManager($id);
+
+                $projectsToDelete = array_diff($projectManagerRelated, $formProjects);
+                $projectsToCreate = array_diff($formProjects, $projectManagerRelated);
+
+                $tempProjectsToDelete = $projectsToDelete;
+                foreach ($tempProjectsToDelete as $projectId) {
+                    $this->model->deleteRelationPmP($id, $projectId);
+                    $this->model->deleteIdProjectMProjec($projectId);
+                }
+
+                $tempProjectsToCreate = $projectsToCreate;
+                foreach ($tempProjectsToCreate as $projectId) {
+                    $this->model->insertProjectManagerRelationship($projectId, $id);
+                    $this->model->insertProjectManagerIdProject($projectId, $id);
+                }
+
                 $this->model->update($projectManager, $id);
-
-                ## Falta actualizar relaciones con proyectos 
-
-                # Message
                 $_SESSION['mensaje'] = "Project Manager update correctly";
-
-                # Redirect to Working Hours main
                 header('location:' . URL . 'projectManagers');
             }
         }
