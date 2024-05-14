@@ -48,7 +48,7 @@
                     <div class="mb-3">
                         <label for="id_project_manager" class="form-label">Project Manager</label>
                         <select class="form-select" name="id_project_manager" id="id_project_manager">
-                            <option selected disabled>Select project manager</option>
+                            <option selected disabled value="null">Select project manager</option>
                             <?php foreach ($this->project_managers as $project_manager): ?>
                                 <option value="<?= $project_manager->id ?>">
                                     <?= $project_manager->name ?>, <?= $project_manager->last_name ?>

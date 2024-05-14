@@ -144,8 +144,8 @@ class Projects extends Controller
             # 1. Security: We sanitize the data that is sent by the user
             $project_ = filter_var($_POST['project'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $description = filter_var($_POST['description'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $id_project_manager = filter_var($_POST['id_project_manager'] ??= '', FILTER_SANITIZE_NUMBER_INT);
-            $id_customer = filter_var($_POST['id_customer'] ??= '', FILTER_SANITIZE_NUMBER_INT);
+            $id_project_manager = isset($_POST['id_project_manager']) ? filter_var($_POST['id_project_manager'], FILTER_SANITIZE_NUMBER_INT) : null;
+            $id_customer = isset($_POST['id_customer']) ? filter_var($_POST['id_customer'], FILTER_SANITIZE_NUMBER_INT) : null;
             $finish_date = filter_var($_POST['finish_date'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
 
             # 2. Create an object of the class project, project_employee, project_managers and customer_project
@@ -284,18 +284,14 @@ class Projects extends Controller
         session_start();
         if (!isset($_SESSION['id'])) {
             $_SESSION['mensaje'] = "User must be authenticated";
-
             header("location:" . URL . "login");
-
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
-
             $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "projects/");
-
         } else {
             $id = $param[0];
 
-            # We update the line id_projectManager and customer from the project table to delete te relations
+            # We update the line id_projectManager and customer from the project table to delete the relations
             $this->model->updatePMyC($id);
 
             # We delete the relation between employee and project
@@ -307,17 +303,32 @@ class Projects extends Controller
             # We delete the relation between project and customer
             $this->model->deleteRelationC($id);
 
-            # We delete the tasks from the project delete 
-            $this->model->deleteTasks($id);
+            # Check if there are tasks associated with the project
+            $tasks = $this->model->getProjTask($id);
+
+            if (!empty($tasks)) {
+
+                foreach ($tasks as $task) {
+                    # Update the relation between the task and the working hour
+                    $this->model->updateTaskWH($task['id']);
+                }
+
+                # If there are tasks associated with the project, delete the tasks
+                $this->model->deleteTasks($id);
+            }
+
+            # Update the relation between the working hour and the project 
+            $this->model->updateProjectWH($id);
 
             # We delete the project
             $this->model->delete($id);
 
-            $_SESSION['mensaje'] = 'Project delete correctly';
-
+            $_SESSION['mensaje'] = 'Project deleted correctly';
             header("Location:" . URL . "projects/");
         }
     }
+
+
 
     # ---------------------------------------------------------------------------------
     #   ______  _____  _____  _______ 
@@ -572,7 +583,7 @@ class Projects extends Controller
 
             $criterio = $param[0];
 
-            if (in_array($_SESSION['id_rol'], $GLOBALS['employee'])){
+            if (in_array($_SESSION['id_rol'], $GLOBALS['employee'])) {
 
                 $id_employee = $_SESSION['employee_id'];
 
@@ -584,7 +595,7 @@ class Projects extends Controller
 
             }
             $this->view->title = "Table Projects";
-            
+
             $this->view->render("projects/main/index");
 
         }

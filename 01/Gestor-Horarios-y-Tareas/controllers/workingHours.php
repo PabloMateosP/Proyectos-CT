@@ -114,8 +114,31 @@ class WorkingHours extends Controller
             $this->view->title = "Form new working hour";
 
             $this->view->time_Codes = $this->model->get_times_codes();
-            $this->view->projects = $this->model->get_projects();
-            $this->view->tasks = $this->model->get_tasks();
+
+            if (in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])) {
+
+                $this->view->projects = $this->model->get_projects();
+                $this->view->tasks = $this->model->get_tasks();
+
+            } else {
+
+                // Obtener proyectos relacionados
+                $projects = $this->model->get_projectsRelated($_SESSION['employee_id']);
+
+                // Inicializar un array para almacenar todas las tareas
+                $all_tasks = [];
+
+                // Para cada proyecto relacionado, obtener tareas relacionadas y agregarlas al array
+                foreach ($projects as $project) {
+                    $project_id = $project->id;
+                    $tasks = $this->model->get_tasksRelated($project_id);
+                }
+
+                // Guardar los proyectos y todas las tareas en las vistas
+                $this->view->projects = $projects;
+                $this->view->tasks = $tasks;
+
+            }
 
             $this->view->render("workingHours/new/index");
         }
@@ -153,7 +176,7 @@ class WorkingHours extends Controller
             $id_time_code = filter_var($_POST['id_time_code'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $id_project = filter_var($_POST['id_project'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $id_task = filter_var($_POST['id_task'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-            $description = filter_var($_POST['description'] ??= '', FILTER_SANITIZE_EMAIL);
+            $description = filter_var($_POST['description'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $duration = filter_var($_POST['duration'] ??= '', FILTER_SANITIZE_NUMBER_INT);
             $date_worked = filter_var($_POST['date_worked'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -372,7 +395,7 @@ class WorkingHours extends Controller
             header("location:" . URL . "login");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
-            
+
             $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "workingHours");
 

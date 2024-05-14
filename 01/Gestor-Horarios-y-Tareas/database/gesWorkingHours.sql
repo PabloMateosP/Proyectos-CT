@@ -27,14 +27,44 @@ CREATE TABLE `employees` (
     UNIQUE KEY `email` (`email`)
 );
 
+--
+-- Table structure for table `customer`
+-- Table to collect customer data
+drop TABLE if EXISTS `customers`;
+
+create table `customers` (
+    `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+    `name` varchar(20) Default Null,
+    `phone` char(9) DEFAULT NULL,
+    `city` varchar(20) DEFAULT NULL,
+    `address` varchar(20) DEFAULT NULL,
+    `email` varchar(45) DEFAULT NULL,
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `update_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    PRIMARY KEY (`id`)
+);
+
+-- Table structure for table `project_managers`
+-- Table to collect project manager data
+DROP TABLE IF EXISTS `project_managers`;
+
+CREATE TABLE `project_managers` (
+    `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `last_name` VARCHAR(45) DEFAULT NULL,
+    `name` VARCHAR(20) DEFAULT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `update_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    PRIMARY KEY (`id`)
+);
+
 -- Table structure for table `projects`
 -- Table to collect project data
 CREATE TABLE `projects` (
     `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `project` CHAR(8) DEFAULT NULL,
     `description` VARCHAR(50) DEFAULT NULL,
-    `id_projectManager` INT(10) UNSIGNED,
-    `id_customer` INT(10) UNSIGNED,
+    `id_projectManager` INT(10) UNSIGNED DEFAULT NULL,
+    `id_customer` INT(10) UNSIGNED DEFAULT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `finish_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `update_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
@@ -56,19 +86,6 @@ CREATE TABLE `project_employee` (
     FOREIGN KEY (`id_project`) REFERENCES `projects`(`id`)
 );
 
--- Table structure for table `project_managers`
--- Table to collect project manager data
-DROP TABLE IF EXISTS `project_managers`;
-
-CREATE TABLE `project_managers` (
-    `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `last_name` VARCHAR(45) DEFAULT NULL,
-    `name` VARCHAR(20) DEFAULT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-    `update_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-    PRIMARY KEY (`id`)
-);
-
 -- Table structure for table `projectManager_project`
 -- Table to establish the relationship between project managers and projects
 -- [Tabla para relacionar un manager de proyecto con uno o más proyecto]
@@ -80,23 +97,6 @@ CREATE TABLE `projectManager_project` (
     PRIMARY KEY (`id_project_manager`, `id_project`),
     FOREIGN KEY (`id_project_manager`) REFERENCES `project_managers`(`id`),
     FOREIGN KEY (`id_project`) REFERENCES `projects`(`id`)
-);
-
---
--- Table structure for table `customer`
--- Table to collect customer data
-drop TABLE if EXISTS `customers`;
-
-create table `customers` (
-    `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-    `name` varchar(20) Default Null,
-    `phone` char(9) DEFAULT NULL,
-    `city` varchar(20) DEFAULT NULL,
-    `address` varchar(20) DEFAULT NULL,
-    `email` varchar(45) DEFAULT NULL,
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-    `update_at` timestamp NOT NULL DEFAULT current_timestamp(),
-    PRIMARY KEY (`id`)
 );
 
 -- Table structure for table `customer_project`

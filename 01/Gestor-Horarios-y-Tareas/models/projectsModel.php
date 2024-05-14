@@ -90,7 +90,7 @@ class projectsModel extends Model
             exit();
         }
     }
-    
+
 
     # ---------------------------------------------------------------------------------
     #    
@@ -276,7 +276,7 @@ class projectsModel extends Model
             exit();
         }
     }
-    
+
 
 
     # ---------------------------------------------------------------------------------
@@ -387,6 +387,51 @@ class projectsModel extends Model
 
             $pdoSt->bindParam(":id", $id_project, PDO::PARAM_STR);
 
+            $pdoSt->execute();
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    public function updateTaskWH($task_id)
+    {
+        try {
+            $sql = " 
+                    UPDATE working_hours
+                    SET
+                        id_task=null
+                    WHERE
+                        id_task=:id
+                    LIMIT 1";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+
+            $pdoSt->bindParam(":id", $task_id, PDO::PARAM_STR);
+
+            $pdoSt->execute();
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    public function updateProjectWH($id_project)
+    {
+        try {
+            $sql = "UPDATE working_hours
+                    SET
+                    id_project=null
+                    WHERE
+                    id_project=:id
+                    LIMIT 1";
+            
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":id", $id_project, PDO::PARAM_STR);
             $pdoSt->execute();
 
         } catch (PDOException $e) {

@@ -34,9 +34,9 @@ class workingHoursModel extends Model
                 employees emp ON wh.id_employee = emp.id
             JOIN 
                 time_codes tc ON wh.id_time_code = tc.id
-            JOIN 
+            LEFT JOIN 
                 projects p ON wh.id_project = p.id
-            JOIN 
+            LEFT JOIN 
                 tasks t ON wh.id_task = t.id
             ORDER by wh.id asc;";
 
@@ -340,6 +340,57 @@ class workingHoursModel extends Model
     }
 
 
+    # ---------------------------------------------------------------------------------  
+    #  
+    #    _____ ______ _______   _____  _____   ____       _ ______ _____ _______ _____ 
+    #   / ____|  ____|__   __| |  __ \|  __ \ / __ \     | |  ____/ ____|__   __/ ____|
+    #  | |  __| |__     | |    | |__) | |__) | |  | |    | | |__ | |       | | | (___  
+    #  | | |_ |  __|    | |    |  ___/|  _  /| |  | |_   | |  __|| |       | |  \___ \ 
+    #  | |__| | |____   | |    | |    | | \ \| |__| | |__| | |___| |____   | |  ____) |
+    #   \_____|______|  |_|    |_|    |_|  \_\\____/ \____/|______\_____|  |_| |_____/ 
+    #
+    # ---------------------------------------------------------------------------------
+    # function get_projects 
+    # function to get the information about all the projects
+    public function get_projectsRelated($id_employee)
+    {
+        try {
+            $sql = "SELECT 
+                    pr.id,
+                    pr.project,
+                    pr.description,
+                    pm.last_name AS manager_last_name,
+                    pm.name AS manager_name
+                FROM 
+                    projects pr
+                JOIN 
+                    projectManager_project ppm ON pr.id = ppm.id_project
+                JOIN 
+                    project_managers pm ON ppm.id_project_manager = pm.id
+                JOIN 
+                    project_employee pEmp ON pr.id = pEmp.id_project
+                JOIN 
+                    employees emp ON pEmp.id_employee = emp.id
+                WHERE emp.id = :id_employee";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':id_employee', $id_employee);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+
+            // Recuperar los resultados de la consulta
+            $projects = $pdoSt->fetchAll();
+
+            // Devolver los resultados
+            return $projects;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
 
     # ---------------------------------------------------------------------------------
     #  
@@ -371,6 +422,50 @@ class workingHoursModel extends Model
             $result->execute();
 
             return $result->fetchAll();
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #
+    #     _____ ______ _______   _______        _____ _  __ _____    _____  ______ _            _______ ______ _____  
+    #    / ____|  ____|__   __| |__   __|/\    / ____| |/ // ____|  |  __ \|  ____| |        /\|__   __|  ____|  __ \ 
+    #   | |  __| |__     | |       | |  /  \  | (___ | ' /| (___    | |__) | |__  | |       /  \  | |  | |__  | |  | |
+    #   | | |_ |  __|    | |       | | / /\ \  \___ \|  <  \___ \   |  _  /|  __| | |      / /\ \ | |  |  __| | |  | |
+    #   | |__| | |____   | |       | |/ ____ \ ____) | . \ ____) |  | | \ \| |____| |____ / ____ \| |  | |____| |__| |
+    #    \_____|______|  |_|       |_/_/    \_\_____/|_|\_\_____/   |_|  \_\______|______/_/    \_\_|  |______|_____/ 
+    #
+    # ---------------------------------------------------------------------------------
+    public function get_tasksRelated($id_project)
+    {
+        try {
+            $sql = "SELECT 
+                        ta.id,
+                        ta.task,
+                        ta.description,
+                        pr.project AS project,
+                        pr.description AS project_description
+                    FROM 
+                        tasks ta
+                    JOIN 
+                        projects pr ON ta.id_project = pr.id
+                    WHERE ta.id_project = :id_project";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':id_project', $id_project);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+
+            // Recuperar los resultados de la consulta
+            $tasks = $pdoSt->fetchAll();
+
+            // Devolver los resultados
+            return $tasks;
+
 
         } catch (PDOException $e) {
             require_once ("template/partials/errorDB.php");
