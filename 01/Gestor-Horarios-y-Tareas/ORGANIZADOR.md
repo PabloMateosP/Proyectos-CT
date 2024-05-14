@@ -234,3 +234,4 @@ Día 14/05/24
     - Tengo la duda sobre si el empleado está registrado en un único proyecto o en más 
     - Voy a modificar el método de update en project manager 
     - He arreglado el asignar y borrar proyecto a la hora de editar tanto un project manager como un employee
+    - He añadido apartado identificador en tabla empleados, falta arreglar el new.
