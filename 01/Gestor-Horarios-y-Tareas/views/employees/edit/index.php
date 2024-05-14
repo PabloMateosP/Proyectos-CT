@@ -19,6 +19,18 @@
             <div class="card-body">
                 <!-- formulario  -->
                 <form action="<?= URL ?>employees/update/<?= $this->id ?>" method="POST">
+                    <!-- identification -->
+                    <div class="mb-3">
+                        <label for="identification" class="form-label">Identification</label>
+                        <input type="text" class="form-control" name="identification" value="<?= $this->employee->identification ?>">
+                        <!-- Mostrar posible error -->
+                        <?php if (isset($this->errores['identification'])): ?>
+                            <span class="form-text text-danger" role="alert">
+                                <?= $this->errores['identification'] ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+
                     <!-- name -->
                     <div class="mb-3">
                         <label for="" class="form-label">Name</label>
@@ -140,9 +152,9 @@
 
                     <!-- botones de acción -->
                     <div class="mb-3">
-                        <a class="btn btn-secondary" href="<?= URL ?>employees/" role="button">Cancelar</a>
-                        <button type="reset" class="btn btn-danger">Borrar</button>
-                        <button type="submit" class="btn btn-primary">Crear</button>
+                        <a class="btn btn-secondary" href="<?= URL ?>employees/" role="button">Cancel</a>
+                        <button type="reset" class="btn btn-danger">Clear</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
                     </div>
                 </form>
             </div>

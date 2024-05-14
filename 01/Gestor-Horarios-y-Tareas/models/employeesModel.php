@@ -23,6 +23,7 @@ class employeesModel extends Model
 
             SELECT 
                 id,
+                identification,
                 concat_ws(', ', last_name, name) employee,
                 phone,
                 city,
@@ -62,6 +63,7 @@ class employeesModel extends Model
         try {
             $sql = "SELECT 
                 id,
+                identification,
                 concat_ws(', ', last_name, name) employee,
                 phone,
                 city,
@@ -181,6 +183,7 @@ class employeesModel extends Model
             $sql = " INSERT INTO 
                         employees 
                         (
+                            identification,
                             name, 
                             last_name, 
                             phone, 
@@ -191,6 +194,7 @@ class employeesModel extends Model
                         ) 
                         VALUES 
                         ( 
+                            :identification,
                             :name,
                             :last_name,
                             :phone,
@@ -204,6 +208,7 @@ class employeesModel extends Model
             $pdoSt = $conexion->prepare($sql);
 
             //Vinculamos los parámetros
+            $pdoSt->bindValue(':identification', $employee->identification, PDO::PARAM_STR, 0);
             $pdoSt->bindParam(":name", $employee->name, PDO::PARAM_STR, 20);
             $pdoSt->bindParam(":last_name", $employee->last_name, PDO::PARAM_STR, 45);
             $pdoSt->bindParam(":phone", $employee->phone, PDO::PARAM_INT, 9);
@@ -245,9 +250,6 @@ class employeesModel extends Model
             
         }
     }
-
-    
-
 
     # ---------------------------------------------------------------------------------
     #
@@ -340,8 +342,6 @@ class employeesModel extends Model
         }
     }
 
-
-
     # ---------------------------------------------------------------------------------
     #
     #    _____  ______          _____  
@@ -360,6 +360,7 @@ class employeesModel extends Model
         try {
             $sql = "SELECT
                         id,
+                        identification,
                         last_name, 
                         name,
                         phone,
@@ -389,7 +390,6 @@ class employeesModel extends Model
 
     }
 
-
     # ---------------------------------------------------------------------------------
     #
     #   _    _  _____   _____         _______  ______ 
@@ -408,6 +408,7 @@ class employeesModel extends Model
             $sql = " 
                     UPDATE employees
                     SET
+                        identification = :identification,
                         last_name=:last_name,
                         name=:name,
                         phone=:phone,
@@ -423,6 +424,7 @@ class employeesModel extends Model
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
 
+            $pdoSt->bindParam(':identification', $employee->identification, PDO::PARAM_STR, 8);
             $pdoSt->bindParam(":name", $employee->name, PDO::PARAM_STR, 20);
             $pdoSt->bindParam(":last_name", $employee->last_name, PDO::PARAM_STR, 45);
             $pdoSt->bindParam(":email", $employee->email, PDO::PARAM_STR, 45);
@@ -486,6 +488,7 @@ class employeesModel extends Model
         try {
             $sql = "
                     SELECT 
+                        emp.identification,
                         concat_ws(', ', emp.last_name, emp.name) employee,
                         emp.phone,
                         emp.city,
@@ -527,6 +530,7 @@ class employeesModel extends Model
 
             $sql = "
                     SELECT 
+                        emp.identification,
                         concat_ws(', ', emp.last_name, emp.name) employee,
                         emp.phone,
                         emp.city,
@@ -538,6 +542,7 @@ class employeesModel extends Model
                         concat_ws(  
                                     ' ',
                                     id,
+                                    identification,
                                     last_name,
                                     name,
                                     phone,

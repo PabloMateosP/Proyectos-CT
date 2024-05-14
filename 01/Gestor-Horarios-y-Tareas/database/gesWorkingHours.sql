@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS `employees`;
 
 CREATE TABLE `employees` (
     `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `identification` VARCHAR(8) DEFAULT NULL,
     `last_name` VARCHAR(45) DEFAULT NULL,
     `name` VARCHAR(20) DEFAULT NULL,
     `phone` CHAR(9) DEFAULT NULL,

@@ -133,6 +133,7 @@ class Employees extends Controller
             # 1. Security. Sanitize form data
             # --
 
+            $identification = filter_var($_POST['identification'] ??= '', FILTER_SANITIZE_STRING);
             $last_name = filter_var($_POST['last_name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $name = filter_var($_POST['name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $phone = filter_var($_POST['phone'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -147,6 +148,7 @@ class Employees extends Controller
 
             $employee = new classEmployee(
                 null,
+                $identification,
                 $last_name,
                 $name,
                 $phone,
@@ -163,6 +165,13 @@ class Employees extends Controller
             # --
 
             $errores = array();
+
+            # Identification
+            if (empty($identification)) {
+                $errores['identification'] = "Identification is required";
+            } else if (strlen($identification) > 8) {
+                $errores['identification'] = "Identification too long";
+            }
 
             # name: max 20 characters
             if (empty($name)) {
@@ -384,6 +393,8 @@ class Employees extends Controller
         } else {
 
             #1. Security. Sanitize the data
+
+            $identification = filter_var($_POST['identification'] ??= '', FILTER_SANITIZE_STRING);
             $last_name = filter_var($_POST['last_name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $name = filter_var($_POST['name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $phone = filter_var($_POST['phone'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -394,6 +405,7 @@ class Employees extends Controller
 
             $employee = new classemployee(
                 null,
+                $identification,
                 $last_name,
                 $name,
                 $phone,
@@ -415,6 +427,15 @@ class Employees extends Controller
             # Only in case of modify some field
 
             $errores = [];
+
+            # identification 
+            if (strcmp($employee->identification, $employee_orig->identification) !== 0) {
+                if (empty($identification)) {
+                    $errores[] = "identification is required";
+                } else if (strlen($identification) > 8 ) {
+                    $errores[] = "Identification too long";
+                }
+            }
 
             # last_name
             if (strcmp($employee->last_name, $employee_orig->last_name) !== 0) {
@@ -669,7 +690,7 @@ class Employees extends Controller
         $archivo = fopen('php:#output', 'w');
 
         # Escribir la primera fila con los encabezados
-        fputcsv($archivo, ['last_name', 'name', 'telefono', 'ciudad', 'dni', 'email', 'create_at', 'update_at'], ';');
+        fputcsv($archivo, ['identification' ,'last_name', 'name', 'telefono', 'ciudad', 'dni', 'email', 'create_at', 'update_at'], ';');
 
         # Iterar sobre los employees y escribir cada fila en el archivo
         foreach ($employees as $employee) {
@@ -678,6 +699,7 @@ class Employees extends Controller
 
             # Construir el array del employee con los datos necesarios
             $employeeData = [
+                'identification' => $employee['identification'],
                 'last_name' => $last_name,
                 'name' => $name,
                 'telefono' => $employee['telefono'],

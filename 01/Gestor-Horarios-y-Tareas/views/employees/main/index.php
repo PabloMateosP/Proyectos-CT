@@ -28,6 +28,7 @@
                 <table class="table">
                     <thead>
                         <tr>
+                            <th>Identification</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone</th>
@@ -45,6 +46,10 @@
                     <tbody>
                         <?php foreach ($this->employees as $employee): ?>
                             <tr>
+                                <td>
+                                    <?= $employee->identification ?>
+                                </td>
+                                </td>
                                 <td>
                                     <?= $employee->employee ?>
                                 </td>

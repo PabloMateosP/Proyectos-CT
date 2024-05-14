@@ -4,6 +4,7 @@ class classEmployee
 {
 
     public $id;
+    public $identification;
     public $last_name;
     public $name;       
     public $phone;
@@ -18,6 +19,7 @@ class classEmployee
     function __construct(
 
         $id = null,
+        $identification = null,
         $last_name = null,
         $name = null,
         $phone = null,
@@ -32,6 +34,7 @@ class classEmployee
     ) {
 
         $this->id=$id;
+        $this->identification=$identification;
         $this->name=$name;
         $this->last_name= $last_name;
         $this->phone= $phone;
