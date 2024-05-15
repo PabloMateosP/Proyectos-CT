@@ -432,7 +432,7 @@ class Employees extends Controller
             if (strcmp($employee->identification, $employee_orig->identification) !== 0) {
                 if (empty($identification)) {
                     $errores[] = "identification is required";
-                } else if (strlen($identification) > 8 ) {
+                } else if (strlen($identification) > 8) {
                     $errores[] = "Identification too long";
                 }
             }
@@ -690,7 +690,7 @@ class Employees extends Controller
         $archivo = fopen('php:#output', 'w');
 
         # Escribir la primera fila con los encabezados
-        fputcsv($archivo, ['identification' ,'last_name', 'name', 'telefono', 'ciudad', 'dni', 'email', 'create_at', 'update_at'], ';');
+        fputcsv($archivo, ['identification', 'last_name', 'name', 'telefono', 'ciudad', 'dni', 'email', 'create_at', 'update_at'], ';');
 
         # Iterar sobre los employees y escribir cada fila en el archivo
         foreach ($employees as $employee) {
@@ -721,67 +721,30 @@ class Employees extends Controller
         readfile('php:#output');
     }
 
-    public function importar($param = [])
+    function importarDatos()
     {
         # Validar la sesión del usuario
         session_start();
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "User must authenticated";
+            $_SESSION['mensaje'] = "User must be authenticated";
             header("location:" . URL . "login");
             exit();
         } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])) {
-            $_SESSION['mensaje'] = "unprivileged operation";
+            $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "employees");
             exit();
         }
 
-        # Validar si se ha subido un archivo
-        if (!isset($_FILES['archivos']) || $_FILES['archivos']['error'] != UPLOAD_ERR_OK) {
-            $_SESSION['mensaje'] = "Error al subir el archivo CSV. ";
+        # Validar si el archivo es un archivo Excel xlsx
+        $allowed_extensions = array('xlsx');
+        $file_extension = pathinfo($_FILES['archivos']['name'], PATHINFO_EXTENSION);
+        if (!in_array(strtolower($file_extension), $allowed_extensions)) {
+            $_SESSION['mensaje'] = "Solo se permiten archivos Excel en formato xlsx.";
             header("location:" . URL . "employees");
             exit();
         }
 
-        # Obtener el name del archivo temporal
-        $archivo_temporal = $_FILES['archivos']['tmp_name'];
-
-        # Abrir el archivo temporal
-        $archivo = fopen($archivo_temporal, 'r');
-
-        # Validar que se pudo abrir el archivo
-        if (!$archivo) {
-            $_SESSION['mensaje'] = "Error al abrir el archivo CSV.";
-            header("location:" . URL . "employees");
-            exit();
-        }
-
-        # Iterar sobre las filas del archivo CSV
-        while (($fila = fgetcsv($archivo, 150, ';')) !== false) {
-            # Crear un array asociativo con los datos de la fila
-            $employee = new classEmployee();
-
-            $employee->name = $fila[1];
-            $employee->last_name = $fila[0];
-            $employee->email = $fila[5];
-            $employee->phone = $fila[2];
-            $employee->city = $fila[3];
-            $employee->dni = $fila[4];
-
-            $this->model->create($employee);
-
-        }
-
-        # Cerrar el archivo
-        fclose($archivo);
-
-        # Redirigir después de importar
-        $_SESSION['mensaje'] = "Datos importados correctamente.";
-        header("location:" . URL . "employees");
-        exit();
-    }
-
-    function importarDatos()
-    {
+        # Cargar el archivo y procesar los datos
         $spreadsheet = IOFactory::load($_FILES['archivos']['tmp_name']);
         $worksheet = $spreadsheet->getActiveSheet();
         $rows = [];
@@ -791,18 +754,31 @@ class Employees extends Controller
             $cellIterator->setIterateOnlyExistingCells(FALSE);
             $cells = [];
             foreach ($cellIterator as $cell) {
-                $cells[] = $cell->getValue();
+                // Sanear el valor del celda
+                $sanitized_value = htmlspecialchars($cell->getValue(), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                $cells[] = $sanitized_value;
             }
             $rows[] = $cells;
         }
 
-        var_dump($rows);
-        exit();
+        foreach ($rows as $fila) {
+            $employee = new classEmployee();
+            $employee->identification = isset($fila[0]) ? filter_var($fila[0], FILTER_SANITIZE_STRING) : null;
+            $employee->name = isset($fila[1]) ? filter_var($fila[1], FILTER_SANITIZE_STRING) : null;
+            $employee->last_name = isset($fila[2]) ? filter_var($fila[2], FILTER_SANITIZE_STRING) : null;
+            $employee->phone = isset($fila[3]) ? filter_var($fila[3], FILTER_SANITIZE_NUMBER_INT) : null;
+            $employee->city = isset($fila[4]) ? filter_var($fila[4], FILTER_SANITIZE_STRING) : null;
+            $employee->dni = isset($fila[5]) ? filter_var($fila[5], FILTER_SANITIZE_STRING) : null;
+            $employee->email = isset($fila[6]) ? filter_var($fila[6], FILTER_SANITIZE_EMAIL) : null;
+            $employee->total_hours = isset($fila[7]) ? filter_var($fila[7], FILTER_SANITIZE_NUMBER_INT) : null;
 
-        return $rows;
+            $this->model->create($employee);
+        }
+
+        $_SESSION['mensaje'] = "Datos importados correctamente.";
+        header("location:" . URL . "employees");
+        exit();
     }
 
 
 }
-
-

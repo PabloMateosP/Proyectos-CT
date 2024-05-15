@@ -16,10 +16,12 @@
                     <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['all']) ?: 'disabled' ?>"
                         href="<?= URL ?>workingHours/export">Export CSV</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['all']) ?: 'disabled' ?>"
-                        href="#" data-bs-toggle="modal" data-bs-target="#importar">Import CSV</a>
-                </li>
+                <?php if (!in_array($_SESSION['id_rol'], $GLOBALS['admin'])): ?>
+                    <li class="nav-item">
+                        <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['all']) ?: 'disabled' ?>"
+                            href="#" data-bs-toggle="modal" data-bs-target="#importar">Import CSV</a>
+                    </li>
+                <?php endif; ?>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">

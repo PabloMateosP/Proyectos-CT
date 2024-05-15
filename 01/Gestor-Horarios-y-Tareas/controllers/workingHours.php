@@ -672,7 +672,7 @@ class WorkingHours extends Controller
             $_SESSION['mensaje'] = "User must be authenticated";
             header("location:" . URL . "login");
             exit();  # Terminar la ejecución para evitar procesar la exportación sin autenticación
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['employee']))) {
             $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "workingHours");
             exit();  # Terminar la ejecución para evitar procesar la exportación sin privilegios
@@ -738,122 +738,5 @@ class WorkingHours extends Controller
 
         # Enviar el contenido del archivo al navegador
         readfile('php:#output');
-    }
-
-
-    # ---------------------------------------------------------------------------------
-    #    
-    #   _____ __  __ _____   ____  _____ _______ 
-    #  |_   _|  \/  |  __ \ / __ \|  __ \__   __|
-    #    | | | \  / | |__) | |  | | |__) | | |
-    #    | | | |\/| |  ___/| |  | |  _  /  | |
-    #   _| |_| |  | | |    | |__| | | \ \  | |
-    #  |_____|_|  |_|_|     \____/|_|  \_\ |_|
-    #
-    # ---------------------------------------------------------------------------------
-    # Method import
-    # Method to import information to table workingHours
-    public function import($param = [])
-    {
-        # Validar la sesión del usuario
-        session_start();
-        if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "User must be authenticated";
-            header("location:" . URL . "login");
-            exit();
-        } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['workingHours']['import'])) {
-            $_SESSION['mensaje'] = "Unprivileged operation";
-            header("location:" . URL . "workingHours");
-            exit();
-        }
-
-        # Validar si se ha subido un archivo
-        if (!isset($_FILES['archivos']) || $_FILES['archivos']['error'] != UPLOAD_ERR_OK) {
-            $_SESSION['mensaje'] = "Error al subir el archivo CSV. ";
-            header("location:" . URL . "workingHours");
-            exit();
-        }
-
-        # Obtener el id_work_order del archivo temporal
-        $archivo_temporal = $_FILES['archivos']['tmp_name'];
-
-        # Abrir el archivo temporal
-        $archivo = fopen($archivo_temporal, 'r');
-
-        # Validar que se pudo abrir el archivo
-        if (!$archivo) {
-            $_SESSION['mensaje'] = "Error al abrir el archivo CSV.";
-            header("location:" . URL . "workingHours");
-            exit();
-        }
-
-        # Iterar sobre las filas del archivo CSV
-        while (($fila = fgetcsv($archivo, 150, ';')) !== false) {
-            # Crear un array asociativo con los datos de la fila
-            $workingHours = new classworkingHours();
-
-            $workingHours->id_work_order = $fila[1];
-            $workingHours->id_time_code = $fila[0];
-            $workingHours->email = $fila[5];
-            $workingHours->telefono = $fila[2];
-            $workingHours->ciudad = $fila[3];
-            $workingHours->dni = $fila[4];
-
-            $this->model->create($workingHours);
-
-        }
-
-        # Cerrar el archivo
-        fclose($archivo);
-
-        # Redirigir después de importar
-        $_SESSION['mensaje'] = "Datos importados correctamente.";
-        header("location:" . URL . "workingHours");
-        exit();
-    }
-
-    # ---------------------------------------------------------------------------------
-    #    
-    #   _____  _____  ______ 
-    #  |  __ \|  __ \|  ____|
-    #  | |__) | |  | | |__   
-    #  |  ___/| |  | |  __|  
-    #  | |    | |__| | |     
-    #  |_|    |_____/|_|     
-    #
-    # ---------------------------------------------------------------------------------
-    # Method pdf 
-    # Method to transfer information on hours worked to pdf
-    function pdf($param = [])
-    {
-        # Validar la sesión del usuario
-        session_start();
-        if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "User must be authenticated";
-            header("location:" . URL . "login");
-            exit();
-        } elseif (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])) {
-            $_SESSION['mensaje'] = "Unprivileged operation";
-            header("location:" . URL . "workingHours");
-            exit();
-        }
-
-        $data = $this->model->get()->fetchAll(PDO::FETCH_ASSOC);
-
-        $columnas = [
-            ['header' => 'workingHours', 'field' => 'workingHours', 'width' => 60],
-            ['header' => 'Telefono', 'field' => 'telefono', 'width' => 40],
-            ['header' => 'Ciudad', 'field' => 'ciudad', 'width' => 30],
-            ['header' => 'DNI', 'field' => 'dni', 'width' => 25],
-            ['header' => 'Email', 'field' => 'email', 'width' => 40],
-        ];
-
-        $pdf = new PDFWorkingHours();
-        $pdf->AliasNbPages();
-        $pdf->AddPage();
-        $pdf->TituloInforme();
-        $pdf->EncabezadoListado($columnas);
-        $pdf->ContenidoListado($data, $columnas);
-        $pdf->Output();
-    }
+    }  
 }

@@ -11,10 +11,6 @@
                     <a class="nav-link active"
                         href="<?= URL ?>customers/new">New</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active"
-                        href="<?= URL ?>customers/exportar">Exportar CSV</a>
-                </li>
             </ul>
             <form class="d-flex" method="get" action="<?= URL ?>customers/buscar">
                 <input class="form-control me-2" type="search" placeholder="Buscar..." aria-label="Search"

@@ -10,7 +10,7 @@
                     <div class="mb-3">
                         <input type="hidden" name="MAX_FILE_SIZE" value="5242880">
                         <label for="archivos" class="form-label">Seleccione Archivo</label>
-                        <input type="file" class="form-control" id="archivos" name="archivos" accept=".csv">
+                        <input type="file" class="form-control" id="archivos" name="archivos" accept=".xlsx">
                     </div>
                 </div>
                 <div class="modal-footer justify-content-center">

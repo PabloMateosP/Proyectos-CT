@@ -208,7 +208,7 @@ class employeesModel extends Model
             $pdoSt = $conexion->prepare($sql);
 
             //Vinculamos los parámetros
-            $pdoSt->bindValue(':identification', $employee->identification, PDO::PARAM_STR, 0);
+            $pdoSt->bindParam(':identification', $employee->identification, PDO::PARAM_STR, 8);
             $pdoSt->bindParam(":name", $employee->name, PDO::PARAM_STR, 20);
             $pdoSt->bindParam(":last_name", $employee->last_name, PDO::PARAM_STR, 45);
             $pdoSt->bindParam(":phone", $employee->phone, PDO::PARAM_INT, 9);
