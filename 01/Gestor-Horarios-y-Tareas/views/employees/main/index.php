@@ -70,6 +70,9 @@
                                         <div class="btn-group" role="group">
                                             <a href="<?= URL ?>employees/show/<?= $employee->id ?>" title="Mostrar"
                                                 class="btn btn-secondary"> <i class="bi bi-eye"></i></a>
+                                            <a href="<?= URL ?>employees/workingHours/<?= $employee->id ?>" title="WorkingHours"
+                                                class="btn btn-success"> <i class="bi bi-list-task"></i>
+                                            </a>
                                             <a href="<?= URL ?>employees/edit/<?= $employee->id ?>" title="edit"
                                                 class="btn btn-primary"> <i class="bi bi-pencil"></i></a>
                                             <a href="<?= URL ?>employees/delete/<?= $employee->id ?>" title="Delete"
@@ -77,8 +80,6 @@
                                                 <i class="bi bi-trash"></i></a>
                                         </div>
                                     </td>
-                                <?php else: ?>
-                                    <!-- No permitido -->
                                 <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>

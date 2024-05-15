@@ -8,6 +8,7 @@ Para organizar la construcción de la base de datos correctamente pondremos aqu�
 
 ### Employees 
 - id
+- identification 
 - last_name
 - name
 - phone
@@ -178,6 +179,8 @@ I really don't know how to solve the organization of the privileges of the user,
 
 7. I must create a calendary to put the non laboral days and when is an holiday the employees musn't put the hours in the app
 
+8. Tengo que hacer que según el tipo de orden de tiempo elegida no haga falta introducir más datos o sí en la working hour 
+
 
 -------------------------------------------------------------------------
 
@@ -235,3 +238,9 @@ Día 14/05/24
     - Voy a modificar el método de update en project manager 
     - He arreglado el asignar y borrar proyecto a la hora de editar tanto un project manager como un employee
     - He añadido apartado identificador en tabla empleados, falta arreglar el new.
+
+Día 15/05/24
+    - He hecho el método importar en empleados "Aunque debe de tener una forma exacta el excel"
+    - He creado una nueva página en empleados para ver las horas de este empleado desde la vista manager o admin 
+    - He intentado hacer que haya un exportar en esa nueva página pero no consigo pasar el id del empleado a la función 
+    - En la página working hours está el exportar más correcto 

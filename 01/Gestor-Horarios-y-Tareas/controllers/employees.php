@@ -628,7 +628,7 @@ class Employees extends Controller
             header("location:" . URL . "employees");
         } else {
             $criterio = $param[0];
-            $this->view->title = "Table employees";
+            $this->view->title = "Employees Table";
             $this->view->employees = $this->model->order($criterio);
             $this->view->render("employees/main/index");
         }
@@ -660,7 +660,7 @@ class Employees extends Controller
             header("location:" . URL . "employees");
         } else {
             $expresion = $_GET["expresion"];
-            $this->view->title = "Table employees";
+            $this->view->title = "Employees Table";
             $this->view->employees = $this->model->filter($expresion);
             $this->view->render("employees/main/index");
         }
@@ -778,6 +778,129 @@ class Employees extends Controller
         $_SESSION['mensaje'] = "Datos importados correctamente.";
         header("location:" . URL . "employees");
         exit();
+    }
+
+    # ---------------------------------------------------------------------------------
+    #
+    #   __          ______  _____  _  _______ _   _  _____    _    _  ____  _    _ _____  
+    #   \ \        / / __ \|  __ \| |/ /_   _| \ | |/ ____|  | |  | |/ __ \| |  | |  __ \ 
+    #    \ \  /\  / / |  | | |__) | ' /  | | |  \| | |  __   | |__| | |  | | |  | | |__) |
+    #     \ \/  \/ /| |  | |  _  /|  <   | | | . ` | | |_ |  |  __  | |  | | |  | |  _  / 
+    #      \  /\  / | |__| | | \ \| . \ _| |_| |\  | |__| |  | |  | | |__| | |__| | | \ \ 
+    #       \/  \/   \____/|_|  \_\_|\_\_____|_| \_|\_____|  |_|  |_|\____/ \____/|_|  \_\
+    #
+    # ---------------------------------------------------------------------------------
+    public function workingHours($param = [])
+    {
+        # Start or continue the session
+        session_start();
+        if (!isset($_SESSION['id'])) {
+
+            $_SESSION['notify'] = "Unauthenticated user";
+
+            header("location:" . URL . "login");
+
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
+
+            $_SESSION['mensaje'] = "Unauthenticated user";
+            header("location:" . URL . "index");
+
+        } else {
+
+            # Probing if exist some message
+            if (isset($_SESSION['mensaje'])) {
+
+                $this->view->mensaje = $_SESSION['mensaje'];
+                unset($_SESSION['mensaje']);
+
+            }
+
+            $id = $param[0];
+
+            $this->view->title = "Working Hour Employee";
+
+            if ($this->model->getTotalHours() == null) {
+
+                $this->view->total_hours = 0;
+
+            } else {
+
+                $this->view->total_hours = $this->model->getTotalHours();
+
+            }
+
+            $this->view->workingHours = $this->model->getWHEmp($id);
+
+            $this->view->render("employees/workingHours/index");
+
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #
+    #   ______ __   __ _____    ____   _____  _______ 
+    #  |  ____|\ \ / /|  __ \  / __ \ |  __ \|__   __|
+    #  | |__    \ V / | |__) || |  | || |__) |  | |   
+    #  |  __|    > <  |  ___/ | |  | ||  _  /   | |   
+    #  | |____  / . \ | |     | |__| || | \ \   | |   
+    #  |______|/_/ \_\|_|      \____/ |_|  \_\  |_|   
+    #
+    # ---------------------------------------------------------------------------------
+    # Method export
+    # Allow to export the data to a csv
+    public function exportWH($param = [])
+    {
+        # Validar la sesión del usuario
+        session_start();
+        if (!isset($_SESSION['id'])) {
+            $_SESSION['mensaje'] = "User must be authenticated";
+            header("location:" . URL . "login");
+            exit();
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
+            $_SESSION['mensaje'] = "Unprivileged operation";
+            header("location:" . URL . "employees");
+            exit();
+        }
+
+        # Nombre del archivo CSV exportado
+        $csvExportado = 'exportWHEmployee.csv';
+
+        # Establecer las cabeceras para la descarga del archivo
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $csvExportado . '"');
+
+        # Abrir el puntero al archivo de salida
+        $archivo = fopen('php:#output', 'w');
+
+        # Escribir la primera fila con los encabezados
+        fputcsv($archivo, ['Identification', 'Nombre Empleado', 'Código de Tiempo', 'Proyecto', 'Tarea', 'Fecha Trabajada', 'Duración'], ';');
+
+        # ------------------------------------------------------------
+        # Obtener el id del empleado al que vamos a exportar las horas
+        $id = $param[0];
+        # ------------------------------------------------------------
+
+        # Obtener las horas trabajadas del empleado actual
+        $workingHoursEmployee = $this->model->get_employeeHoursExport($id)->fetchAll(PDO::FETCH_ASSOC);
+
+        # Iterar sobre las horas trabajadas del empleado y escribir cada fila en el archivo
+        foreach ($workingHoursEmployee as $workingHour) {
+            fputcsv($archivo, [
+                $workingHour['identification'],
+                $workingHour['employee_name'],
+                $workingHour['time_code'],
+                $workingHour['project_name'],
+                $workingHour['task_description'],
+                $workingHour['date_worked'],
+                $workingHour['duration']
+            ], ';');
+        }
+
+        # Cerramos el archivo
+        fclose($archivo);
+
+        # Enviar el contenido del archivo al navegador
+        readfile('php:#output');
     }
 
 

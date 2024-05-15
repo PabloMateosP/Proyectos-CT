@@ -164,6 +164,46 @@ class employeesModel extends Model
 
     }
 
+    public function getWHEmp($id)
+    {
+        try {
+            $sql = "SELECT 
+                        wh.id,
+                        wh.id_employee,
+                        concat_ws(', ', emp.last_name, emp.name) employee_name,
+                        tc.time_code,
+                        p.project AS project_name,
+                        t.description AS task_description,
+                        wh.date_worked,
+                        wh.duration
+                    FROM 
+                        working_hours wh
+                    JOIN 
+                        employees emp ON wh.id_employee = emp.id
+                    JOIN 
+                        time_codes tc ON wh.id_time_code = tc.id
+                    JOIN 
+                        projects p ON wh.id_project = p.id
+                    JOIN 
+                        tasks t ON wh.id_task = t.id
+                    JOIN users u on emp.email = u.email
+                    WHERE
+                        emp.id = :id
+                    ORDER BY wh.id ASC;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':id', $id);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
 
     # ---------------------------------------------------------------------------------
     #
@@ -236,7 +276,7 @@ class employeesModel extends Model
         try {
 
             $sql = "INSERT INTO project_employee (id_employee, id_project) VALUES (:employeeId, :projectId)";
-            
+
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->bindParam(':employeeId', $employeeId, PDO::PARAM_INT);
@@ -247,7 +287,7 @@ class employeesModel extends Model
 
             require_once ("template/partials/errorDB.php");
             throw $e;
-            
+
         }
     }
 
@@ -722,6 +762,78 @@ class employeesModel extends Model
             include_once ('template/partials/errorDB.php');
             throw $e;
 
+        }
+    }
+
+    public function get_employeeHoursExport($id)
+    {
+        try {
+            $sql = "
+        SELECT
+            emp.identification,
+            concat_ws(', ', emp.last_name, emp.name) employee_name,
+            tc.time_code,
+            p.project AS project_name,
+            t.description AS task_description,
+            wh.date_worked,
+            wh.duration
+        FROM 
+            working_hours wh
+        JOIN 
+            employees emp ON wh.id_employee = emp.id
+        JOIN 
+            time_codes tc ON wh.id_time_code = tc.id
+        JOIN 
+            projects p ON wh.id_project = p.id
+        JOIN 
+            tasks t ON wh.id_task = t.id
+        JOIN users u on emp.email = u.email
+        WHERE
+            emp.id = :id
+        ORDER BY wh.id ASC;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':id', $id);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #    
+    #    _____ ______ _______   _______ ____ _______       _        _    _  ____  _    _ _____   _____ 
+    #   / ____|  ____|__   __| |__   __/ __ \__   __|/\   | |      | |  | |/ __ \| |  | |  __ \ / ____|
+    #  | |  __| |__     | |       | | | |  | | | |  /  \  | |      | |__| | |  | | |  | | |__) | (___  
+    #  | | |_ |  __|    | |       | | | |  | | | | / /\ \ | |      |  __  | |  | | |  | |  _  / \___ \ 
+    #  | |__| | |____   | |       | | | |__| | | |/ ____ \| |____  | |  | | |__| | |__| | | \ \ ____) |
+    #   \_____|______|  |_|       |_|  \____/  |_/_/    \_\______| |_|  |_|\____/ \____/|_|  \_\_____/ 
+    #
+    # ---------------------------------------------------------------------------------
+    public function getTotalHours()
+    {
+        try {
+            $sql = "SELECT total_hours FROM employees WHERE id = :employee_id";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':employee_id', $_SESSION['employee_id']);
+            $pdoSt->execute();
+            $result = $pdoSt->fetch(PDO::FETCH_ASSOC);
+
+            // Verificar si $result es falso o es un array
+            if ($result !== false && isset($result['total_hours'])) {
+                return $result['total_hours'];
+            } else {
+                return 0;
+            }
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
         }
     }
 
