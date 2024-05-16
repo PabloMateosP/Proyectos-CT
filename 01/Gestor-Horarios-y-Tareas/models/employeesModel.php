@@ -182,9 +182,9 @@ class employeesModel extends Model
                         employees emp ON wh.id_employee = emp.id
                     JOIN 
                         time_codes tc ON wh.id_time_code = tc.id
-                    JOIN 
+                    LEFT JOIN 
                         projects p ON wh.id_project = p.id
-                    JOIN 
+                    LEFT JOIN 
                         tasks t ON wh.id_task = t.id
                     JOIN users u on emp.email = u.email
                     WHERE
@@ -783,9 +783,9 @@ class employeesModel extends Model
             employees emp ON wh.id_employee = emp.id
         JOIN 
             time_codes tc ON wh.id_time_code = tc.id
-        JOIN 
+        LEFT JOIN 
             projects p ON wh.id_project = p.id
-        JOIN 
+        LEFT JOIN 
             tasks t ON wh.id_task = t.id
         JOIN users u on emp.email = u.email
         WHERE
@@ -815,13 +815,13 @@ class employeesModel extends Model
     #   \_____|______|  |_|       |_|  \____/  |_/_/    \_\______| |_|  |_|\____/ \____/|_|  \_\_____/ 
     #
     # ---------------------------------------------------------------------------------
-    public function getTotalHours()
+    public function getTotalHours($id_employee)
     {
         try {
             $sql = "SELECT total_hours FROM employees WHERE id = :employee_id";
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
-            $pdoSt->bindParam(':employee_id', $_SESSION['employee_id']);
+            $pdoSt->bindParam(':employee_id', $id_employee, PDO::PARAM_INT);
             $pdoSt->execute();
             $result = $pdoSt->fetch(PDO::FETCH_ASSOC);
 

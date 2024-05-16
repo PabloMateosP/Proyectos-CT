@@ -161,17 +161,16 @@ class WorkingHours extends Controller
         session_start();
 
         if (!isset($_SESSION['id'])) {
+            
             $_SESSION['mensaje'] = "User must authenticated";
-
             header("location:" . URL . "login");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
-
+            
             $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "workingHours");
 
         } else {
-
             # 1. Security: We sanitize the data that is sent by the user
             $id_time_code = filter_var($_POST['id_time_code'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $id_project = filter_var($_POST['id_project'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -179,6 +178,12 @@ class WorkingHours extends Controller
             $description = filter_var($_POST['description'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $duration = filter_var($_POST['duration'] ??= '', FILTER_SANITIZE_NUMBER_INT);
             $date_worked = filter_var($_POST['date_worked'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
+
+            # Check if id_time_code is different from 1, then set id_project and id_task to null
+            if ($id_time_code != 1) {
+                $id_project = null;
+                $id_task = null;
+            }
 
             # 2. Create an object of the class
             $workingHours = new classWorkingHours(
@@ -205,16 +210,16 @@ class WorkingHours extends Controller
             }
 
             # Id_project
-            if (empty($id_project)) {
+            if (!is_null($id_project) && empty($id_project)) {
                 $errores['id_project'] = 'The field project is required';
-            } else if (strlen($id_project) > 10) {
+            } else if (!is_null($id_project) && strlen($id_project) > 10) {
                 $errores['id_project'] = 'The field project is too long';
             }
 
             # Id_task
-            if (empty($id_task)) {
+            if (!is_null($id_task) && empty($id_task)) {
                 $errores['id_task'] = 'The field task is required';
-            } else if (strlen($id_task) > 10) {
+            } else if (!is_null($id_task) && strlen($id_task) > 10) {
                 $errores['id_task'] = 'Field task too long';
             }
 
@@ -235,31 +240,25 @@ class WorkingHours extends Controller
             #4. Verify Validation
 
             if (!empty($errores)) {
-
                 # Validation's error
                 $_SESSION['workingHours'] = serialize($workingHours);
                 $_SESSION['error'] = 'Formulario no validado';
                 $_SESSION['errores'] = $errores;
-
                 header('location:' . URL . 'workingHours/new');
-
             } else {
-
                 # Suma de horas totales desde la tabla employees + nuevas horas trabajadas
                 $this->model->sumTHoursWHour($duration, $_SESSION['employee_id']);
-
                 #Create workingHours
                 # Añadir registro a la tabla
                 $this->model->create($workingHours);
-
                 #Mensaje
                 $_SESSION['mensaje'] = "Working Hour create correctly";
-
                 # Redirigimos al main de workingHours
                 header('location:' . URL . 'workingHours');
             }
         }
     }
+
 
     # ---------------------------------------------------------------------------------   
     #  
@@ -737,5 +736,5 @@ class WorkingHours extends Controller
 
         # Enviar el contenido del archivo al navegador
         readfile('php:#output');
-    }  
+    }
 }

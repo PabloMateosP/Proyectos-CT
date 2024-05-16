@@ -817,15 +817,17 @@ class Employees extends Controller
 
             $id = $param[0];
 
+            $_SESSION['employee_id_export'] = $id;
+
             $this->view->title = "Working Hour Employee";
 
-            if ($this->model->getTotalHours() == null) {
+            if ($this->model->getTotalHours($id) == null) {
 
                 $this->view->total_hours = 0;
 
             } else {
 
-                $this->view->total_hours = $this->model->getTotalHours();
+                $this->view->total_hours = $this->model->getTotalHours($id);
 
             }
 
@@ -877,11 +879,13 @@ class Employees extends Controller
 
         # ------------------------------------------------------------
         # Obtener el id del empleado al que vamos a exportar las horas
-        $id = $param[0];
+        $id = $_SESSION['employee_id_export'];
         # ------------------------------------------------------------
 
         # Obtener las horas trabajadas del empleado actual
         $workingHoursEmployee = $this->model->get_employeeHoursExport($id)->fetchAll(PDO::FETCH_ASSOC);
+
+        $totalHoursEmployee = $this->model->getTotalHours($id);
 
         # Iterar sobre las horas trabajadas del empleado y escribir cada fila en el archivo
         foreach ($workingHoursEmployee as $workingHour) {
@@ -895,6 +899,9 @@ class Employees extends Controller
                 $workingHour['duration']
             ], ';');
         }
+
+        # Agregar una fila para mostrar el total de horas
+        fputcsv($archivo, ['Total Hours', $totalHoursEmployee], ';');
 
         # Cerramos el archivo
         fclose($archivo);

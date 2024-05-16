@@ -244,3 +244,8 @@ Día 15/05/24
     - He creado una nueva página en empleados para ver las horas de este empleado desde la vista manager o admin 
     - He intentado hacer que haya un exportar en esa nueva página pero no consigo pasar el id del empleado a la función 
     - En la página working hours está el exportar más correcto 
+
+Día 16/05/24
+    - He hecho que si el código de tiempo es diferente de 1 que es la hora por defecto las tareas y los proyectos puedan ser nulos 
+    - He arreglado el ordenar de las tareas 
+    - He arreglado el borrado de las tareas para que se ponga nulo el valor en la tabla working hours

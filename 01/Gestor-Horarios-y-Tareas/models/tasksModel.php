@@ -165,7 +165,7 @@ class tasksModel extends Model
         }
     }
 
-    public function get_projectsRelated($id_employee) 
+    public function get_projectsRelated($id_employee)
     {
         try {
             $sql = "SELECT 
@@ -199,7 +199,7 @@ class tasksModel extends Model
             exit();
         }
     }
-    
+
 
     # ---------------------------------------------------------------------------------
     #    
@@ -306,8 +306,7 @@ class tasksModel extends Model
     public function update(classTask $task, $id)
     {
         try {
-            $sql = " 
-                    UPDATE tasks
+            $sql = "UPDATE tasks
                     SET
                         task=:task,
                         id_project=:id_project,
@@ -327,7 +326,25 @@ class tasksModel extends Model
 
             $pdoSt->execute();
 
-        } catch (PDOException $error) {
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    public function updateRelationWH($id_task){
+        try {
+
+            $sql = "UPDATE working_hours SET id_task=null WHERE id_task=:id_task;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+
+            $pdoSt->bindParam(":id_task", $id_task, PDO::PARAM_INT);
+
+            $pdoSt->execute();
+        
+        } catch (PDOException $e){
             require_once ("template/partials/errorDB.php");
             exit();
         }
@@ -375,7 +392,8 @@ class tasksModel extends Model
     # ---------------------------------------------------------------------------------
     # Method order
     # Permit execute command ORDER BY at the table tasks
-    public function order($criterio){
+    public function order($criterio)
+    {
         try {
             $sql = "SELECT 
                         tk.task,
@@ -418,7 +436,8 @@ class tasksModel extends Model
     # ---------------------------------------------------------------------------------
     # Method order
     # Permit execute command ORDER BY at the table tasks
-    public function orderTaskEmp($criterio){
+    public function orderTaskEmp($criterio, $id_project)
+    {
         try {
             $sql = "SELECT 
                         tk.id,
@@ -431,16 +450,18 @@ class tasksModel extends Model
                         tasks tk
                     JOIN 
                         projects pr ON tk.id_project = pr.id
-                    ORDER by :criterio ;";
+                    WHERE 
+                        pr.id = :project_id
+                    ORDER by $criterio ASC;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
-            $pdoSt->bindParam(":criterio", $criterio, PDO::PARAM_INT);
+            $pdoSt->bindParam(":project_id", $id_project, PDO::PARAM_INT);
 
             $pdoSt->execute();
 
             return $pdoSt->fetchAll(PDO::FETCH_ASSOC);
-            
+
         } catch (PDOException $e) {
 
             require_once ("template/partials/errorDB.php");
@@ -448,5 +469,4 @@ class tasksModel extends Model
 
         }
     }
-
 }

@@ -142,6 +142,66 @@ CREATE TABLE IF NOT EXISTS `time_codes` (
     PRIMARY KEY (`id`)
 );
 
+INSERT INTO
+    `time_codes`
+VALUES
+    (
+        1,
+        100,
+        'Normal Hours',
+        default,
+        default
+    ),
+    (
+        2,
+        200,
+        'Non Productive Hours',
+        default,
+        default
+    ),
+    (
+        3,
+        555,
+        'Extra Hours',
+        default,
+        default
+    ),
+    (
+        4,
+        900,
+        'Vacation Hours',
+        default,
+        default
+    ),
+    (
+        5,
+        901,
+        'Compensation Hours',
+        default,
+        default
+    ),
+    (
+        6,
+        905,
+        'Unpaid Leaves',
+        default,
+        default
+    ),
+    (
+        7,
+        906,
+        'Temp Layoff',
+        default,
+        default
+    ),
+    (
+        8,
+        909,
+        'Covid Flexi-Hours',
+        default,
+        default
+    );
+
 -- Table structure for table `working_hours`
 -- Table to collect working hours
 DROP TABLE IF EXISTS `working_hours`;

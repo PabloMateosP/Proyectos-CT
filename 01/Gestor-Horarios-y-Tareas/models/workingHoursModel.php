@@ -121,9 +121,9 @@ class workingHoursModel extends Model
             employees emp ON wh.id_employee = emp.id
         JOIN 
             time_codes tc ON wh.id_time_code = tc.id
-        JOIN 
+        LEFT JOIN 
             projects p ON wh.id_project = p.id
-        JOIN 
+        LEFT JOIN
             tasks t ON wh.id_task = t.id
         JOIN users u on emp.email = u.email
         WHERE
@@ -867,9 +867,9 @@ class workingHoursModel extends Model
                 employees emp ON wh.id_employee = emp.id
             JOIN 
                 time_codes tc ON wh.id_time_code = tc.id
-            JOIN 
+            LEFT JOIN 
                 projects p ON wh.id_project = p.id
-            JOIN 
+            LEFT JOIN 
                 tasks t ON wh.id_task = t.id
             ORDER by :criterio;";
 
@@ -920,9 +920,9 @@ class workingHoursModel extends Model
                 employees emp ON wh.id_employee = emp.id
             JOIN 
                 time_codes tc ON wh.id_time_code = tc.id
-            JOIN 
+            LEFT JOIN 
                 projects p ON wh.id_project = p.id
-            JOIN 
+            LEFT JOIN 
                 tasks t ON wh.id_task = t.id
             WHERE wh.id_employee = :id
             ORDER by :criterio;";
@@ -975,12 +975,10 @@ class workingHoursModel extends Model
                         employees emp ON wh.id_employee = emp.id
                     JOIN 
                         time_codes tc ON wh.id_time_code = tc.id
-                    JOIN 
+                    LEFT JOIN 
                         projects p ON wh.id_project = p.id
-                    JOIN 
+                    LEFT JOIN 
                         tasks t ON wh.id_task = t.id
-                    JOIN 
-                        work_orders wo ON wh.id_work_order = wo.id
                     WHERE 
                         concat_ws(  
                             ' ',

@@ -418,6 +418,8 @@ class Tasks extends Controller
         } else {
             $id = $param[0];
 
+            $this->model->updateRelationWH($id);
+
             $this->model->delete($id);
 
             $_SESSION['mensaje'] = 'Task delete correctly';
@@ -458,7 +460,7 @@ class Tasks extends Controller
 
             $this->view->title = "Table tasks";
 
-            if ((in_array($_SESSION['id_rol'], $GLOBALS['employee']))) {
+            if ((in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee']))) {
 
                 $employee_id = $_SESSION['employee_id'];
 
@@ -474,7 +476,7 @@ class Tasks extends Controller
                     $allTasks = array_merge($allTasks, $tasks);
                 }
 
-                $this->view->workingHours = $allTasks;
+                $this->view->tasks = $allTasks;
                 $this->view->render("tasks/main/index");
 
             } else {
