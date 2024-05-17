@@ -238,3 +238,8 @@ Día 16/05/24
     - He hecho que si el código de tiempo es diferente de 1 que es la hora por defecto las tareas y los proyectos puedan ser nulos 
     - He arreglado el ordenar de las tareas 
     - He arreglado el borrado de las tareas para que se ponga nulo el valor en la tabla working hours
+
+Día 17/05/24
+    - He intentado hacer el calendario, aún sin funcionalidades pero visible a todos los usuarios. En otras horas buscaré la forma de insertar datos a una base de datos mediante el calendario. 
+
+## SEMANA 6 ##
