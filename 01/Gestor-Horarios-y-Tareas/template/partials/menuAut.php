@@ -57,6 +57,12 @@
             <a class="nav-link active" href="<?= URL ?>users/">Users</a>
           <?php endif; ?>
         </li>
+
+        <li class="nav-item">
+          <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['all'])): ?>
+            <a class="nav-link active" href="<?= URL ?>calendar/">Calendary</a>
+          <?php endif; ?>
+        </li>
       </ul>
       <div class="d-flex">
         <div class="collapse navbar-collapse" id="exCollapsingNavbar">

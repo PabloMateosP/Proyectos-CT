@@ -186,18 +186,7 @@ I really don't know how to solve the organization of the privileges of the user,
 
 Hay que hacer: (muchas cosas :[)
     --> Crear un calendario para poner los no laborales y los festivos
-    --> Poner método task para ver las tareas de cada proyecto en el botón success
-    --> Hacer que cuando se añada un nuevo project manager con un proyecto, al campo id_projectManager de ese proyecto se le añada el id de ese projectManager, además de al editar y al eliminar.
-    --> Hay que añadir a los empleados el poder introfucirlos en un proyecto al crearlo
-    --> Hay que hacer que el empleado solo vea las tareas del proyecto en el que se encuentra registrado
 
-    !--> Lo más importante es conseguir arreglar el edit de empleados en caso de que un empleado sea cambiado de un proyecto a otro¡
-
-
-    [Hacer una función que recoja los proyectos de un empleado se comparan con los introducidos por el formulario
-    si alguno es igual se deja, si tenía alguno antes pero ahora no se borra la relación y si no tenía ninguno se crean los nuevo]
-
-    Hay que mirar porque cuando entras como admin al crear una tarea no puedes ver los proyectos al igual que otros usuarios excepto empleados 
 
 ------------------------------------------------------------------------------------------------------------------------------------------
 ## SEMANA 4     
