@@ -248,3 +248,9 @@ Día 17/05/24
 
 Día 20/05/24
     - Estoy intentando hacer el calendario. He conseguido añadir un nuevo evento aunque no puedo mostrarlo en el calendario (creo que para mostrar los datos debe ser en json).
+    - He conseguir ver los eventos en el calendario con varios fallos
+        1. Se añaden de dos en dos.
+        2. No se pueden borrar los eventos.
+        3. No se pueden editar los eventos.
+        4. No se pueden desplazar 
+        5. Al añadir no redirije con los datos para cargar la página correctamente 

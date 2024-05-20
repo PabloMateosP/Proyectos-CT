@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class Calendar extends Controller
 {
@@ -13,33 +13,66 @@ class Calendar extends Controller
     # 
     # ---------------------------------------------------------------------------------
     # "Render" Method. That show all the employees
+    // public function render($param = [])
+    // {
+    //     # Began or continuo session
+    //     session_start();
+    //     if (!isset($_SESSION['id'])) {
+    //         $_SESSION['notify'] = "Unauthenticated User";
+
+    //         header("location:" . URL . "login");
+    //     } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
+    //         $_SESSION['mensaje'] = "Unauthenticated User";
+    //         header("location:" . URL . "index");
+
+    //     } else {
+
+    //         # Check if message exists
+    //         if (isset($_SESSION['mensaje'])) {
+    //             $this->view->mensaje = $_SESSION['mensaje'];
+    //             unset($_SESSION['mensaje']);
+    //         }
+
+    //         $this->view->title = "Calendar";
+    //         $this->view->schedules = $this->model->get();
+    //         $this->view->render("calendar/main/index");
+    //     }
+    // }
+
     public function render($param = [])
     {
-        # Began or continuo session
         session_start();
         if (!isset($_SESSION['id'])) {
             $_SESSION['notify'] = "Unauthenticated User";
-
             header("location:" . URL . "login");
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
+            exit();
+        } else if (!in_array($_SESSION['id_rol'], $GLOBALS['all'])) {
             $_SESSION['mensaje'] = "Unauthenticated User";
             header("location:" . URL . "index");
-
+            exit();
         } else {
-
-            # Check if message exists
             if (isset($_SESSION['mensaje'])) {
                 $this->view->mensaje = $_SESSION['mensaje'];
                 unset($_SESSION['mensaje']);
             }
 
+            // Ejecuta la consulta a la base de datos
+            $schedules = $this->model->getSchedules();
+            $sched_res = [];
+            foreach ($schedules as $row) {
+                $row->sdate = date("F d, Y h:i A", strtotime($row->start_datetime));
+                $row->edate = date("F d, Y h:i A", strtotime($row->end_datetime));
+                $sched_res[$row->id] = $row;
+            }
+
             $this->view->title = "Calendar";
-            $this->view->schedules = $this->model->get();
+            $this->view->sched_res = $sched_res; // Pasa los datos a la vista
             $this->view->render("calendar/main/index");
         }
     }
 
-    public function handleRequest() {
+    public function handleRequest()
+    {
 
         session_start();
 
@@ -58,7 +91,7 @@ class Calendar extends Controller
                 $_SESSION['mensaje'] = "No hay datos para guardar";
                 header("location:" . URL . "index");
             }
-    
+
             $data = [
                 'id' => $_POST['id'] ?? null,
                 'title' => $_POST['title'],
@@ -66,12 +99,12 @@ class Calendar extends Controller
                 'start_datetime' => date('Y-m-d H:i:s', strtotime($_POST['start_datetime'])),
                 'end_datetime' => date('Y-m-d H:i:s', strtotime($_POST['end_datetime']))
             ];
-    
+
             if ($this->model->checkIfExists($data['start_datetime'])) {
                 $_SESSION['mensaje'] = "Ya existe un registro en la misma fecha y hora, dentro del rango de 15 minutos";
                 header("location:" . URL . "index");
             }
-    
+
             if ($this->model->saveEvent($data)) {
                 $_SESSION['mensaje'] = "Evento Guardado Correctamente";
                 $this->view->render("calendar/main/index");

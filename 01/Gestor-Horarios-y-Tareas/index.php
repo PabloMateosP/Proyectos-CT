@@ -19,8 +19,6 @@ require_once 'class/class.user.php';
 require_once 'fpdf/fpdf.php';
 require_once 'class/class.pdfWorkingHours.php';
 
-
-require_once "libs/lib.php";
 require_once 'libs/app.php';
 require_once 'config/config.php';
 require_once 'config/privileges.php';

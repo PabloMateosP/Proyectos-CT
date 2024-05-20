@@ -1,6 +1,5 @@
 <?php
 
-
 class calendarModel extends Model
 {
 
@@ -20,7 +19,11 @@ class calendarModel extends Model
     {
         try {
             $sql = "SELECT 
-                        *
+                        id, 
+                        title,
+                        description,
+                        start_datetime,
+                        end_datetime
                     FROM 
                         schedule_list;";
 
@@ -29,6 +32,36 @@ class calendarModel extends Model
             $pdoSt->setFetchMode(PDO::FETCH_OBJ);
             $pdoSt->execute();
             return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    public function getSchedules()
+    {
+        try {
+            $sql = "SELECT 
+                    id, 
+                    title,
+                    description,
+                    start_datetime,
+                    end_datetime
+                FROM 
+                    schedule_list;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->setFetchMode(PDO::FETCH_OBJ);
+            $pdoSt->execute();
+
+            $result = [];
+            while ($row = $pdoSt->fetch()) {
+                $result[] = $row;
+            }
+
+            return $result;
 
         } catch (PDOException $e) {
             require_once ("template/partials/errorDB.php");
