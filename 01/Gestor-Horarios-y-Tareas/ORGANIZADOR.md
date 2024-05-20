@@ -242,4 +242,9 @@ Día 16/05/24
 Día 17/05/24
     - He intentado hacer el calendario, aún sin funcionalidades pero visible a todos los usuarios. En otras horas buscaré la forma de insertar datos a una base de datos mediante el calendario. 
 
+-------------------------------------------------------------------------------------------------------------------------------------------
+
 ## SEMANA 6 ##
+
+Día 20/05/24
+    - Estoy intentando hacer el calendario. He conseguido añadir un nuevo evento aunque no puedo mostrarlo en el calendario (creo que para mostrar los datos debe ser en json).
