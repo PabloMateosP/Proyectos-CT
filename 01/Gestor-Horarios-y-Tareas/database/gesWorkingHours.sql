@@ -305,6 +305,19 @@ CREATE TABLE IF NOT EXISTS `roles_users`(
     `update_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- ------------------------------------------------------------------------------------------------------
+-- Schedule Gestion
+-- ------------------------------------------------------------------------------------------------------
+
+CREATE TABLE `schedule_list` (
+  `id` int(30) NOT NULL AUTO_INCREMENT,
+  `title` text NOT NULL,
+  `description` text NOT NULL,
+  `start_datetime` datetime NOT NULL,
+  `end_datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+)
+
 -- POSIBLES FUNCIONES PARA MEJORAR EL RENDIMIENTO DEL SERVIDOR --
 -- ----------------------------------------------------------- --
 

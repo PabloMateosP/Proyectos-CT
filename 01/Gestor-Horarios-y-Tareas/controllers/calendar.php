@@ -13,32 +13,6 @@ class Calendar extends Controller
     # 
     # ---------------------------------------------------------------------------------
     # "Render" Method. That show all the employees
-    // public function render($param = [])
-    // {
-    //     # Began or continuo session
-    //     session_start();
-    //     if (!isset($_SESSION['id'])) {
-    //         $_SESSION['notify'] = "Unauthenticated User";
-
-    //         header("location:" . URL . "login");
-    //     } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
-    //         $_SESSION['mensaje'] = "Unauthenticated User";
-    //         header("location:" . URL . "index");
-
-    //     } else {
-
-    //         # Check if message exists
-    //         if (isset($_SESSION['mensaje'])) {
-    //             $this->view->mensaje = $_SESSION['mensaje'];
-    //             unset($_SESSION['mensaje']);
-    //         }
-
-    //         $this->view->title = "Calendar";
-    //         $this->view->schedules = $this->model->get();
-    //         $this->view->render("calendar/main/index");
-    //     }
-    // }
-
     public function render($param = [])
     {
         session_start();
@@ -77,9 +51,10 @@ class Calendar extends Controller
         session_start();
 
         if (!isset($_SESSION['id'])) {
-            $_SESSION['notify'] = "Unauthenticated User";
 
+            $_SESSION['notify'] = "Unauthenticated User";
             header("location:" . URL . "login");
+        
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
 
             $_SESSION['mensaje'] = "Unauthenticated User";
@@ -107,6 +82,7 @@ class Calendar extends Controller
 
             if ($this->model->saveEvent($data)) {
                 $_SESSION['mensaje'] = "Evento Guardado Correctamente";
+
                 $this->view->render("calendar/main/index");
             } else {
                 $_SESSION['error'] = "Error al guardar el evento";
@@ -117,6 +93,40 @@ class Calendar extends Controller
                 $this->view->mensaje = $_SESSION['mensaje'];
                 unset($_SESSION['mensaje']);
             }
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #
+    #    _____  ______ _      ______ _______ ______ 
+    #    |  __ \|  ____| |    |  ____|__   __|  ____|
+    #    | |  | | |__  | |    | |__     | |  | |__   
+    #    | |  | |  __| | |    |  __|    | |  |  __|  
+    #    | |__| | |____| |____| |____   | |  | |____ 
+    #    |_____/|______|______|______|  |_|  |______|
+    #                                                                                                  
+    # ---------------------------------------------------------------------------------
+    # Method delet. 
+    # Allow the elimination of an event
+    public function delete($param = [])
+    {
+        session_start();
+        if (!isset($_SESSION['id'])) {
+            $_SESSION['mensaje'] = "User must be authenticated";
+
+            header("location:" . URL . "login");
+
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
+            $_SESSION['mensaje'] = "Unprivileged operation";
+            header("location:" . URL . "calendar");
+        } else {
+            $id = $param[0];
+
+            $this->model->delete($id);
+
+            $_SESSION['mensaje'] = 'Event delete correctly';
+
+            $this->view->render("calendar/main/index");
         }
     }
 }

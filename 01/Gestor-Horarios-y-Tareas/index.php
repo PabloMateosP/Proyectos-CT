@@ -15,10 +15,6 @@ require_once 'class/class.customer.php';
 require_once 'class/class.timeCode.php';
 require_once 'class/class.user.php';
 
-// --- Exportar PDF ---
-require_once 'fpdf/fpdf.php';
-require_once 'class/class.pdfWorkingHours.php';
-
 require_once 'libs/app.php';
 require_once 'config/config.php';
 require_once 'config/privileges.php';

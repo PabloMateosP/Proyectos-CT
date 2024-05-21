@@ -124,4 +124,34 @@ class calendarModel extends Model
             exit();
         }
     }
+
+    # ---------------------------------------------------------------------------------
+    #    
+    #   _____  ______ _      ______ _______ ______ 
+    #  |  __ \|  ____| |    |  ____|__   __|  ____|
+    #  | |  | | |__  | |    | |__     | |  | |__   
+    #  | |  | |  __| | |    |  __|    | |  |  __|  
+    #  | |__| | |____| |____| |____   | |  | |____ 
+    #  |_____/|______|______|______|  |_|  |______|
+    #                                              
+    # ---------------------------------------------------------------------------------                                          
+    # Método delete
+    # Permite ejecutar comando DELETE en la tabla customers
+    public function delete($id)
+    {
+        try {
+
+            $sql = "DELETE FROM schedule_list WHERE id = :id;";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":id", $id, PDO::PARAM_INT);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
 }

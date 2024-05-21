@@ -254,3 +254,8 @@ Día 20/05/24
         3. No se pueden editar los eventos.
         4. No se pueden desplazar 
         5. Al añadir no redirije con los datos para cargar la página correctamente 
+
+Día 21/05/24
+    - He conseguido hacer el borrado de los eventos (Aunque hay que crear un método o alguna forma de refrescar el calendario para ver los datos actualizados)
+    - Tengo que hacer que cuando se cree un evento no se creen dos sino uno (Cuando se le da a guardar si se le da a refrescar la página introduce dos nuevos eventos iguales pero si se le pulsa al botón calendary no)
+    - Tengo que hacer que al crear un evento se refresque el calendario con el nuevo evento
