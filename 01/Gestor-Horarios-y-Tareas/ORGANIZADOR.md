@@ -262,4 +262,5 @@ Día 21/05/24
 
 Día 22/05/24
     - He conseguido que al crear un evento se actualice el calendario con el nuevo evento, aunque si pulsas refrescar la web se crean dos eventos y vuelve a la pantalla de login 
-    - He conseguido que al borrar recargue la página y oculte el modal. 
+    - He conseguido que al borrar recargue la página y oculte el modal.
+    - Tengo que intentar hacer el exportar según alguna fecha (Semana, Mes ...) 
