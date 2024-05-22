@@ -95,28 +95,14 @@ class calendarModel extends Model
     {
         try {
 
-            if (empty($data['id'])) {
+            $sql = "INSERT INTO `schedule_list` (`title`, `description`, `start_datetime`, `end_datetime`) VALUES (:title, :description, :start_datetime, :end_datetime)";
+            $conexion = $this->db->connect();
+            $stmt = $conexion->prepare($sql);
+            $stmt->bindParam(":title", $data['title'], PDO::PARAM_STR, 20);
+            $stmt->bindParam(":description", $data['description'], PDO::PARAM_INT, 9);
+            $stmt->bindParam(":start_datetime", $data['start_datetime'], PDO::PARAM_STR, 20);
+            $stmt->bindParam(":end_datetime", $data['end_datetime'], PDO::PARAM_INT, 20);
 
-                $sql = "INSERT INTO `schedule_list` (`title`, `description`, `start_datetime`, `end_datetime`) VALUES (:title, :description, :start_datetime, :end_datetime)";
-                $conexion = $this->db->connect();
-                $stmt = $conexion->prepare($sql);
-                $stmt->bindParam(":title", $data['title'], PDO::PARAM_STR, 20);
-                $stmt->bindParam(":description", $data['description'], PDO::PARAM_INT, 9);
-                $stmt->bindParam(":start_datetime", $data['start_datetime'], PDO::PARAM_STR, 20);
-                $stmt->bindParam(":end_datetime", $data['end_datetime'], PDO::PARAM_INT, 20);
-
-            } else {
-
-                $sql = "UPDATE `schedule_list` SET `title` = :title, `description` = :description, `start_datetime` = :start_datetime, `end_datetime` = :end_datetime WHERE `id` = :id";
-                $conexion = $this->db->connect();
-                $stmt = $conexion->prepare($sql);
-                $stmt->bindParam(":title", $data['title'], PDO::PARAM_STR, 20);
-                $stmt->bindParam(":description", $data['description'], PDO::PARAM_INT, 9);
-                $stmt->bindParam(":start_datetime", $data['start_datetime'], PDO::PARAM_STR, 20);
-                $stmt->bindParam(":end_datetime", $data['end_datetime'], PDO::PARAM_INT, 20);
-                $stmt->bindParam(":id", $data['id'], PDO::PARAM_INT, 20);
-
-            }
             return $stmt->execute();
 
         } catch (PDOException $e) {

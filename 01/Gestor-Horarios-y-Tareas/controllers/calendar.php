@@ -54,7 +54,7 @@ class Calendar extends Controller
 
             $_SESSION['notify'] = "Unauthenticated User";
             header("location:" . URL . "login");
-        
+
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
 
             $_SESSION['mensaje'] = "Unauthenticated User";
@@ -81,9 +81,23 @@ class Calendar extends Controller
             }
 
             if ($this->model->saveEvent($data)) {
+
                 $_SESSION['mensaje'] = "Evento Guardado Correctamente";
 
+                // Ejecuta la consulta a la base de datos
+                $schedules = $this->model->getSchedules();
+                $sched_res = [];
+                foreach ($schedules as $row) {
+                    $row->sdate = date("F d, Y h:i A", strtotime($row->start_datetime));
+                    $row->edate = date("F d, Y h:i A", strtotime($row->end_datetime));
+                    $sched_res[$row->id] = $row;
+                }
+
+                $this->view->title = "Calendar";
+                $this->view->sched_res = $sched_res; // Pasa los datos a la vista
+
                 $this->view->render("calendar/main/index");
+
             } else {
                 $_SESSION['error'] = "Error al guardar el evento";
                 $this->view->render("calendar/main/index");

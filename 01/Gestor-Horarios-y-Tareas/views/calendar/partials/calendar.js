@@ -78,7 +78,7 @@ $(function () { // Función que se ejecuta cuando se carga la página
     $('#delete').click(function () {
         var id = $(this).attr('data-id'); // Obtiene el id del botón
         if (!!scheds[id]) { // Si el horario correspondiente al id existe
-            var _conf = confirm("¿Estás segura de eliminar este evento programado?"); // Muestra un mensaje de confirmación
+            var _conf = confirm("¿Estás seguro de eliminar este evento programado?"); // Muestra un mensaje de confirmación
             if (_conf === true) {
                 // Prepara los datos para la solicitud AJAX
                 var data = {
@@ -93,7 +93,8 @@ $(function () { // Función que se ejecuta cuando se carga la página
                     success: function (response) {
                         alert("Evento eliminado con éxito.");
                         // Refresca el calendario para eliminar el evento visualmente
-                        Calendar.refetchEvents();
+                        $('#event-details-modal').modal('hide') // Oculta el modal
+                        location.reload(); // Recarga la página
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         // Maneja cualquier error que ocurra durante la solicitud
