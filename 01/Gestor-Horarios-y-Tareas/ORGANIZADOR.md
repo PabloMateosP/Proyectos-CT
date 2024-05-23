@@ -267,4 +267,5 @@ Día 22/05/24
 
 Día 23/05/24
     - He conseguido arreglar el crear evento para que no se creen dos eventos.
-    
+    - He arreglado exportar de la tabla employee 
+
