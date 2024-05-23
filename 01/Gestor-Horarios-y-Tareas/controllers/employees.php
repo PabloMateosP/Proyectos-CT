@@ -690,7 +690,7 @@ class Employees extends Controller
         $archivo = fopen('php:#output', 'w');
 
         # Escribir la primera fila con los encabezados
-        fputcsv($archivo, ['identification', 'last_name', 'name', 'telefono', 'ciudad', 'dni', 'email', 'create_at', 'update_at'], ';');
+        fputcsv($archivo, ['Identificación', 'Apellidos', 'Nombre', 'Telefono', 'Ciudad', 'Dni', 'Email', 'Horas Totales'], ';');
 
         # Iterar sobre los employees y escribir cada fila en el archivo
         foreach ($employees as $employee) {
@@ -702,12 +702,11 @@ class Employees extends Controller
                 'identification' => $employee['identification'],
                 'last_name' => $last_name,
                 'name' => $name,
-                'telefono' => $employee['telefono'],
-                'ciudad' => $employee['ciudad'],
+                'phone' => $employee['phone'],
+                'city' => $employee['city'],
                 'dni' => $employee['dni'],
                 'email' => $employee['email'],
-                'create_at' => date('Y-m-d H:i:s'),
-                'update_at' => null
+                'total_hours' => $employee['total_hours']
             ];
 
             # Escribir la fila en el archivo
