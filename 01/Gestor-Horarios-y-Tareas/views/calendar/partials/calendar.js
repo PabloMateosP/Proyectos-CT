@@ -11,10 +11,6 @@ $(function () { // Función que se ejecuta cuando se carga la página
             events.push({ id: row.id, title: row.title, start: row.start_datetime, end: row.end_datetime });
         })
     }
-    var date = new Date() // Obtiene la fecha actual
-    var d = date.getDate(), // Día del mes
-        m = date.getMonth(), // Mes
-        y = date.getFullYear() // Año
 
     // Crea una nueva instancia de Calendar
     calendar = new Calendar(document.getElementById('calendar'), {
@@ -25,7 +21,7 @@ $(function () { // Función que se ejecuta cuando se carga la página
             right: 'dayGridMonth,dayGridWeek,list', // Botones a la derecha
             center: 'title', // Título en el centro
         },
-        selectable: true, // Permite seleccionar días
+        editable: false,
         themeSystem: 'bootstrap', // Sistema de temas
         events: events, // Eventos del calendario
         eventClick: function (info) { // Función que se ejecuta al hacer clic en un evento
@@ -55,24 +51,6 @@ $(function () { // Función que se ejecuta cuando se carga la página
     $('#schedule-form').on('reset', function () {
         $(this).find('input:hidden').val('') // Vacía los campos ocultos del formulario
         $(this).find('input:visible').first().focus() // Pone el foco en el primer campo visible
-    })
-
-    // Botón Editar
-    $('#edit').click(function () {
-        var id = $(this).attr('data-id') // Obtiene el id del botón
-        if (!!scheds[id]) { // Si el horario correspondiente al id existe
-            var _form = $('#schedule-form') // Obtiene el formulario
-            // Rellena el formulario con los datos del horario
-            _form.find('[name="id"]').val(id)
-            _form.find('[name="title"]').val(scheds[id].title)
-            _form.find('[name="description"]').val(scheds[id].description)
-            _form.find('[name="start_datetime"]').val(String(scheds[id].start_datetime).replace(" ", "T"))
-            _form.find('[name="end_datetime"]').val(String(scheds[id].end_datetime).replace(" ", "T"))
-            $('#event-details-modal').modal('hide') // Oculta el modal
-            _form.find('[name="title"]').focus() // Pone el foco en el campo de título
-        } else {
-            alert("Event is undefined"); // Muestra una alerta si el horario no existe
-        }
     })
 
     $('#delete').click(function () {

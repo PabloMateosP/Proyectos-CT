@@ -55,7 +55,7 @@ class Calendar extends Controller
             $_SESSION['notify'] = "Unauthenticated User";
             header("location:" . URL . "login");
 
-        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
 
             $_SESSION['mensaje'] = "Unauthenticated User";
             header("location:" . URL . "index");
@@ -77,7 +77,7 @@ class Calendar extends Controller
 
             if ($this->model->checkIfExists($data['start_datetime'])) {
                 $_SESSION['mensaje'] = "Ya existe un registro en la misma fecha y hora, dentro del rango de 15 minutos";
-                header("location:" . URL . "index");
+                header("location:" . URL . "calendar");
             }
 
             if ($this->model->saveEvent($data)) {
@@ -96,11 +96,11 @@ class Calendar extends Controller
                 $this->view->title = "Calendar";
                 $this->view->sched_res = $sched_res; // Pasa los datos a la vista
 
-                $this->view->render("calendar/main/index");
+                header('location:' . URL . 'calendar');
 
             } else {
                 $_SESSION['error'] = "Error al guardar el evento";
-                $this->view->render("calendar/main/index");
+                header('location:' . URL . 'calendar');
             }
 
             if (isset($_SESSION['mensaje'])) {
