@@ -25,6 +25,7 @@
                 <!-- Mensaje -->
                 <?php require_once "template/partials/mensaje.php" ?>
                 <?php require ('template/partials/modalClientes.php'); ?>
+                <?php require ('template/partials/modal.php'); ?>
                 <!-- tabla Working Hours -->
                 <table class="table">
                     <thead>

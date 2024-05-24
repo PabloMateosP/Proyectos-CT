@@ -11,22 +11,12 @@
                     <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['all']) ?: 'disabled' ?>"
                         href="<?= URL ?>workingHours/new">New</a>
                 </li>
-
                 <li class="nav-item">
-                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['all']) ?: 'disabled' ?>"
-                        href="<?= URL ?>workingHours/export">Export CSV</a>
+                    <a class="nav-link active" href="<?= URL ?>workingHours/export">Exportar Semana</a>
                 </li>
-                <!-- <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Export CSV
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="<//?= URL ?>workingHours/export/1">Month</a></li>
-                        <li><a class="dropdown-item" href="<//?= URL ?>workingHours/export/2">Year</a></li>
-                        <li><a class="dropdown-item" href="<//?= URL ?>workingHours/export/3">Week</a></li>
-                    </ul>
-                </li> -->
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" data-bs-toggle="modal" data-bs-target="#exportModal">Exportar CSV</a>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">

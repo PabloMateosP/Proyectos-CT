@@ -269,3 +269,7 @@ Día 23/05/24
     - He conseguido arreglar el crear evento para que no se creen dos eventos.
     - He arreglado exportar de la tabla employee 
 
+Día 24/05/24
+    - He intentado hacer la forma de editar un evento aunque no encuentro la manera de pasar el id del evento.
+    - He hecho avances con el tema de la exportación de los datos aunque sin conocer la forma es difícil de avanzar. (Había pensado hacer un select poniendo los meses del año)
+
