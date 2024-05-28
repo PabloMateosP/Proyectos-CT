@@ -24,16 +24,8 @@
                         <?php require_once("views/perfil/partials/menu.php") ?>
                     </div>
                         <form>
-
-                            <!-- campo tipo perfil -->
                             <br>
-                            <div class="row mb-3">
-                                <label class="col-sm-3 col-form-label text-end">Perfil</label>
-                                <div class="col-sm-7">
-                                    <input type="text" class="form-control" value="<?= $_SESSION['name_rol'] ?>" disabled>
-                                </div>
-                            </div>    
-
+                            
                             <!-- campo name -->
                             <div class="row mb-3">
                                 <label class="col-sm-3 col-form-label text-end">Nombre Usuario</label>

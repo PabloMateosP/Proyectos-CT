@@ -56,26 +56,25 @@ class workingHoursModel extends Model
     public function getExport()
     {
         try {
-            $sql = "
-            SELECT 
-                emp.identification,
-                concat_ws(', ', emp.last_name, emp.name) employee_name,
-                tc.time_code,
-                p.project AS project_name,
-                t.description AS task_description,
-                wh.date_worked,
-                wh.duration
-            FROM 
-                working_hours wh
-            JOIN 
-                employees emp ON wh.id_employee = emp.id
-            JOIN 
-                time_codes tc ON wh.id_time_code = tc.id
-            LEFT JOIN 
-                projects p ON wh.id_project = p.id
-            LEFT JOIN 
-                tasks t ON wh.id_task = t.id
-            ORDER by wh.id asc;";
+            $sql = "SELECT 
+                        emp.identification,
+                        concat_ws(', ', emp.last_name, emp.name) employee_name,
+                        tc.time_code,
+                        p.project AS project_name,
+                        t.description AS task_description,
+                        wh.date_worked,
+                        wh.duration
+                    FROM 
+                        working_hours wh
+                    JOIN 
+                        employees emp ON wh.id_employee = emp.id
+                    JOIN 
+                        time_codes tc ON wh.id_time_code = tc.id
+                    LEFT JOIN 
+                        projects p ON wh.id_project = p.id
+                    LEFT JOIN 
+                        tasks t ON wh.id_task = t.id
+                    ORDER by wh.id asc;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
@@ -146,29 +145,28 @@ class workingHoursModel extends Model
     public function get_employeeHoursExport($user_email)
     {
         try {
-            $sql = "
-        SELECT 
-            emp.identification,
-            concat_ws(', ', emp.last_name, emp.name) employee_name,
-            tc.time_code,
-            p.project AS project_name,
-            t.description AS task_description,
-            wh.date_worked,
-            wh.duration
-        FROM 
-            working_hours wh
-        JOIN 
-            employees emp ON wh.id_employee = emp.id
-        JOIN 
-            time_codes tc ON wh.id_time_code = tc.id
-        JOIN 
-            projects p ON wh.id_project = p.id
-        JOIN 
-            tasks t ON wh.id_task = t.id
-        JOIN users u on emp.email = u.email
-        WHERE
-            u.email = :email
-        ORDER BY wh.id ASC;";
+            $sql = "SELECT 
+                        emp.identification,
+                        concat_ws(', ', emp.last_name, emp.name) employee_name,
+                        tc.time_code,
+                        p.project AS project_name,
+                        t.description AS task_description,
+                        wh.date_worked,
+                        wh.duration
+                    FROM 
+                        working_hours wh
+                    LEFT JOIN 
+                        employees emp ON wh.id_employee = emp.id
+                    JOIN 
+                        time_codes tc ON wh.id_time_code = tc.id
+                    LEFT JOIN 
+                        projects p ON wh.id_project = p.id
+                    LEFT JOIN 
+                        tasks t ON wh.id_task = t.id
+                    JOIN users u on emp.email = u.email
+                    WHERE
+                        u.email = :email
+                    ORDER BY wh.id ASC;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
@@ -181,6 +179,84 @@ class workingHoursModel extends Model
             require_once ("template/partials/errorDB.php");
             exit();
         }
+    }
+
+    public function get_employeeHoursExport2($email, $dateFilter)
+    {
+        try {
+
+            $query = "SELECT 
+                            emp.identification,
+                            concat_ws(', ', emp.last_name, emp.name) employee_name,
+                            tc.time_code,
+                            p.project AS project_name,
+                            t.description AS task_description,
+                            wh.date_worked,
+                            wh.duration
+                        FROM 
+                            working_hours wh
+                        JOIN 
+                            employees emp ON wh.id_employee = emp.id
+                        JOIN 
+                            time_codes tc ON wh.id_time_code = tc.id
+                        LEFT JOIN 
+                            projects p ON wh.id_project = p.id
+                        LEFT JOIN 
+                            tasks t ON wh.id_task = t.id
+                        JOIN 
+                            users u on emp.email = u.email
+                        WHERE
+                            u.email = :email AND $dateFilter
+                        ORDER BY wh.id ASC;";
+
+            $conexion = $this->db->connect();
+            $stmt = $conexion->prepare($query);
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
+            return $stmt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+
+    }
+
+    public function getExport2($dateFilter)
+    {
+        try {
+
+            $query = "SELECT 
+                        emp.identification,
+                        concat_ws(', ', emp.last_name, emp.name) employee_name,
+                        tc.time_code,
+                        p.project AS project_name,
+                        t.description AS task_description,
+                        wh.date_worked,
+                        wh.duration
+                    FROM 
+                        working_hours wh
+                    JOIN 
+                        employees emp ON wh.id_employee = emp.id
+                    JOIN 
+                        time_codes tc ON wh.id_time_code = tc.id
+                    LEFT JOIN 
+                        projects p ON wh.id_project = p.id
+                    LEFT JOIN 
+                        tasks t ON wh.id_task = t.id
+                    WHERE $dateFilter
+                    ORDER by wh.id asc;";
+
+            $conexion = $this->db->connect();
+            $stmt = $conexion->prepare($query);
+            $stmt->execute();
+            return $stmt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+
     }
 
     # ---------------------------------------------------------------------------------

@@ -161,12 +161,12 @@ class WorkingHours extends Controller
         session_start();
 
         if (!isset($_SESSION['id'])) {
-            
+
             $_SESSION['mensaje'] = "User must authenticated";
             header("location:" . URL . "login");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) && (!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
-            
+
             $_SESSION['mensaje'] = "Unprivileged operation";
             header("location:" . URL . "workingHours");
 
@@ -737,4 +737,285 @@ class WorkingHours extends Controller
         # Enviar el contenido del archivo al navegador
         readfile('php:#output');
     }
+
+    public function exportByDate($param = [])
+    {
+        # Validar la sesión del usuario
+        session_start();
+        if (!isset($_SESSION['id'])) {
+            $_SESSION['mensaje'] = "User must be authenticated";
+            header("location:" . URL . "login");
+            exit();  # Terminar la ejecución para evitar procesar la exportación sin autenticación
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
+            $_SESSION['mensaje'] = "Unprivileged operation";
+            header("location:" . URL . "workingHours");
+            exit();  # Terminar la ejecución para evitar procesar la exportación sin privilegios
+        }
+
+        # Obtener el mes de exportación seleccionado
+        $monthMap = [
+            'january' => 1,
+            'february' => 2,
+            'march' => 3,
+            'april' => 4,
+            'may' => 5,
+            'june' => 6,
+            'july' => 7,
+            'august' => 8,
+            'september' => 9,
+            'october' => 10,
+            'november' => 11,
+            'december' => 12,
+        ];
+
+        $selectedMonth = isset($_POST['exportFrequency']) ? $_POST['exportFrequency'] : null;
+        $monthNumber = isset($monthMap[$selectedMonth]) ? $monthMap[$selectedMonth] : null;
+
+        if ($monthNumber === null) {
+            $_SESSION['mensaje'] = "Invalid month selected";
+            header("location:" . URL . "workingHours");
+            exit();
+        }
+
+        $currentYear = date('Y');
+
+        # Nombre del archivo CSV exportado
+        $csvExportado = 'exportWH.csv';
+
+        # Establecer las cabeceras para la descarga del archivo
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $csvExportado . '"');
+
+        # Abrir el puntero al archivo de salida
+        $archivo = fopen('php://output', 'w');
+
+        # Escribir la primera fila con los encabezados
+        fputcsv($archivo, ['Identification', 'Nombre Empleado', 'Código de Tiempo', 'Proyecto', 'Tarea', 'Fecha Trabajada', 'Duración'], ';');
+
+        # Preparar la cláusula WHERE para filtrar por mes y año
+        $dateFilter = "YEAR(date_worked) = $currentYear AND MONTH(date_worked) = $monthNumber";
+
+        # Verificar si el usuario es empleado
+        if (in_array($_SESSION['id_rol'], $GLOBALS['employee'])) {
+
+            # Obtener el correo electrónico del empleado actual
+            $employee_email = $_SESSION['email'];
+
+            # Obtener las horas trabajadas del empleado actual
+            $workingHoursEmployee = $this->model->get_employeeHoursExport2($employee_email, $dateFilter)->fetchAll(PDO::FETCH_ASSOC);
+
+            # Iterar sobre las horas trabajadas del empleado y escribir cada fila en el archivo
+            foreach ($workingHoursEmployee as $workingHour) {
+                fputcsv($archivo, [
+                    $workingHour['identification'],
+                    $workingHour['employee_name'],
+                    $workingHour['time_code'],
+                    $workingHour['project_name'],
+                    $workingHour['task_description'],
+                    $workingHour['date_worked'],
+                    $workingHour['duration']
+                ], ';');
+            }
+
+            # Verificar si el usuario es administrador o gerente
+        } else if (in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])) {
+
+            $workingHours = $this->model->getExport2($dateFilter)->fetchAll(PDO::FETCH_ASSOC);
+
+            # Iterar sobre los workingHours y escribir cada fila en el archivo
+            foreach ($workingHours as $workingHour) {
+                # Escribir la fila en el archivo
+                fputcsv($archivo, [
+                    $workingHour['identification'],
+                    $workingHour['employee_name'],
+                    $workingHour['time_code'],
+                    $workingHour['project_name'],
+                    $workingHour['task_description'],
+                    $workingHour['date_worked'],
+                    $workingHour['duration']
+                ], ';');
+            }
+        }
+
+        # Cerramos el archivo
+        fclose($archivo);
+    }
+
+    public function exportByWeek($param = [])
+    {
+        # Validar la sesión del usuario
+        session_start();
+        if (!isset($_SESSION['id'])) {
+            $_SESSION['mensaje'] = "User must be authenticated";
+            header("location:" . URL . "login");
+            exit();
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
+            $_SESSION['mensaje'] = "Unprivileged operation";
+            header("location:" . URL . "workingHours");
+            exit();
+        }
+
+        # Obtener la semana de exportación seleccionada
+        $selectedWeek = isset($_POST['exportWeek']) ? (int) $_POST['exportWeek'] : null;
+
+        if ($selectedWeek === null) {
+            $_SESSION['mensaje'] = "Invalid week selected";
+            header("location:" . URL . "workingHours");
+            exit();
+        }
+
+        # Calcular las fechas de inicio y fin de la semana seleccionada
+        $currentYear = date('Y');
+        $dto = new DateTime();
+        $dto->setISODate($currentYear, $selectedWeek);
+        $startDate = $dto->format('Y-m-d');
+        $dto->modify('+6 days');
+        $endDate = $dto->format('Y-m-d');
+
+        # Nombre del archivo CSV exportado
+        $csvExportado = 'exportWH.csv';
+
+        # Establecer las cabeceras para la descarga del archivo
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $csvExportado . '"');
+
+        # Abrir el puntero al archivo de salida
+        $archivo = fopen('php://output', 'w');
+
+        # Escribir la primera fila con los encabezados
+        fputcsv($archivo, ['Identification', 'Nombre Empleado', 'Código de Tiempo', 'Proyecto', 'Tarea', 'Fecha Trabajada', 'Duración'], ';');
+
+        # Preparar la cláusula WHERE para filtrar por rango de fechas
+        $dateFilter = "date_worked BETWEEN '$startDate' AND '$endDate'";
+
+        # Verificar si el usuario es empleado
+        if (in_array($_SESSION['id_rol'], $GLOBALS['employee'])) {
+
+            # Obtener el correo electrónico del empleado actual
+            $employee_email = $_SESSION['email'];
+
+            # Obtener las horas trabajadas del empleado actual
+            $workingHoursEmployee = $this->model->get_employeeHoursExport2($employee_email, $dateFilter)->fetchAll(PDO::FETCH_ASSOC);
+
+            # Iterar sobre las horas trabajadas del empleado y escribir cada fila en el archivo
+            foreach ($workingHoursEmployee as $workingHour) {
+                fputcsv($archivo, [
+                    $workingHour['identification'],
+                    $workingHour['employee_name'],
+                    $workingHour['time_code'],
+                    $workingHour['project_name'],
+                    $workingHour['task_description'],
+                    $workingHour['date_worked'],
+                    $workingHour['duration']
+                ], ';');
+            }
+
+            # Verificar si el usuario es administrador o gerente
+        } else if (in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])) {
+
+            $workingHours = $this->model->getExport2($dateFilter)->fetchAll(PDO::FETCH_ASSOC);
+
+            # Iterar sobre los workingHours y escribir cada fila en el archivo
+            foreach ($workingHours as $workingHour) {
+                # Escribir la fila en el archivo
+                fputcsv($archivo, [
+                    $workingHour['identification'],
+                    $workingHour['employee_name'],
+                    $workingHour['time_code'],
+                    $workingHour['project_name'],
+                    $workingHour['task_description'],
+                    $workingHour['date_worked'],
+                    $workingHour['duration']
+                ], ';');
+            }
+        }
+
+        # Cerramos el archivo
+        fclose($archivo);
+    }
+
+    public function exportCurrentWeek($param = [])
+    {
+        # Validar la sesión del usuario
+        session_start();
+        if (!isset($_SESSION['id'])) {
+            $_SESSION['mensaje'] = "User must be authenticated";
+            header("location:" . URL . "login");
+            exit();
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
+            $_SESSION['mensaje'] = "Unprivileged operation";
+            header("location:" . URL . "workingHours");
+            exit();
+        }
+
+        # Calcular las fechas de inicio y fin de la semana actual
+        $dto = new DateTime();
+        $dto->setISODate((int) $dto->format('o'), (int) $dto->format('W'));
+        $startDate = $dto->format('Y-m-d');
+        $dto->modify('+6 days');
+        $endDate = $dto->format('Y-m-d');
+
+        # Nombre del archivo CSV exportado
+        $csvExportado = 'exportWH.csv';
+
+        # Establecer las cabeceras para la descarga del archivo
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $csvExportado . '"');
+
+        # Abrir el puntero al archivo de salida
+        $archivo = fopen('php://output', 'w');
+
+        # Escribir la primera fila con los encabezados
+        fputcsv($archivo, ['Identification', 'Nombre Empleado', 'Código de Tiempo', 'Proyecto', 'Tarea', 'Fecha Trabajada', 'Duración'], ';');
+
+        # Preparar la cláusula WHERE para filtrar por rango de fechas
+        $dateFilter = "date_worked BETWEEN '$startDate' AND '$endDate'";
+
+        # Verificar si el usuario es empleado
+        if (in_array($_SESSION['id_rol'], $GLOBALS['employee'])) {
+
+            # Obtener el correo electrónico del empleado actual
+            $employee_email = $_SESSION['email'];
+
+            # Obtener las horas trabajadas del empleado actual
+            $workingHoursEmployee = $this->model->get_employeeHoursExport2($employee_email, $dateFilter)->fetchAll(PDO::FETCH_ASSOC);
+
+            # Iterar sobre las horas trabajadas del empleado y escribir cada fila en el archivo
+            foreach ($workingHoursEmployee as $workingHour) {
+                fputcsv($archivo, [
+                    $workingHour['identification'],
+                    $workingHour['employee_name'],
+                    $workingHour['time_code'],
+                    $workingHour['project_name'],
+                    $workingHour['task_description'],
+                    $workingHour['date_worked'],
+                    $workingHour['duration']
+                ], ';');
+            }
+
+            # Verificar si el usuario es administrador o gerente
+        } else if (in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])) {
+
+            $workingHours = $this->model->getExport2($dateFilter)->fetchAll(PDO::FETCH_ASSOC);
+
+            # Iterar sobre los workingHours y escribir cada fila en el archivo
+            foreach ($workingHours as $workingHour) {
+                # Escribir la fila en el archivo
+                fputcsv($archivo, [
+                    $workingHour['identification'],
+                    $workingHour['employee_name'],
+                    $workingHour['time_code'],
+                    $workingHour['project_name'],
+                    $workingHour['task_description'],
+                    $workingHour['date_worked'],
+                    $workingHour['duration']
+                ], ';');
+            }
+        }
+
+        # Cerramos el archivo
+        fclose($archivo);
+    }
+
+
 }

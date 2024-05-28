@@ -185,8 +185,8 @@ I really don't know how to solve the organization of the privileges of the user,
 -------------------------------------------------------------------------
 
 Hay que hacer: (muchas cosas :[)
-    --> Crear un calendario para poner los no laborales y los festivos
-
+    --> Tenemos que crear una cuenta regresiva de los festivos, de partida se tienen 24 y por cada día que pasa festivo se le debe de restar uno 
+    --> Por otro lado hay que crear una cuenta regresiva de las horas total del empleado contando las horas de más y las horas de menos que hay trabajado.
 
 ------------------------------------------------------------------------------------------------------------------------------------------
 ## SEMANA 4     
@@ -273,3 +273,11 @@ Día 24/05/24
     - He intentado hacer la forma de editar un evento aunque no encuentro la manera de pasar el id del evento.
     - He hecho avances con el tema de la exportación de los datos aunque sin conocer la forma es difícil de avanzar. (Había pensado hacer un select poniendo los meses del año)
 
+## SEMANA 7 ##
+
+Día 28/05/24
+    - He conseguido hacer el exportar por meses del año en el año en el que nos encontramos (Diferente si es para empleado o para admin_manager)
+    - He conseguido exportar mediante semana 
+    - He conseguido exportar la semana actual 
+    - Blas me ha comunicado que sería necesario añadir al empleado un contador de los festivos de cada persona, restando a medida de lo que queda de año 
+    - Blas me ha comunicado que habría que añadir un total de horas por empleado que se reste en caso de que el empleado haya trabajado sus horas de la semana (Ejemplo: una semana he trabajado 50 horas y el total son 1200 pues 1200 menos 50 y me quedan 1160 y 10 horas extras hechas o por si de contrario hubiese trabajado 36 horas que tenga 1164 horas y que ponga que debo 4 horas)

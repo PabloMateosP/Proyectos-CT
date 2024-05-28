@@ -12,10 +12,16 @@
                         href="<?= URL ?>workingHours/new">New</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="<?= URL ?>workingHours/export">Exportar Semana</a>
+                    <a class="nav-link active" href="<?= URL ?>workingHours/exportCurrentWeek">Export This Week</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="#" data-bs-toggle="modal" data-bs-target="#exportModal">Exportar CSV</a>
+                    <a class="nav-link active" href="<?= URL ?>workingHours/export">Export All</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" data-bs-toggle="modal" data-bs-target="#exportModal">Export Month</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" data-bs-toggle="modal" data-bs-target="#exportModalWeek">Export Week</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"

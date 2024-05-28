@@ -1,15 +1,15 @@
-<form id="formExportar" action="<?= URL . 'workingHours/Export/' ?>" method="POST" enctype="multipart/form-data">
+<form id="formExportar" action="<?= URL . 'workingHours/exportByDate/' ?>" method="POST" enctype="multipart/form-data">
     <div id="exportModal" class="modal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Export Working Hours</h5>
+                    <h5 class="modal-title">Export Working Hours By Month</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <strong><label for="exportFrequency">Frecuencia de Exportación</label></strong>
-                        <select class="form-control" id="exportFrequency">
+                        <strong><label for="exportFrequency">Month of Export</label></strong>
+                        <select class="form-control" id="exportFrequency" name="exportFrequency">
                             <option value="january">January</option>
                             <option value="february">February</option>
                             <option value="march">March</option>
