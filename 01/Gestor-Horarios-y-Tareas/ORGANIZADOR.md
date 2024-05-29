@@ -281,3 +281,9 @@ Día 28/05/24
     - He conseguido exportar la semana actual 
     - Blas me ha comunicado que sería necesario añadir al empleado un contador de los festivos de cada persona, restando a medida de lo que queda de año 
     - Blas me ha comunicado que habría que añadir un total de horas por empleado que se reste en caso de que el empleado haya trabajado sus horas de la semana (Ejemplo: una semana he trabajado 50 horas y el total son 1200 pues 1200 menos 50 y me quedan 1160 y 10 horas extras hechas o por si de contrario hubiese trabajado 36 horas que tenga 1164 horas y que ponga que debo 4 horas)
+
+Día 29/05/24
+    - Me puse con el modelaje final de las horas totales del empleado en un año con un apartado de horas extras trabajadas y horas de menos  trabajadas
+    - Además hay que hacer que el total de las horas totales de la semana ser reestablezcan a las 12 de la noche el domingo 
+    - Buscar la forma de que a cada empleado le salgan los días festivos que tiene (Son 23 en total) y que cuando pase el día se reste
+
