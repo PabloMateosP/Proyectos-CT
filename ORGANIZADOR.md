@@ -292,5 +292,14 @@ Día 30/05/24
     - Además se pueden añadir dos campos nuevos al empleado para que salgan las horas totales anuales y las horas extras 
 
 Día 31/05/24
-    - 
+    - Seguimiento de arreglos varios
+    - Buscamos como ejecutar la app en servidor y como sería su puesta a punto para lanzamiento.
+
+## SEMANA 8 ## 
+
+Día 03/06/24
+    - Vine a la empresa pero no había nadie por lo que trabajé de forma online en mi casa explicando código para futuros programadores que usen la app así como búsqueda de la ejecucuión de la app en un servidor
+
+Día 04/06/24
+    - Llegando cerca del punto final con la empresa me he puesto a describir todos los documentos y sus funciones levemente para una fácil comprensión a futuro.
 
