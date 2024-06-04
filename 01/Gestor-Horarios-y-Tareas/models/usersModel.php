@@ -3,8 +3,18 @@
 class usersModel extends Model
 {
 
-    # Método Get
-    # Consulta SELECT a la tabla usuarios 
+    # ---------------------------------------------------------------------------------
+    #
+    #     _____ ______ _______ 
+    #    / ____|  ____|__   __|
+    #   | |  __| |__     | |   
+    #   | | |_ |  __|    | |   
+    #   | |__| | |____   | |   
+    #    \_____|______|  |_|   
+    #
+    # ---------------------------------------------------------------------------------
+    # Method get 
+    # Select form table users
     public function get()
     {
         try {
@@ -26,13 +36,23 @@ class usersModel extends Model
             return $pdoSt;
 
         } catch (PDOException $e) {
-            require_once("template/partials/errorDB.php");
+            require_once ("template/partials/errorDB.php");
             exit();
         }
     }
 
+    # ---------------------------------------------------------------------------------    
+    #
+    #    _____ ______ _______   _    _  _____ ______ _____     _____   ____  _      ______ 
+    #   / ____|  ____|__   __| | |  | |/ ____|  ____|  __ \   |  __ \ / __ \| |    |  ____|
+    #  | |  __| |__     | |    | |  | | (___ | |__  | |__) |  | |__) | |  | | |    | |__   
+    #  | | |_ |  __|    | |    | |  | |\___ \|  __| |  _  /   |  _  /| |  | | |    |  __|  
+    #  | |__| | |____   | |    | |__| |____) | |____| | \ \   | | \ \| |__| | |____| |____ 
+    #   \_____|______|  |_|     \____/|_____/|______|_|  \_\  |_|  \_\\____/|______|______|
+    #                                                                                     
+    # --------------------------------------------------------------------------------- 
     # Método getUserRole
-    # Consulta SELECT para recoger el rol de un usuario
+    # Select to take the role of an employee
     public function getUserRole($id)
     {
         try {
@@ -59,19 +79,28 @@ class usersModel extends Model
 
         } catch (PDOException $e) {
 
-            require_once("template/partials/errorDB.php");
+            require_once ("template/partials/errorDB.php");
             exit();
 
         }
     }
 
-    # Método create
-    # Insertamos un nuevo registro 
+    # ---------------------------------------------------------------------------------
+    #    
+    #    _____ _____  ______       _______ ______ 
+    #   / ____|  __ \|  ____|   /\|__   __|  ____|
+    #  | |    | |__) | |__     /  \  | |  | |__   
+    #  | |    |  _  /|  __|   / /\ \ | |  |  __|  
+    #  | |____| | \ \| |____ / ____ \| |  | |____ 
+    #   \_____|_|  \_\______/_/    \_\_|  |______|
+    #
+    # ---------------------------------------------------------------------------------
+    # Method create
+    # Allow to create a new user
     public function create($nombre, $email, $password, $id_rol)
     {
         try {
 
-            //Encriptamos la contraseña del usuario 
             $password = password_hash($password, PASSWORD_BCRYPT);
 
             $sql = "INSERT INTO 
@@ -93,10 +122,8 @@ class usersModel extends Model
 
             $stmt->execute();
 
-            //Guardamos en una variable el valor id de este último registro insertado
             $id_usuario = $pdo->lastInsertId();
 
-            // Asignamos rol
             $sql = "INSERT INTO 
                         roles_users 
                     VALUES (
@@ -113,19 +140,29 @@ class usersModel extends Model
 
         } catch (PDOException $e) {
 
-            require_once("template/partials/errorDB.php");
+            require_once ("template/partials/errorDB.php");
             exit();
-            
+
         }
     }
 
-    # Método delete
-    # Permite ejecutar comando DELETE de un usuario
+    # ---------------------------------------------------------------------------------
+    #    
+    #   _____  ______ _      ______ _______ ______ 
+    #  |  __ \|  ____| |    |  ____|__   __|  ____|
+    #  | |  | | |__  | |    | |__     | |  | |__   
+    #  | |  | |  __| | |    |  __|    | |  |  __|  
+    #  | |__| | |____| |____| |____   | |  | |____ 
+    #  |_____/|______|______|______|  |_|  |______|
+    #
+    # ---------------------------------------------------------------------------------
+    # Method delete
+    # Permit execute command DELETE at the table users
     public function delete($id)
     {
         try {
 
-            $sql = " DELETE FROM users WHERE id = :id; ";
+            $sql = "DELETE FROM users WHERE id = :id; ";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
@@ -134,14 +171,23 @@ class usersModel extends Model
             return $pdoSt;
 
         } catch (PDOException $error) {
-            require_once("template/partials/errorDB.php");
+            require_once ("template/partials/errorDB.php");
             exit();
         }
     }
 
-
-    # Método update 
-    # Actualiza los detalles del usuario 
+    # ---------------------------------------------------------------------------------
+    #    
+    #   _    _ _____  _____       _______ ______ 
+    #  | |  | |  __ \|  __ \   /\|__   __|  ____|
+    #  | |  | | |__) | |  | | /  \  | |  | |__   
+    #  | |  | |  ___/| |  | |/ /\ \ | |  |  __|  
+    #  | |__| | |    | |__| / ____ \| |  | |____ 
+    #   \____/|_|    |_____/_/    \_\_|  |______|
+    #
+    # ---------------------------------------------------------------------------------
+    # Method update
+    # Update the user's data
     public function update(classUser $user, $id, $id_Rol)
     {
 
@@ -188,13 +234,22 @@ class usersModel extends Model
             $pdoSt->execute();
 
         } catch (PDOException $error) {
-            require_once("template/partials/errorDB.php");
+            require_once ("template/partials/errorDB.php");
             exit();
         }
     }
 
+    # --------------------------------------------------------------------------------- 
+    #    _____ ______ _______   _    _  _____ ______ _____  
+    #   / ____|  ____|__   __| | |  | |/ ____|  ____|  __ \ 
+    #  | |  __| |__     | |    | |  | | (___ | |__  | |__) |
+    #  | | |_ |  __|    | |    | |  | |\___ \|  __| |  _  / 
+    #  | |__| | |____   | |    | |__| |____) | |____| | \ \ 
+    #   \_____|______|  |_|     \____/|_____/|______|_|  \_\                                                   
+    #                                                      
+    # ---------------------------------------------------------------------------------
     # Método getUser
-    # Obtenemos los detalles de un cliente a partir del id
+    # Get the user details
     public function getUser($id)
     {
         try {
@@ -217,11 +272,24 @@ class usersModel extends Model
             return $pdoSt->fetch();
 
         } catch (PDOException $e) {
-            require_once("template/partials/errorDB.php");
+            require_once ("template/partials/errorDB.php");
             exit();
         }
     }
 
+
+    # ---------------------------------------------------------------------------------
+    #    
+    #   _____  ______          _____  
+    #  |  __ \|  ____|   /\   |  __ \ 
+    #  | |__) | |__     /  \  | |  | |
+    #  |  _  /|  __|   / /\ \ | |  | |
+    #  | | \ \| |____ / ____ \| |__| |
+    #  |_|  \_\______/_/    \_\_____/ 
+    #
+    # ---------------------------------------------------------------------------------
+    # Method read 
+    # Get the data of a user
     public function read($id)
     {
 
@@ -248,12 +316,24 @@ class usersModel extends Model
             return $pdoSt->fetch();
 
         } catch (PDOException $e) {
-            include_once('template/partials/errorDB.php');
+            include_once ('template/partials/errorDB.php');
             exit();
         }
 
     }
 
+
+    # ---------------------------------------------------------------------------------
+    #    
+    #   __      __     _      _____ _____       _______ ______    _    _ _   _ _____ ____  _    _ ______   ______ __  __          _____ _      
+    #   \ \    / /\   | |    |_   _|  __ \   /\|__   __|  ____|  | |  | | \ | |_   _/ __ \| |  | |  ____| |  ____|  \/  |   /\   |_   _| |     
+    #    \ \  / /  \  | |      | | | |  | | /  \  | |  | |__     | |  | |  \| | | || |  | | |  | | |__    | |__  | \  / |  /  \    | | | |     
+    #     \ \/ / /\ \ | |      | | | |  | |/ /\ \ | |  |  __|    | |  | | . ` | | || |  | | |  | |  __|   |  __| | |\/| | / /\ \   | | | |     
+    #      \  / ____ \| |____ _| |_| |__| / ____ \| |  | |____   | |__| | |\  |_| || |__| | |__| | |____  | |____| |  | |/ ____ \ _| |_| |____ 
+    #       \/_/    \_\______|_____|_____/_/    \_\_|  |______|   \____/|_| \_|_____\___\_\\____/|______| |______|_|  |_/_/    \_\_____|______|
+    #
+    # ---------------------------------------------------------------------------------
+    # Validate the user email
     public function validateUniqueEmail($email)
     {
         try {
@@ -279,7 +359,7 @@ class usersModel extends Model
 
         } catch (PDOException $e) {
 
-            include_once('template/partials/errorDB.php');
+            include_once ('template/partials/errorDB.php');
             exit();
 
         }
@@ -309,7 +389,7 @@ class usersModel extends Model
 
             return $pdoSt;
         } catch (PDOException $e) {
-            require_once("template/partials/errorDB.php");
+            require_once ("template/partials/errorDB.php");
             exit();
         }
     }
@@ -355,7 +435,7 @@ class usersModel extends Model
             return $pdoSt;
 
         } catch (PDOException $e) {
-            require_once("template/partials/errorDB.php");
+            require_once ("template/partials/errorDB.php");
             exit();
         }
     }
@@ -374,7 +454,7 @@ class usersModel extends Model
 
         } catch (PDOException $e) {
 
-            require_once("template/partials/errorDB.php");
+            require_once ("template/partials/errorDB.php");
             exit();
 
         }
