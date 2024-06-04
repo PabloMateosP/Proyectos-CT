@@ -1,11 +1,16 @@
 <?php
 
-
 class PerfilModel extends Model
 {
-
-    # Devuelve objeto user si lo encuentra
-    # Si no lo encuentra devuelve FALSE
+    # ---------------------------------------------------------------------------------    
+    #    _____ ______ _______   _    _  _____ ______ _____    _____ _____  
+    #   / ____|  ____|__   __| | |  | |/ ____|  ____|  __ \  |_   _|  __ \ 
+    #  | |  __| |__     | |    | |  | | (___ | |__  | |__) |   | | | |  | |
+    #  | | |_ |  __|    | |    | |  | |\___ \|  __| |  _  /    | | | |  | |
+    #  | |__| | |____   | |    | |__| |____) | |____| | \ \   _| |_| |__| |
+    #   \_____|______|  |_|     \____/|_____/|______|_|  \_\ |_____|_____/ 
+    #
+    # --------------------------------------------------------------------------------- 
     public function getUserId($id)
     {
         try {
@@ -21,14 +26,24 @@ class PerfilModel extends Model
 
         } catch (PDOException $e) {
 
-            include_once('template/partials/errorDB.php');
+            include_once ('template/partials/errorDB.php');
             exit();
 
         }
 
     }
 
-    # Actualizar password
+    # ---------------------------------------------------------------------------------
+    #    
+    #   _    _ _____  _____       _______ ______   _____         _____ _____ 
+    #  | |  | |  __ \|  __ \   /\|__   __|  ____| |  __ \ /\    / ____/ ____|
+    #  | |  | | |__) | |  | | /  \  | |  | |__    | |__) /  \  | (___| (___  
+    #  | |  | |  ___/| |  | |/ /\ \ | |  |  __|   |  ___/ /\ \  \___ \\___ \ 
+    #  | |__| | |    | |__| / ____ \| |  | |____  | |  / ____ \ ____) |___) |
+    #   \____/|_|    |_____/_/    \_\_|  |______| |_| /_/    \_\_____/_____/ 
+    #
+    # ---------------------------------------------------------------------------------
+    # Update password
     public function updatePass(classUser $user)
     {
         try {
@@ -50,21 +65,26 @@ class PerfilModel extends Model
 
         } catch (PDOException $e) {
 
-            include_once('template/partials/errorDB.php');
+            include_once ('template/partials/errorDB.php');
             exit();
 
         }
     }
 
-    # Valida nombre de usuario ha de ser único
+    # ---------------------------------------------------------------------------------
+    # __      __     _      _____ _____          _____    _   _          __  __ ______ 
+    # \ \    / /\   | |    |_   _|  __ \   /\   |  __ \  | \ | |   /\   |  \/  |  ____|
+    #  \ \  / /  \  | |      | | | |  | | /  \  | |__) | |  \| |  /  \  | \  / | |__   
+    #   \ \/ / /\ \ | |      | | | |  | |/ /\ \ |  _  /  | . ` | / /\ \ | |\/| |  __|  
+    #    \  / ____ \| |____ _| |_| |__| / ____ \| | \ \  | |\  |/ ____ \| |  | | |____ 
+    #     \/_/    \_\______|_____|_____/_/    \_\_|  \_\ |_| \_/_/    \_\_|  |_|______|
+    #
+    # ---------------------------------------------------------------------------------
     public function validarName($name)
     {
 
         try {
-            $sql = "
-                    SELECT * FROM users
-                    WHERE name = :name
-            ";
+            $sql = "SELECT * FROM users WHERE name = :name";
 
             # Conectamos con la base de datos
             $conexion = $this->db->connect();
@@ -79,22 +99,29 @@ class PerfilModel extends Model
             return FALSE;
 
         } catch (PDOException $e) {
-            include_once('template/partials/errorDB.php');
+            include_once ('template/partials/errorDB.php');
             exit();
         }
 
 
     }
 
-    # Valida nombre de usuario ha de ser único
+    # ---------------------------------------------------------------------------------
+    #    
+    # __      __     _      _____ _____          _____    ______ __  __          _____ _      
+    # \ \    / /\   | |    |_   _|  __ \   /\   |  __ \  |  ____|  \/  |   /\   |_   _| |     
+    #  \ \  / /  \  | |      | | | |  | | /  \  | |__) | | |__  | \  / |  /  \    | | | |     
+    #   \ \/ / /\ \ | |      | | | |  | |/ /\ \ |  _  /  |  __| | |\/| | / /\ \   | | | |     
+    #    \  / ____ \| |____ _| |_| |__| / ____ \| | \ \  | |____| |  | |/ ____ \ _| |_| |____ 
+    #     \/_/    \_\______|_____|_____/_/    \_\_|  \_\ |______|_|  |_/_/    \_\_____|______|
+    #
+    # ---------------------------------------------------------------------------------
+    # Validate user by email
     public function validarEmail($email)
     {
 
         try {
-            $sql = "
-                SELECT * FROM users
-                WHERE email = :email
-        ";
+            $sql = "SELECT * FROM users WHERE email = :email";
 
             # Conectamos con la base de datos
             $conexion = $this->db->connect();
@@ -109,24 +136,28 @@ class PerfilModel extends Model
             return FALSE;
 
         } catch (PDOException $e) {
-            include_once('template/partials/errorDB.php');
+            include_once ('template/partials/errorDB.php');
             exit();
         }
 
     }
 
-    # Actualizar perfil name y email
+    # --------------------------------------------------------------------------------- 
+    #   
+    #   _    _ _____  _____       _______ ______ 
+    #  | |  | |  __ \|  __ \   /\|__   __|  ____|
+    #  | |  | | |__) | |  | | /  \  | |  | |__   
+    #  | |  | |  ___/| |  | |/ /\ \ | |  |  __|  
+    #  | |__| | |    | |__| / ____ \| |  | |____ 
+    #   \____/|_|    |_____/_/    \_\_|  |______|
+    #                                         
+    # ---------------------------------------------------------------------------------
+    # Update the profile
     public function update(classUser $user)
     {
         try {
 
-            $update = "
-                        UPDATE users SET
-                            name = :name,
-                            email = :email
-                        WHERE id = :id
-                        LIMIT 1      
-                        ";
+            $update = "UPDATE users SET name = :name, email = :email WHERE id = :id LIMIT 1";
 
             $conexion = $this->db->connect();
             $result = $conexion->prepare($update);
@@ -139,20 +170,27 @@ class PerfilModel extends Model
 
         } catch (PDOException $e) {
 
-            include_once('template/partials/errorDB.php');
+            include_once ('template/partials/errorDB.php');
             exit();
 
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #
+    #   _____  ______ _      ______ _______ ______ 
+    #  |  __ \|  ____| |    |  ____|__   __|  ____|
+    #  | |  | | |__  | |    | |__     | |  | |__   
+    #  | |  | |  __| | |    |  __|    | |  |  __|  
+    #  | |__| | |____| |____| |____   | |  | |____ 
+    #  |_____/|______|______|______|  |_|  |______|
+    #
+    # --------------------------------------------------------------------------------- 
     public function delete($id)
     {
 
         try {
-            $delete = "
-                    DELETE FROM users 
-                    WHERE id = :id      
-                ";
+            $delete = "DELETE FROM users WHERE id = :id";
 
             $conexion = $this->db->connect();
             $result = $conexion->prepare($delete);
@@ -163,11 +201,9 @@ class PerfilModel extends Model
 
         } catch (PDOException $e) {
 
-            include_once('template/partials/errorDB.php');
+            include_once ('template/partials/errorDB.php');
             exit();
 
         }
-
     }
-
 }

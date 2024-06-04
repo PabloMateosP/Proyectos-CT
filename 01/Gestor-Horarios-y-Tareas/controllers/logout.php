@@ -1,31 +1,46 @@
 <?php
 
-    class Logout Extends Controller {
+class Logout extends Controller
+{
 
-        function render() {
+    # ---------------------------------------------------------------------------------
+    #   _____  ______ _   _ _____  ______ _____  
+    #  |  __ \|  ____| \ | |  __ \|  ____|  __ \ 
+    #  | |__) | |__  |  \| | |  | | |__  | |__) |
+    #  |  _  /|  __| | . ` | |  | |  __| |  _  / 
+    #  | | \ \| |____| |\  | |__| | |____| | \ \ 
+    #  |_|  \_\______|_| \_|_____/|______|_|  \_\
+    # 
+    # ---------------------------------------------------------------------------------
+    # "Render" Method. That show the logout view
+    function render()
+    {
 
-            # Iniciamos o continuamos sesión
-            session_start();
+        // Start or continue session
+        session_start();
 
-            // Destruir todas las variables de sesión.
-            $_SESSION = array();
+        // Destroy all session variables.
+        $_SESSION = array();
 
-            // Si se desea destruir la sesión completamente, borre también la cookie de sesión.
-            // Nota: ¡Esto destruirá la sesión, y no la información de la sesión!
-            if (ini_get("session.use_cookies")) {
-                $params = session_get_cookie_params();
-                setcookie(session_name(), '', time() - 42000,
-                    $params["path"], $params["domain"],
-                    $params["secure"], $params["httponly"]
-                );
-            }
-
-            // Finalmente, destruir la sesión.
-            session_destroy();
-
-            // Redireccionamos a la página principal
-            header("location:".URL."index");
+        // If you want to destroy the session completely, also delete the session cookie.
+        // Note: This will destroy the session, not the session information!
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(
+                session_name(),
+                '',
+                time() - 42000,
+                $params["path"],
+                $params["domain"],
+                $params["secure"],
+                $params["httponly"]
+            );
         }
-    }
 
-?>
+        // Finally, destroy the session.
+        session_destroy();
+
+        // Redirect to the main page
+        header("location:" . URL . "index");
+    }
+}

@@ -1,7 +1,6 @@
 <?php
 
 require 'vendor/autoload.php';
-
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class Employees extends Controller
@@ -378,21 +377,20 @@ class Employees extends Controller
     # Update the data of an employee
     public function update($param = [])
     {
-
-        #Session start or continue
+        // Start or continue session
         session_start();
 
         if (!isset($_SESSION['id'])) {
-            $_SESSION['mensaje'] = "User must authenticated";
+            $_SESSION['mensaje'] = "User must be authenticated";
 
             header("location:" . URL . "login");
 
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
-            $_SESSION['mensaje'] = "unprivileged operation";
+            $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "employees");
         } else {
 
-            #1. Security. Sanitize the data
+            // 1. Security. Sanitize the data
 
             $identification = filter_var($_POST['identification'] ??= '', FILTER_SANITIZE_STRING);
             $last_name = filter_var($_POST['last_name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -419,45 +417,43 @@ class Employees extends Controller
 
             $id = $param[0];
 
-            # We take the original employee
+            // We take the original employee
             $employee_orig = $this->model->read($id);
 
-            #3. Validation
-            # Only if is necessary 
-            # Only in case of modify some field
+            // 3. Validation
+            // Only if necessary 
+            // Only in case of modifying some field
 
-            $errores = [];
+            $errors = [];
 
-            # identification 
+            // Identification 
             if (strcmp($employee->identification, $employee_orig->identification) !== 0) {
                 if (empty($identification)) {
-                    $errores[] = "identification is required";
+                    $errors[] = "Identification is required";
                 } else if (strlen($identification) > 8) {
-                    $errores[] = "Identification too long";
+                    $errors[] = "Identification too long";
                 }
             }
 
-            # last_name
+            // Last name
             if (strcmp($employee->last_name, $employee_orig->last_name) !== 0) {
                 if (empty($last_name)) {
-                    $errores['last_name'] = 'The field last_name is required';
+                    $errors['last_name'] = 'The field last_name is required';
                 } else if (strlen($last_name) > 45) {
-                    $errores['last_name'] = 'The field last_name is too long ';
+                    $errors['last_name'] = 'The field last_name is too long';
                 }
             }
 
-            # name
+            // Name
             if (strcmp($employee->name, $employee_orig->name) !== 0) {
-
                 if (empty($name)) {
-                    $errores['name'] = 'The field name is required';
+                    $errors['name'] = 'The field name is required';
                 } else if (strlen($name) > 20) {
-                    $errores['name'] = 'The field name is too long';
+                    $errors['name'] = 'The field name is too long';
                 }
             }
 
-
-            # Phone: we validate 9 numbers phone and unique 
+            // Phone: we validate 9 numbers phone and unique 
             if (strcmp($employee->phone, $employee_orig->phone) !== 0) {
                 $options_tlf = [
                     'options' => [
@@ -466,36 +462,31 @@ class Employees extends Controller
                 ];
 
                 if (!filter_var($employee->phone, FILTER_VALIDATE_REGEXP, $options_tlf)) {
-                    $errores['telefono'] = 'The format entered is incorrect';
+                    $errors['phone'] = 'The format entered is incorrect';
                 }
             }
 
-
-            # City
+            // City
             if (strcmp($employee->city, $employee_orig->city) !== 0) {
-
                 if (empty($city)) {
-                    $errores['city'] = 'The field city is required';
+                    $errors['city'] = 'The field city is required';
                 } else if (strlen($city) > 20) {
-                    $errores['ciudad'] = 'The field city is too long';
-
+                    $errors['city'] = 'The field city is too long';
                 }
             }
 
-            # Email: we validate and unique email 
+            // Email: we validate and unique email 
             if (strcmp($employee->email, $employee_orig->email) !== 0) {
-
                 if (empty($email)) {
-                    $errores['email'] = 'El campo email es obligatorio';
+                    $errors['email'] = 'The field email is required';
                 } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    $errores['email'] = 'El formato introducido es incorrecto';
+                    $errors['email'] = 'The format entered is incorrect';
                 } else if (!$this->model->validateUniqueEmail($email)) {
-                    $errores['email'] = 'Email ya registrado';
-
+                    $errors['email'] = 'Email already registered';
                 }
             }
 
-            # Dni: we validate a correct DNI and unique 
+            // DNI: we validate a correct DNI and unique 
             if (strcmp($employee->dni, $employee_orig->dni) !== 0) {
                 $options = [
                     'options' => [
@@ -504,67 +495,66 @@ class Employees extends Controller
                 ];
 
                 if (empty($dni)) {
-                    $errores['dni'] = 'El campo dni es obligatorio';
+                    $errors['dni'] = 'The field dni is required';
                 } else if (!filter_var($dni, FILTER_VALIDATE_REGEXP, $options)) {
-                    $errores['dni'] = 'El formato introducido es incorrecto';
+                    $errors['dni'] = 'The format entered is incorrect';
                 } else if (!$this->model->validateUniqueDni($dni)) {
-                    $errores['dni'] = 'Dni ya registrado';
-
+                    $errors['dni'] = 'DNI already registered';
                 }
             }
 
-            #4. Checking Validation
+            // 4. Checking Validation
 
-            if (!empty($errores)) {
+            if (!empty($errors)) {
 
-                # Validation errors
+                // Validation errors
                 $_SESSION['employee'] = serialize($employee);
-                $_SESSION['error'] = 'Formulario no validado';
-                $_SESSION['errores'] = $errores;
+                $_SESSION['error'] = 'Form not validated';
+                $_SESSION['errors'] = $errors;
 
-                # Redirect to the page edit 
+                // Redirect to the edit page 
                 header('location:' . URL . 'employees/edit/' . $id);
 
             } else {
 
-                // Verificar si $_POST['projects'] está definido y no es null
+                // Check if $_POST['projects'] is defined and not null
                 if (isset($_POST['projects'])) {
-                    // Si tiene algún valor, asignarlo a $formProjects
+                    // If it has any value, assign it to $formProjects
                     $formProjects = $_POST['projects'];
                 } else {
-                    // Si no tiene ningún valor, asignar un array vacío a $formProjects
+                    // If it has no value, assign an empty array to $formProjects
                     $formProjects = [];
                 }
 
-                // Recoger los proyectos actuales del empleado
+                // Collect the current projects of the employee
                 $projectEmployeeRelated = $this->model->getProjectEmployees($id);
 
-                // Proyectos a eliminar (los que estaban antes pero no están en el formulario)
+                // Projects to delete (those that were before but are not in the form)
                 $projectsToDelete = array_diff($projectEmployeeRelated, $formProjects);
 
-                // Proyectos a crear (los que están en el formulario pero no estaban antes)
+                // Projects to create (those that are in the form but were not before)
                 $projectsToCreate = array_diff($formProjects, $projectEmployeeRelated);
 
 
-                // Eliminar relaciones de proyectos que ya no están en el formulario
+                // Delete project relationships that are no longer in the form
                 $tempProjectsToDelete = $projectsToDelete;
                 foreach ($tempProjectsToDelete as $projectId) {
                     $this->model->deleteRelationEP($projectId, $id);
                 }
 
                 $tempProjectsToCreate = $projectsToCreate;
-                // Crear relaciones para los proyectos del formulario que no estaban previamente relacionados
+                // Create relationships for the projects of the form that were not previously related
                 foreach ($tempProjectsToCreate as $projectId) {
                     $this->model->createRelationPR($id, $projectId);
                 }
 
-                # Update employee
+                // Update employee
                 $this->model->update($employee, $id);
 
-                # Message
-                $_SESSION['mensaje'] = "Employee Correctly Update";
+                // Message
+                $_SESSION['mensaje'] = "Employee Correctly Updated";
 
-                # Redirect to the main page 
+                // Redirect to the main page 
                 header('location:' . URL . 'employees');
 
             }
@@ -666,6 +656,16 @@ class Employees extends Controller
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #    
+    #  ________   _______   ____  _____ _______       _____  
+    #  |  ____\ \ / /  __ \ / __ \|  __ \__   __|/\   |  __ \ 
+    #  | |__   \ V /| |__) | |  | | |__) | | |  /  \  | |__) |
+    #  |  __|   > < |  ___/| |  | |  _  /  | | / /\ \ |  _  / 
+    #  | |____ / . \| |    | |__| | | \ \  | |/ ____ \| | \ \ 
+    #  |______/_/ \_\_|     \____/|_|  \_\ |_/_/    \_\_|  \_\
+    # 
+    # ---------------------------------------------------------------------------------
     public function exportar($param = [])
     {
         # Validar la sesión del usuario
@@ -720,9 +720,20 @@ class Employees extends Controller
         readfile('php:#output');
     }
 
+
+    # ---------------------------------------------------------------------------------  
+    #  
+    #  _____ __  __ _____   ____  _____ _______       _____  _____       _______ ____   _____ 
+    #  |_   _|  \/  |  __ \ / __ \|  __ \__   __|/\   |  __ \|  __ \   /\|__   __/ __ \ / ____|
+    #    | | | \  / | |__) | |  | | |__) | | |  /  \  | |__) | |  | | /  \  | | | |  | | (___  
+    #    | | | |\/| |  ___/| |  | |  _  /  | | / /\ \ |  _  /| |  | |/ /\ \ | | | |  | |\___ \ 
+    #   _| |_| |  | | |    | |__| | | \ \  | |/ ____ \| | \ \| |__| / ____ \| | | |__| |____) |
+    #  |_____|_|  |_|_|     \____/|_|  \_\ |_/_/    \_\_|  \_\_____/_/    \_\_|  \____/|_____/ 
+    # 
+    # ---------------------------------------------------------------------------------
     function importarDatos()
     {
-        # Validar la sesión del usuario
+
         session_start();
         if (!isset($_SESSION['id'])) {
             $_SESSION['mensaje'] = "User must be authenticated";
@@ -734,7 +745,7 @@ class Employees extends Controller
             exit();
         }
 
-        # Validar si el archivo es un archivo Excel xlsx
+        # Validate if is an excel file
         $allowed_extensions = array('xlsx');
         $file_extension = pathinfo($_FILES['archivos']['name'], PATHINFO_EXTENSION);
         if (!in_array(strtolower($file_extension), $allowed_extensions)) {
@@ -743,7 +754,7 @@ class Employees extends Controller
             exit();
         }
 
-        # Cargar el archivo y procesar los datos
+        # Charge the file 
         $spreadsheet = IOFactory::load($_FILES['archivos']['tmp_name']);
         $worksheet = $spreadsheet->getActiveSheet();
         $rows = [];
@@ -753,13 +764,13 @@ class Employees extends Controller
             $cellIterator->setIterateOnlyExistingCells(FALSE);
             $cells = [];
             foreach ($cellIterator as $cell) {
-                // Sanear el valor del celda
                 $sanitized_value = htmlspecialchars($cell->getValue(), ENT_QUOTES | ENT_HTML5, 'UTF-8');
                 $cells[] = $sanitized_value;
             }
             $rows[] = $cells;
         }
 
+        # Sanitize the data
         foreach ($rows as $fila) {
             $employee = new classEmployee();
             $employee->identification = isset($fila[0]) ? filter_var($fila[0], FILTER_SANITIZE_STRING) : null;
@@ -774,7 +785,7 @@ class Employees extends Controller
             $this->model->create($employee);
         }
 
-        $_SESSION['mensaje'] = "Datos importados correctamente.";
+        $_SESSION['mensaje'] = "Data imported successfully";
         header("location:" . URL . "employees");
         exit();
     }

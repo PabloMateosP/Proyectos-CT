@@ -15,7 +15,7 @@ class Tasks extends Controller
     # Main method. Charge all the tasks in the database.
     public function render($param = [])
     {
-        # Start or continue the session
+        // Start or continue the session
         session_start();
         if (!isset($_SESSION['id'])) {
             $_SESSION['notify'] = "Unauthenticated user";
@@ -27,7 +27,7 @@ class Tasks extends Controller
 
         } else {
 
-            # Probing if exist some message
+            // Check if a message exists
             if (isset($_SESSION['mensaje'])) {
                 $this->view->mensaje = $_SESSION['mensaje'];
                 unset($_SESSION['mensaje']);
@@ -36,27 +36,27 @@ class Tasks extends Controller
             $this->view->title = "Tasks";
 
             if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['employee'])) {
-                // Recogemos los proyectos donde el empleado se encuentra asignado 
+                // Collect the projects where the employee is assigned
                 $projects = $this->model->getProjectEmployee($_SESSION['employee_id']);
 
-                // Creamos un array para almacenar todas las tareas de los proyectos
+                // Create an array to store all tasks of the projects
                 $allTasks = [];
 
-                // Recorremos los proyectos
+                // Go through the projects
                 foreach ($projects as $project) {
-                    // Recogemos las tareas según el proyecto al que el empleado se encuentra asignado
+                    // Collect the tasks according to the project to which the employee is assigned
                     $tasks = $this->model->getProjTask($project['id']);
 
-                    // Agregamos las tareas al array general
+                    // Add the tasks to the general array
                     $allTasks = array_merge($allTasks, $tasks);
                 }
 
-                // Asignamos todas las tareas al atributo "tasks" de la vista
+                // Assign all tasks to the "tasks" attribute of the view
                 $this->view->tasks = $allTasks;
                 $this->view->render("tasks/main/index");
 
             } else {
-                // Si el empleado no tiene asignado ningún proyecto, mostramos todas las tareas
+                // If the employee is not assigned any project, we show all tasks
                 $this->view->tasks = $this->model->get();
                 $this->view->render("tasks/main/index2");
             }
@@ -298,7 +298,6 @@ class Tasks extends Controller
     public function update($param = [])
     {
 
-        #Iniciar Sesión
         session_start();
 
         if (!isset($_SESSION['id'])) {
@@ -442,21 +441,17 @@ class Tasks extends Controller
     # Permit execute command ORDER BY at the table tasks
     public function order($param = [])
     {
+        // Start or continue session
         session_start();
 
         if (!isset($_SESSION['id'])) {
-
             $_SESSION['mensaje'] = "User must be authenticated";
-
             header("location:" . URL . "login");
-
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['all']))) {
-
             $_SESSION['mensaje'] = "Operation without privileges";
             header("location:" . URL . "tasks");
-
         } else {
-            $criterio = $param[0];
+            $criterion = $param[0];
 
             $this->view->title = "Table tasks";
 
@@ -464,15 +459,15 @@ class Tasks extends Controller
 
                 $employee_id = $_SESSION['employee_id'];
 
-                // Obtener todos los proyectos del empleado
+                // Get all projects of the employee
                 $projects = $this->model->getProjectEmployee($employee_id);
 
-                // Inicializar un array para almacenar las tareas ordenadas de todos los proyectos
+                // Initialize an array to store the ordered tasks of all projects
                 $allTasks = [];
 
                 foreach ($projects as $project) {
-                    // Obtener las tareas ordenadas del proyecto actual y agregarlas al array
-                    $tasks = $this->model->orderTaskEmp($criterio, $project['id']);
+                    // Get the ordered tasks of the current project and add them to the array
+                    $tasks = $this->model->orderTaskEmp($criterion, $project['id']);
                     $allTasks = array_merge($allTasks, $tasks);
                 }
 
@@ -481,12 +476,9 @@ class Tasks extends Controller
 
             } else {
 
-                $this->view->tasks = $this->model->order($criterio);
+                $this->view->tasks = $this->model->order($criterion);
                 $this->view->render("tasks/main/index2");
             }
-
-            
         }
     }
-
 }

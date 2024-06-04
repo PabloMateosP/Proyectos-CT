@@ -12,7 +12,7 @@ class Calendar extends Controller
     #  |_|  \_\______|_| \_|_____/|______|_|  \_\
     # 
     # ---------------------------------------------------------------------------------
-    # "Render" Method. That show all the employees
+    # "Render" Method. That show all the events in the calendar
     public function render($param = [])
     {
         session_start();
@@ -30,7 +30,6 @@ class Calendar extends Controller
                 unset($_SESSION['mensaje']);
             }
 
-            // Ejecuta la consulta a la base de datos
             $schedules = $this->model->getSchedules();
             $sched_res = [];
             foreach ($schedules as $row) {
@@ -40,11 +39,22 @@ class Calendar extends Controller
             }
 
             $this->view->title = "Calendar";
-            $this->view->sched_res = $sched_res; // Pasa los datos a la vista
+            $this->view->sched_res = $sched_res; // We send the data to the view
             $this->view->render("calendar/main/index");
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #    
+    #  _    _          _   _ _____  _      ______ _____  ______ ____  _    _ ______  _____ _______ 
+    #  | |  | |   /\   | \ | |  __ \| |    |  ____|  __ \|  ____/ __ \| |  | |  ____|/ ____|__   __|
+    #  | |__| |  /  \  |  \| | |  | | |    | |__  | |__) | |__ | |  | | |  | | |__  | (___    | |   
+    #  |  __  | / /\ \ | . ` | |  | | |    |  __| |  _  /|  __|| |  | | |  | |  __|  \___ \   | |   
+    #  | |  | |/ ____ \| |\  | |__| | |____| |____| | \ \| |___| |__| | |__| | |____ ____) |  | |   
+    #  |_|  |_/_/    \_\_| \_|_____/|______|______|_|  \_\______\___\_\\____/|______|_____/   |_|   
+    #                                                                                           
+    # ---------------------------------------------------------------------------------
+    # Method to create an event 
     public function handleRequest()
     {
 
@@ -63,7 +73,7 @@ class Calendar extends Controller
         } else {
 
             if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-                $_SESSION['mensaje'] = "No hay datos para guardar";
+                $_SESSION['mensaje'] = "There isn't any data to save";
                 header("location:" . URL . "index");
             }
 
@@ -76,15 +86,14 @@ class Calendar extends Controller
             ];
 
             if ($this->model->checkIfExists($data['start_datetime'])) {
-                $_SESSION['mensaje'] = "Ya existe un registro en la misma fecha y hora, dentro del rango de 15 minutos";
+                $_SESSION['mensaje'] = "A record already exists on the same date and time, within the 15 minute range";
                 header("location:" . URL . "calendar");
             }
 
             if ($this->model->saveEvent($data)) {
 
-                $_SESSION['mensaje'] = "Evento Guardado Correctamente";
+                $_SESSION['mensaje'] = "Event Save Correctly";
 
-                // Ejecuta la consulta a la base de datos
                 $schedules = $this->model->getSchedules();
                 $sched_res = [];
                 foreach ($schedules as $row) {

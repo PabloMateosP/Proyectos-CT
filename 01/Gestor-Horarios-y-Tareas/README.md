@@ -57,3 +57,11 @@ QSA: Significa "query string append" (añadir cadena de consulta). Esto preserva
 Para el uso de la app esta debe estar cimentada en una LAMP (Linux-Apache-MySql-PHP) para su correcto funcionamiento. 
 
 Mis conocimientos todavía no son tan avanzados como para el despegue de la app en un servidor por lo que con la construcción de ella espero dejar el último paso para un especialista en ello. 
+
+## IMPORTANTE ## 
+Como la app será de entrada solo para aquellos que el administrador de la web haya añadido el apartado Sign Up del Inicio de la web debe ser eliminado una vez que el administrador se cree su propio usuario, por defecto el primer usuario creado será administrador por lo que al crear ese usuario ya puede hacer todas las acciones  
+
+Por otra parte, el correo del empleado y del usuario de el mismo deben ser iguales ya que al ser únicos es la forma más segurad de referenciar el empleado por su usuario en casos como: 
+* Ver sus horas
+* Ver los proyectos en los que fue asignado 
+* ... 

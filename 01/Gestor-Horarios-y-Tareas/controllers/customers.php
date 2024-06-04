@@ -3,7 +3,6 @@
 class Customers extends Controller
 {
 
-
     # ---------------------------------------------------------------------------------
     #   _____  ______ _   _ _____  ______ _____  
     #  |  __ \|  ____| \ | |  __ \|  ____|  __ \ 
@@ -17,7 +16,7 @@ class Customers extends Controller
 
     public function render($param = [])
     {
-        # Began or continuo session
+        # Began or continue session
         session_start();
         if (!isset($_SESSION['id'])) {
             $_SESSION['notify'] = "Unauthenticated User";
@@ -195,7 +194,6 @@ class Customers extends Controller
                 $errores['email'] = 'The email is already registered';
             }
 
-
             # --
             # 4. Check Validation
             # --
@@ -210,8 +208,6 @@ class Customers extends Controller
                 header('location:' . URL . 'customers/new');
 
             } else {
-
-                # Create customer
 
                 # Add customer
                 $this->model->create($customer);
@@ -272,7 +268,7 @@ class Customers extends Controller
     #
     # ---------------------------------------------------------------------------------
     # Method edit. 
-    # Show a form to edit a project
+    # Show a form to edit a customer
     public function edit($param = [])
     {
         session_start();
@@ -294,26 +290,27 @@ class Customers extends Controller
             $this->view->title = "Form customer edit";
             $this->view->customer = $this->model->read($id);
 
-            # Comprobamos si hay errores -> esta variable se crea al lanzar un error de validacion
+            // Check if there are errors -> this variable is created when a validation error is thrown
             if (isset($_SESSION['error'])) {
-                # rescatemos el mensaje
+                // Let's rescue the message
                 $this->view->error = $_SESSION['error'];
 
-                # Autorellenamos el formulario
+                // We autofill the form
                 $this->view->project_ = unserialize($_SESSION['employee']);
 
-                # Recupero array de errores específicos
+                // I recover array of specific errors
                 $this->view->errores = $_SESSION['errores'];
 
-                # debemos liberar las variables de sesión ya que su cometido ha sido resuelto
+                // We must free the session variables since their purpose has been resolved
                 unset($_SESSION['error']);
                 unset($_SESSION['errores']);
                 unset($_SESSION['projects']);
-                # Si estas variables existen cuando no hay errores, entraremos en los bloques de error en las condicionales
+                // If these variables exist when there are no errors, we will enter the error blocks in the conditionals
             }
 
             $this->view->render("customers/edit/index");
         }
     }
+
 
 }

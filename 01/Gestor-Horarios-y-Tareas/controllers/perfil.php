@@ -3,7 +3,16 @@
 class Perfil extends Controller
 {
 
-    # Muestra los detalles del perfil antes de eliminar
+    # ---------------------------------------------------------------------------------
+    #   _____  ______ _   _ _____  ______ _____  
+    #  |  __ \|  ____| \ | |  __ \|  ____|  __ \ 
+    #  | |__) | |__  |  \| | |  | | |__  | |__) |
+    #  |  _  /|  __| | . ` | |  | |  __| |  _  / 
+    #  | | \ \| |____| |\  | |__| | |____| | \ \ 
+    #  |_|  \_\______|_| \_|_____/|______|_|  \_\
+    # 
+    # ---------------------------------------------------------------------------------
+    # "Render" Method. That show the perfil view
     public function render()
     {
 
@@ -30,21 +39,27 @@ class Perfil extends Controller
 
     }
 
-    # Editar los detalles name y email de usuario
+    # ---------------------------------------------------------------------------------
+    #    
+    #  ______ _____ _____ _______ 
+    #  |  ____|  __ \_   _|__   __|
+    #  | |__  | |  | || |    | |   
+    #  |  __| | |  | || |    | |   
+    #  | |____| |__| || |_   | |   
+    #  |______|_____/_____|  |_|   
+    #
+    # ---------------------------------------------------------------------------------
     public function edit()
     {
 
-        # Iniciamos o continuamos sesión
         session_start();
 
-        # Capa de autentificación
         if (!isset($_SESSION['id'])) {
 
             header('location:' . URL . 'login');
 
         }
 
-        # Comprobamos si existe mensaje
         if (isset($_SESSION['mensaje'])) {
 
             $this->view->mensaje = $_SESSION['mensaje'];
@@ -52,55 +67,54 @@ class Perfil extends Controller
 
         }
 
-        # Obtenemos objeto User con los detalles del usuario
         $this->view->user = $this->model->getUserId($_SESSION['id']);
 
-        # Capa no validación formulario
         if (isset($_SESSION['error'])) {
 
-            # Mensaje de error
             $this->view->error = $_SESSION['error'];
             unset($_SESSION['error']);
 
-            # Variables de autorrelleno
             $this->view->user = unserialize($_SESSION['user']);
             unset($_SESSION['user']);
 
-            # Tipo de error
             $this->view->errores = $_SESSION['errores'];
             unset($_SESSION['errores']);
 
         }
 
-
-
         $this->view->title = 'Modify User';
         $this->view->render('perfil/edit/index');
 
-
     }
 
-    # Valida el formulario de modificación de perfil
+    # ---------------------------------------------------------------------------------
+    #    
+    # __      __     _      _____  ______ _____  ______ _____ _      
+    # \ \    / /\   | |    |  __ \|  ____|  __ \|  ____|_   _| |     
+    #  \ \  / /  \  | |    | |__) | |__  | |__) | |__    | | | |     
+    #   \ \/ / /\ \ | |    |  ___/|  __| |  _  /|  __|   | | | |     
+    #    \  / ____ \| |____| |    | |____| | \ \| |     _| |_| |____ 
+    #     \/_/    \_\______|_|    |______|_|  \_\_|    |_____|______|
+    #
+    # ---------------------------------------------------------------------------------
     public function valperfil()
     {
 
-        # Iniciamos o continuamos con la sesión
         session_start();
 
-        # Capa autentificación
         if (!isset($_SESSION['id'])) {
 
             header("location:" . URL . "login");
         }
 
-        # Saneamos el formulario
+        # Sanitize the data
         $name = filter_var($_POST['name'] ??= null, FILTER_SANITIZE_SPECIAL_CHARS);
         $email = filter_var($_POST['email'] ??= null, FILTER_SANITIZE_EMAIL);
 
-        # Obtenemos objeto con los detalles del usuario
+        # Obtain the details
         $user = $this->model->getUserId($_SESSION['id']);
 
-        # Validaciones
+        # Validations
         $errores = [];
 
         // name
@@ -125,7 +139,6 @@ class Perfil extends Controller
             }
         }
 
-        # Crear objeto user
         $user = new classUser(
             $user->id,
             $name,
@@ -133,8 +146,6 @@ class Perfil extends Controller
             null
         );
 
-
-        # Comprobamos si hay errores
         if (!empty($errores)) {
             $_SESSION['errores'] = $errores;
             $_SESSION['user'] = serialize($user);
@@ -144,7 +155,7 @@ class Perfil extends Controller
 
         } else {
 
-            # Actualizamos perfil
+            # Update Profile
             $this->model->update($user);
 
             $_SESSION['name_user'] = $name;
@@ -156,21 +167,30 @@ class Perfil extends Controller
 
     }
 
-    # Modificación del password
+    # ---------------------------------------------------------------------------------
+    #    
+    #  _____         _____ _____ 
+    #  |  __ \ /\    / ____/ ____|
+    #  | |__) /  \  | (___| (___  
+    #  |  ___/ /\ \  \___ \\___ \ 
+    #  | |  / ____ \ ____) |___) |
+    #  |_| /_/    \_\_____/_____/ 
+    #
+    # ---------------------------------------------------------------------------------
+    # Modify Password
     public function pass()
     {
-
-        # Iniciamos o continuamos sesión
+        // Start or continue session
         session_start();
 
-        # Capa de autentificación
+        // Authentication layer
         if (!isset($_SESSION['id'])) {
 
             header('location:' . URL . 'login');
 
         }
 
-        # Comprobamos si existe mensaje
+        // Check if a message exists
         if (isset($_SESSION['mensaje'])) {
 
             $this->view->mensaje = $_SESSION['mensaje'];
@@ -178,76 +198,84 @@ class Perfil extends Controller
 
         }
 
-        # Capa no validación formulario
+        // Layer for form validation failure
         if (isset($_SESSION['error'])) {
 
-            # Mensaje de error
+            // Error message
             $this->view->error = $_SESSION['error'];
             unset($_SESSION['error']);
 
-            # Tipo de error
+            // Type of error
             $this->view->errores = $_SESSION['errores'];
             unset($_SESSION['errores']);
 
         }
 
-        # título página
+        // Page title
         $this->view->title = "Modify Password";
         $this->view->render('perfil/pass/index');
-
-
     }
 
+
+    # ---------------------------------------------------------------------------------
+    #    
+    # __      __     _      _____         _____ _____ 
+    # \ \    / /\   | |    |  __ \ /\    / ____/ ____|
+    #  \ \  / /  \  | |    | |__) /  \  | (___| (___  
+    #   \ \/ / /\ \ | |    |  ___/ /\ \  \___ \\___ \ 
+    #    \  / ____ \| |____| |  / ____ \ ____) |___) |
+    #     \/_/    \_\______|_| /_/    \_\_____/_____/ 
+    #
+    # ---------------------------------------------------------------------------------
     # Validación cambio password
     public function valpass()
     {
-
-        # Iniciamos o continuamos con la sesión
+        // Start or continue with the session
         session_start();
 
-        # Capa autentificación
+        // Authentication layer
         if (!isset($_SESSION['id'])) {
 
             header("location:" . URL . "login");
         }
 
-        # Saneamos el formulario
+        // Sanitize the form
         $password_actual = filter_var($_POST['password_actual'] ??= null, FILTER_SANITIZE_SPECIAL_CHARS);
         $password = filter_var($_POST['password'] ??= null, FILTER_SANITIZE_SPECIAL_CHARS);
         $password_confirm = filter_var($_POST['password_confirm'] ??= null, FILTER_SANITIZE_SPECIAL_CHARS);
 
-        # Obtenemos objeto con los detalles del usuario
+        // Get object with user details
         $user1 = $this->model->getUserId($_SESSION['id']);
 
-        # Validaciones
+        // Validations
 
-        $errores = array();
+        $errors = array();
 
-        # Validar password actual
+        // Validate current password
         if (!password_verify($password_actual, $user1->password)) {
-            $errores['password_actual'] = "Password actual no es correcto";
+            $errors['password_actual'] = "Current password is incorrect";
         }
 
-        # Validar nuevo password
+        // Validate new password
         if (empty($password)) {
-            $errores['password'] = "Password no introducido";
+            $errors['password'] = "Password not entered";
         } else if (strcmp($password, $password_confirm) !== 0) {
-            $errores['password'] = "Password no coincidentes";
+            $errors['password'] = "Passwords do not match";
         } else if ((strlen($password) < 5) || (strlen($password) > 60)) {
-            $errores['password'] = "Password ha de tener entre 5 y 60 caracteres";
+            $errors['password'] = "Password must be between 5 and 60 characters";
         }
 
 
-        if (!empty($errores)) {
+        if (!empty($errors)) {
 
-            $_SESSION['errores'] = $errores;
-            $_SESSION['error'] = "Formulario con errores de validación";
+            $_SESSION['errores'] = $errors;
+            $_SESSION['error'] = "Form with validation errors";
 
             header("location:" . URL . "perfil/pass");
 
         } else {
 
-            # Crear objeto user
+            // Create user object
             $user = new classUser(
                 $user1->id,
                 null,
@@ -255,44 +283,49 @@ class Perfil extends Controller
                 $password
             );
 
-            # Actualiza password
+            // Update password
             $this->model->updatePass($user);
 
-            $_SESSION['mensaje'] = "Password modify correctly";
+            $_SESSION['mensaje'] = "Password modified correctly";
 
-            #Vuelve corredores
+            // Return to runners
             header("location:" . URL . "workingHours");
         }
     }
 
-    # Elimina definitivamente el perfil
+
+    # ---------------------------------------------------------------------------------
+    #    
+    #   _____  ______ _      ______ _______ ______ 
+    #  |  __ \|  ____| |    |  ____|__   __|  ____|
+    #  | |  | | |__  | |    | |__     | |  | |__   
+    #  | |  | |  __| | |    |  __|    | |  |  __|  
+    #  | |__| | |____| |____| |____   | |  | |____ 
+    #  |_____/|______|______|______|  |_|  |______|
+    #
+    # ---------------------------------------------------------------------------------
+    # Delete definitely the profile
     public function delete()
     {
-
-        # Iniciamos o continuamos con la sesión
         session_start();
 
-        # Capa autentificación
         if (!isset($_SESSION['id'])) {
 
             header("location:" . URL . "login");
 
         } else {
 
-            # Obtenemos objeto con los detalles del usuario
+            # Take the user data
             $user1 = $this->model->getUserId($_SESSION['id']);
 
-            # Elimino perfil de usuario
+            # Delete the user profile
             $this->model->delete($_SESSION['id']);
 
-            # Destruyo la sesión
+            # Destroy the session
             session_destroy();
 
-            # Salgo de la aplicación
+            # Leave the app
             header('location:' . URL . 'index');
         }
-
     }
 }
-
-?>

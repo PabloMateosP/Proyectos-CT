@@ -34,14 +34,14 @@ class ProjectManagers extends Controller
 
             $projectManagers = $this->model->get();
 
-            $allProjects = []; // Array para almacenar todos los proyectos
+            $allProjects = []; // Array to store all the projects
 
             foreach ($projectManagers as $projectManager) {
                 $projects = $this->model->getProjectsByManager($projectManager->id);
-                $allProjects = array_merge($allProjects, $projects); // Fusionar los proyectos al array
+                $allProjects = array_merge($allProjects, $projects); // Merge the projects in a same array
             }
 
-            $this->view->projects = $allProjects; // Asignar todos los proyectos al view
+            $this->view->projects = $allProjects;
 
             $this->view->render("projectManagers/main/index");
         }
@@ -187,10 +187,8 @@ class ProjectManagers extends Controller
                     }
                 }
 
-                #Mensaje
                 $_SESSION['mensaje'] = "Working Hour create correctly";
 
-                # Redirigimos al main de projectManager
                 header('location:' . URL . 'projectManagers');
 
             }

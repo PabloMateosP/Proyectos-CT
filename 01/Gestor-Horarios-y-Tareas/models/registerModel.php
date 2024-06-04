@@ -54,12 +54,12 @@ class RegisterModel extends Model
             $password_encriptado = password_hash($pass, CRYPT_BLOWFISH);
 
             $insertarsql = "INSERT INTO users VALUES (
-                 null,
-                :nombre,
-                :email,
-                :pass,
-                default,
-                default)";
+             null,
+            :nombre,
+            :email,
+            :pass,
+            default,
+            default)";
 
             $pdo = $this->db->connect();
             $stmt = $pdo->prepare($insertarsql);
@@ -71,17 +71,23 @@ class RegisterModel extends Model
             $stmt->execute();
 
             # Asignamos rol de registrado
-            // Rol que asignaremos por defecto
+            // Rol que asignaremos por defecto el de empleado 
             $role_id = 4;
-            $insertarsql = "INSERT INTO roles_users VALUES (
-                null,
-                :user_id,
-                :role_id,
-                default,
-                default)";
 
             # Obtener id del último usuario insertado
             $ultimo_id = $pdo->lastInsertId();
+
+            // Si el id del empleado es 1, el rol será 4
+            if ($ultimo_id == 1) {
+                $role_id = 4;
+            }
+
+            $insertarsql = "INSERT INTO roles_users VALUES (
+            null,
+            :user_id,
+            :role_id,
+            default,
+            default)";
 
             $stmt = $pdo->prepare($insertarsql);
             $stmt->bindParam(':user_id', $ultimo_id);
@@ -95,5 +101,6 @@ class RegisterModel extends Model
 
         }
     }
+
 
 }

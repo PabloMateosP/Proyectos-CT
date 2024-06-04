@@ -26,7 +26,7 @@ class Users extends Controller
             header("location:" . URL . "index");
 
         } else {
-            #comprobar si existe mensaje
+
             if (isset($_SESSION['mensaje'])) {
                 $this->view->mensaje = $_SESSION['mensaje'];
                 unset($_SESSION['mensaje']);
@@ -53,7 +53,6 @@ class Users extends Controller
     # Show a form to watch the information about a user
     function show($param = [])
     {
-
         session_start();
 
         $id = $param[0];
@@ -140,30 +139,29 @@ class Users extends Controller
     # Allow to add a new user
     function create($param = [])
     {
-        //Iniciar sesión
+        // Start session
         session_start();
 
-        //Comprobar si el usuario está identificado
+        // Check if the user is authenticated
         if (!isset($_SESSION['id'])) {
             $_SESSION['mensaje'] = "Unauthenticated user";
-
             header("location:" . URL . "login");
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
             $_SESSION['mensaje'] = "Unprivileged operation";
             header('location:' . URL . 'users');
         } else {
 
-            //1. Seguridad. Saneamos los datos del formulario
+            // 1. Security. Sanitize the form data
 
-            //Si se introduce un campo vacío, se le otorga "nulo"
+            // If a field is empty, it is given "null"
             $name = filter_var($_POST['name'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $email = filter_var($_POST['email'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $roles = filter_var($_POST['roles'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $password = filter_var($_POST['password'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
             $passwordConfirm = filter_var($_POST['passwordConfirm'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
 
-            //2. Creamos el cliente con los datos saneados
-            //Cargamos los datos del formulario
+            // 2. Create the user with the sanitized data
+            // Load the form data
             $usuario = new classUser(
                 null,
                 $name,
@@ -172,59 +170,59 @@ class Users extends Controller
                 $passwordConfirm
             );
 
-            # 3. Validación
-            $errores = [];
+            // 3. Validation
+            $errors = [];
 
-            //name: required
+            // name: required
             if (empty($name)) {
-                $errores['name'] = 'The name field is required';
+                $errors['name'] = 'The name field is required';
             }
 
-            //Email: required and unique	
+            // Email: required and unique	
             if (empty($email)) {
-                $errores['email'] = 'The email field is required';
+                $errors['email'] = 'The email field is required';
             } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errores['email'] = 'The email format is not correct';
+                $errors['email'] = 'The email format is not correct';
             } else if (!$this->model->validateUniqueEmail($email)) {
-                $errores['email'] = 'The email has already been registered';
+                $errors['email'] = 'The email has already been registered';
             }
 
-            //Roles: required
+            // Roles: required
             if (empty($roles)) {
-                $errores['roles'] = 'The roles email is required';
+                $errors['roles'] = 'The roles field is required';
             }
 
-            //password: required
+            // password: required
             if (empty($password)) {
-                $errores['password'] = 'The field password is required';
+                $errors['password'] = 'The password field is required';
             } else if ($password != $passwordConfirm) {
-                $errores['password'] = 'Both passwords do not match';
+                $errors['password'] = 'Both passwords do not match';
             }
 
-            //passwordConfirm: required, must match with password Confirm
+            // passwordConfirm: required, must match with password Confirm
             if (empty($passwordConfirm)) {
-                $errores['passwordConfirm'] = 'The field confirm password is required';
+                $errors['passwordConfirm'] = 'The confirm password field is required';
             } else if ($password != $passwordConfirm) {
-                $errores['passwordConfirm'] = 'Both passwords do not match';
+                $errors['passwordConfirm'] = 'Both passwords do not match';
             }
 
-            # 4. Comprobar validación
-            if (!empty($errores)) {
+            // 4. Check validation
+            if (!empty($errors)) {
 
                 $_SESSION['usuario'] = serialize($usuario);
-                $_SESSION['error'] = 'Formulario no validado';
-                $_SESSION['errores'] = $errores;
+                $_SESSION['error'] = 'Form not validated';
+                $_SESSION['errores'] = $errors;
                 $_SESSION['roles'] = $roles;
 
                 header('location:' . URL . 'users/new/index/');
 
             } else {
-                # Añadimos el registro a la tabla
+                // Add the record to the table
                 $this->model->create($name, $email, $password, $roles);
 
                 $_SESSION['mensaje'] = "User has been created correctly.";
 
-                // Redireccionamos a la vista users
+                // Redirect to the users view
                 header("Location:" . URL . "users/");
             }
         }
@@ -392,28 +390,22 @@ class Users extends Controller
                 }
             }
 
-            # Obtenemos el id del rol del usuario
             $idRol = filter_input(INPUT_POST, 'rol', FILTER_SANITIZE_NUMBER_INT);
 
-            #4. Comprobar validacion
-
             if (!empty($errores)) {
-                //errores de validacion
+
                 $_SESSION['user'] = serialize($user);
                 $_SESSION['error'] = 'Formulario no validado';
                 $_SESSION['errores'] = $errores;
 
-                # Redirigimos al main de clientes
+
                 header('location:' . URL . 'users/edit/' . $id);
             } else {
-                //crear alumno
-                # Añadir registro a la tabla
+
                 $this->model->update($user, $id, $idRol);
 
-                #Mensaje
                 $_SESSION['mensaje'] = "User update correctly";
 
-                # Redirigimos al main de alumnos
                 header('location:' . URL . 'users');
             }
         }

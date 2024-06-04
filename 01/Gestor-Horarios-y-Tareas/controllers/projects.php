@@ -357,8 +357,6 @@ class Projects extends Controller
 
         } else {
 
-            # obtengo el id del project que voy a editar
-
             $id = $param[0];
 
             $this->view->id = $id;
@@ -371,22 +369,19 @@ class Projects extends Controller
 
             $this->view->employees = $this->model->get_Employees();
 
-            # Comprobamos si hay errores -> esta variable se crea al lanzar un error de validacion
             if (isset($_SESSION['error'])) {
-                # rescatemos el mensaje
+
                 $this->view->error = $_SESSION['error'];
 
-                # Autorellenamos el formulario
                 $this->view->project_ = unserialize($_SESSION['employee']);
 
-                # Recupero array de errores específicos
                 $this->view->errores = $_SESSION['errores'];
 
-                # debemos liberar las variables de sesión ya que su cometido ha sido resuelto
+                # We must release the variables because their purpose was carried out
                 unset($_SESSION['error']);
                 unset($_SESSION['errores']);
                 unset($_SESSION['projects']);
-                # Si estas variables existen cuando no hay errores, entraremos en los bloques de error en las condicionales
+
             }
 
             $this->view->render("projects/edit/index");
@@ -407,7 +402,7 @@ class Projects extends Controller
     # Update the table of the table project
     public function update($param = [])
     {
-        // Iniciar Sesión
+        // Start Session
         session_start();
 
         if (!isset($_SESSION['id'])) {
@@ -443,71 +438,65 @@ class Projects extends Controller
 
             // Validation
             // Check if each field is modified and validate
-            # 3. Validation
-            # Only if is necessary
-            # Only in case when the field is modified 
+            // 3. Validation
+            // Only if necessary
+            // Only in case when the field is modified 
 
-            $errores = [];
+            $errors = [];
 
-            # project
+            // project
             if (strcmp($project->project, $project_orig->project) !== 0) {
                 if (empty($project_)) {
-                    $errores['project'] = 'The field project_ is required';
+                    $errors['project'] = 'The field project_ is required';
                 } else if (strlen($project_) > 10) {
-                    $errores['project'] = 'The field project_ is too long';
-
+                    $errors['project'] = 'The field project_ is too long';
                 }
             }
 
-            # description
+            // description
             if (strcmp($project->description, $project_orig->description) !== 0) {
-
                 if (empty($description)) {
-                    $errores['description'] = 'The field description is required';
+                    $errors['description'] = 'The field description is required';
                 } else if (strlen($description) > 50) {
-                    $errores['description'] = 'The field description is too long';
+                    $errors['description'] = 'The field description is too long';
                 }
             }
 
-            # id_projectManager
+            // id_projectManager
             if (strcmp($project->id_projectManager, $project_orig->id_projectManager) !== 0) {
-
                 if (empty($id_Manager)) {
                     $id_Manager = null;
                 } else if (strlen($id_Manager) > 10) {
-                    $errores['id_project_manager'] = 'The field id_Manager is too long';
+                    $errors['id_project_manager'] = 'The field id_Manager is too long';
                 }
             }
 
-            # id_customer
+            // id_customer
             if (strcmp($project->id_customer, $project_orig->id_customer) !== 0) {
-
                 if (empty($id_customer)) {
                     $id_customer = null;
                 } else if (strlen($id_customer) > 10) {
-                    $errores['id_customer'] = 'The field id_customer is too long';
+                    $errors['id_customer'] = 'The field id_customer is too long';
                 }
             }
 
-            # finish_date
+            // finish_date
             if (strcmp($project->finish_date, $project_orig->finish_date) !== 0) {
-
                 if (empty($finish_date)) {
-                    $errores['finish_date'] = 'The field finish_date is required ';
+                    $errors['finish_date'] = 'The field finish_date is required';
                 } else if (strlen($finish_date) > 20) {
-                    $errores['finish_date'] = 'The field finish_date is too long';
-
+                    $errors['finish_date'] = 'The field finish_date is too long';
                 }
             }
 
-            if (!empty($errores)) {
+            if (!empty($errors)) {
 
-                # Validation's error
+                // Validation's error
                 $_SESSION['project'] = serialize($project);
-                $_SESSION['error'] = 'Formulario no validado';
-                $_SESSION['errores'] = $errores;
+                $_SESSION['error'] = 'Form not validated';
+                $_SESSION['errores'] = $errors;
 
-                # Redirect to workingHour's main
+                // Redirect to workingHour's main
                 header('location:' . URL . 'projects/edit/' . $id);
 
             } else {
@@ -526,17 +515,17 @@ class Projects extends Controller
 
                 foreach ($formEmployees as $employeeId) {
                     if (in_array($employeeId, $projectEmployeeRelated)) {
-                        // Este empleado ya estaba relacionado, lo eliminamos de los empleados a crear relación
+                        // This employee was already related, we remove it from the employees to create relation
                         unset($employeesToCreate[array_search($employeeId, $employeesToCreate)]);
                     }
                 }
 
-                // Eliminar relaciones de empleados que ya no están en el formulario
+                // Delete employee relationships that are no longer in the form
                 foreach ($employeesToDelete as $employeeId) {
                     $this->model->deleteRelationEP($id, $employeeId);
                 }
 
-                // Crear relaciones para los empleados del formulario que no estaban previamente relacionados
+                // Create relationships for the employees of the form that were not previously related
                 foreach ($employeesToCreate as $employeeId) {
                     $this->model->insertProjectEmployeeRelationship($employeeId, $id);
                 }
@@ -544,16 +533,15 @@ class Projects extends Controller
                 // Update project data
                 $this->model->update($project, $id);
 
-                # Message
-                $_SESSION['mensaje'] = "project update correctly";
+                // Message
+                $_SESSION['mensaje'] = "Project updated correctly";
 
-                # Redirect to projects main
+                // Redirect to projects main
                 header('location:' . URL . 'projects');
 
             }
         }
     }
-
 
     # ---------------------------------------------------------------------------------
     #    ____   _____   _____   ______  _____  

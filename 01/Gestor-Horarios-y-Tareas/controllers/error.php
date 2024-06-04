@@ -1,14 +1,9 @@
 <?php
-    # Clase para pantalla errores.
     class Errores extends Controller {
-
         function __construct() {
 
             parent ::__construct();
-            $this->view->mensaje = "Error al cargar el recurso";
+            $this->view->mensaje = "Error To Charge the resource";
             $this->view->render('error/index');
         }
-
     }
-
-?>

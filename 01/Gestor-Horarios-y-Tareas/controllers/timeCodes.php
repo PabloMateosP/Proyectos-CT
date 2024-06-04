@@ -209,18 +209,15 @@ class timeCodes extends Controller
     # Show a form to edit a time code
     public function edit($param = [])
     {
+        // Start or continue session
         session_start();
 
         if (!isset($_SESSION['id'])) {
             $_SESSION['mensaje'] = "User must be authenticated";
-
             header("location:" . URL . "login");
-
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
             $_SESSION['mensaje'] = "Operation without privileges";
-
             header('location:' . URL . 'workingHours');
-
         } else {
             $id = $param[0];
 
@@ -228,26 +225,25 @@ class timeCodes extends Controller
             $this->view->title = "Form Time Codes edit";
             $this->view->timeCode = $this->model->read($id);
 
-            # Comprobamos si hay errores -> esta variable se crea al lanzar un error de validacion
+            // Check if there are errors -> this variable is created when a validation error is thrown
             if (isset($_SESSION['error'])) {
-                # rescatemos el mensaje
+                // Rescue the message
                 $this->view->error = $_SESSION['error'];
 
-                # Autorellenamos el formulario
+                // Autofill the form
                 $this->view->project_ = unserialize($_SESSION['timeCodes']);
 
-                # Recupero array de errores específicos
+                // Recover array of specific errors
                 $this->view->errores = $_SESSION['errores'];
 
-                # debemos liberar las variables de sesión ya que su cometido ha sido resuelto
+                // We must free the session variables since their purpose has been resolved
                 unset($_SESSION['error']);
                 unset($_SESSION['errores']);
                 unset($_SESSION['timeCodes']);
-                # Si estas variables existen cuando no hay errores, entraremos en los bloques de error en las condicionales
+                // If these variables exist when there are no errors, we will enter the error blocks in the conditionals
             }
 
             $this->view->render("timeCodes/edit/index");
         }
     }
-
 }

@@ -3,23 +3,32 @@
 class Login extends Controller
 {
 
+    # ---------------------------------------------------------------------------------
+    #   _____  ______ _   _ _____  ______ _____  
+    #  |  __ \|  ____| \ | |  __ \|  ____|  __ \ 
+    #  | |__) | |__  |  \| | |  | | |__  | |__) |
+    #  |  _  /|  __| | . ` | |  | |  __| |  _  / 
+    #  | | \ \| |____| |\  | |__| | |____| | \ \ 
+    #  |_|  \_\______|_| \_|_____/|______|_|  \_\
+    # 
+    # ---------------------------------------------------------------------------------
+    # "Render" Method. That show the login view
     public function render()
     {
-
-        # Iniciar o continuar sesión segura
+        // Start or continue secure session
         session_start();
 
-        # Inicializo los valores del formulario
+        // Initialize form values
         $this->view->email = null;
         $this->view->password = null;
 
-        # Control de los mensajes
+        // Message control
         if (isset($_SESSION['mensaje'])) {
 
             $this->view->mensaje = $_SESSION['mensaje'];
             unset($_SESSION['mensaje']);
 
-            # Autorelleno en caso de registro con éxito
+            // Autofill in case of successful registration
 
             if (isset($_SESSION['email'])) {
                 $this->view->email = $_SESSION['email'];
@@ -33,19 +42,19 @@ class Login extends Controller
 
         }
 
-        # Control de errores
+        // Error control
         if (isset($_SESSION['error'])) {
 
             $this->view->error = $_SESSION['error'];
             unset($_SESSION['error']);
 
-            # Autocompleto los valores del formulario
+            // Autocomplete form values
             $this->view->email = $_SESSION['email'];
             $this->view->password = $_SESSION['password'];
             unset($_SESSION['email']);
             unset($_SESSION['password']);
 
-            # Tipo de error
+            // Type of error
             $this->view->errores = $_SESSION['errores'];
             unset($_SESSION['errores']);
 
@@ -54,53 +63,63 @@ class Login extends Controller
         $this->view->render('login/index');
     }
 
-    # 
-    # Validación login
+
+    # ---------------------------------------------------------------------------------
+    #    
+    # __      __     _      _____ _____       _______ ______ 
+    # \ \    / /\   | |    |_   _|  __ \   /\|__   __|  ____|
+    #  \ \  / /  \  | |      | | | |  | | /  \  | |  | |__   
+    #   \ \/ / /\ \ | |      | | | |  | |/ /\ \ | |  |  __|  
+    #    \  / ____ \| |____ _| |_| |__| / ____ \| |  | |____ 
+    #     \/_/    \_\______|_____|_____/_/    \_\_|  |______|
     #
+    # ---------------------------------------------------------------------------------
+    # Method Validate 
+    # Method to validate the login of the user 
     public function validate()
     {
 
-        # Inicio o reanudación de sessión
+        // Start or resume session
         session_start();
 
-        # Saneamos el formulario
+        // Sanitize the form
         $email = filter_var($_POST['email'] ??= '', FILTER_SANITIZE_EMAIL);
         $password = filter_var($_POST['password'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        # Validaciones
+        // Validations
 
-        $errores = array();
+        $errors = array();
 
-        #obtengo el usuario a partir del email
+        // Get the user from the email
         $user = $this->model->getUserEmail($email);
 
         if ($user === false) {
 
-            $errores['email'] = "Email no ha sido registrado";
-            $_SESSION['errores'] = $errores;
+            $errors['email'] = "Email has not been registered";
+            $_SESSION['errores'] = $errors;
 
             $_SESSION['email'] = $email;
             $_SESSION['password'] = $password;
 
-            $_SESSION['error'] = "Fallo en la Autentificación";
+            $_SESSION['error'] = "Authentication Failed";
 
             header("location:" . URL . "login");
 
         } else if (!password_verify($password, $user->password)) {
 
-            $errores['password'] = "Password no es correcto";
-            $_SESSION['errores'] = $errores;
+            $errors['password'] = "Password is incorrect";
+            $_SESSION['errores'] = $errors;
 
             $_SESSION['email'] = $email;
             $_SESSION['password'] = $password;
 
-            $_SESSION['error'] = "Fallo en la Autentificación";
+            $_SESSION['error'] = "Authentication Failed";
 
             header("location:" . URL . "login");
 
         } else {
 
-            # Autentificación completada
+            // Authentication completed
             $_SESSION['id'] = $user->id;
             $_SESSION['email'] = $email;
             $_SESSION['name_user'] = $user->name;
@@ -108,19 +127,19 @@ class Login extends Controller
             $_SESSION['name_rol'] = $this->model->getUserPerfil($_SESSION['id_rol']);
 
             if ((in_array($_SESSION['id_rol'], $GLOBALS['admin']))) {
-                // If the user is admin, they do not need to be add in table employee.
+                // If the user is admin, they do not need to be added in the employee table.
             } else {
                 $employeee = $this->model->getEmployeeId($email);
                 $_SESSION['employee_id'] = $employeee->id;
             }
 
             if ((in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
-                # Si el usuario es admin, redirigir a la página de employees
-                $_SESSION['mensaje'] = "Usuario " . $user->name . " ha iniciado sesión";
+                // If the user is admin, redirect to the employees page
+                $_SESSION['mensaje'] = "User " . $user->name . " has logged in";
                 header("location:" . URL . "employees/");
             } elseif ((in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee']))) {
-                # Si el usuario no es admin, redirigir a la página de workingHours
-                $_SESSION['mensaje'] = "Usuario " . $user->name . " ha iniciado sesión";
+                // If the user is not admin, redirect to the workingHours page
+                $_SESSION['mensaje'] = "User " . $user->name . " has logged in";
                 header("location:" . URL . "workingHours/");
             }
         }

@@ -1,9 +1,9 @@
 <?php
 
-// Variables para solo uso de administrador
+// Variables only for admin use
 $GLOBALS['admin'] = [1];
 
-// Variables para uso de administrador y coordinador
+// Variables for admin and manager use
 $GLOBALS['admin_manager'] = [1,2];
 
 // Variables para uso de coordinador 
