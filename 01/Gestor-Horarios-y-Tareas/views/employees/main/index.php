@@ -38,8 +38,6 @@
                                 <th>Actions</th>
                             <?php elseif ((isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['organiser']))): ?>
                                 <th>Actions</th>
-                            <?php else: ?>
-                                <!-- No permitido -->
                             <?php endif; ?>
                         </tr>
                     </thead>

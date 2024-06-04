@@ -287,3 +287,10 @@ Día 29/05/24
     - Además hay que hacer que el total de las horas totales de la semana ser reestablezcan a las 12 de la noche el domingo 
     - Buscar la forma de que a cada empleado le salgan los días festivos que tiene (Son 23 en total) y que cuando pase el día se reste
 
+Día 30/05/24
+    - He pensado que mediante los horarios del calendario de eventos se podría hacer que se restasen los días festivos 
+    - Además se pueden añadir dos campos nuevos al empleado para que salgan las horas totales anuales y las horas extras 
+
+Día 31/05/24
+    - 
+
