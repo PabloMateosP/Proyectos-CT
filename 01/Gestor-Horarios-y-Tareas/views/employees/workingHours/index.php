@@ -5,6 +5,19 @@
     <!-- head -->
     <?php require_once ("template/partials/head.php"); ?>
     <title>Working Hour Employee</title>
+    <style>
+        .hours-green {
+            background-color: green !important;
+            color: white !important;
+            /* Para que el texto sea legible */
+        }
+
+        .hours-red {
+            background-color: #8C1A1A !important;
+            color: white !important;
+            /* Para que el texto sea legible */
+        }
+    </style>
 </head>
 
 <body>
@@ -65,8 +78,8 @@
                             <td colspan="5">Nº:
                                 <?= $this->workingHours->rowCount() ?>
                             </td>
-                            <td> Total:
-                                <strong><?= $this->total_hours ?></strong>
+                            <td class="<?= $this->total_hours >= 40 ? 'hours-green' : 'hours-red' ?>"> Total:
+                                <?= $this->total_hours ?>
                             </td>
                         </tr>
                     </tfoot>

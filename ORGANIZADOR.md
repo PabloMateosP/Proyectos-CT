@@ -317,3 +317,4 @@ Día 07/06/24
 Día 10/06/24
     - Debido al poco tiempo que me queda en la empresa y la de cambios que se deben de hacer para implementar las horas totales y para no dejar a medias, he optado por no añadir ese parámetro ya que habría que modificar unos 4 métodos para ello así como la base de datos.
     - He seguido documentando al máximo posible los métodos para que el siguiente que siga tenga fácil comprensión de todo. 
+    - Hemos empezado con la implementación en servidor (Dandome cuenta como la seguridad no sé da nada en el grado)

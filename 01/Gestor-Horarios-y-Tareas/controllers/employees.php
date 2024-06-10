@@ -919,6 +919,4 @@ class Employees extends Controller
         # Enviar el contenido del archivo al navegador
         readfile('php:#output');
     }
-
-
 }

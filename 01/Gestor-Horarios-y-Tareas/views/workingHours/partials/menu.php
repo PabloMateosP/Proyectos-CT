@@ -8,20 +8,31 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active <?= in_array($_SESSION['id_rol'], $GLOBALS['all']) ?: 'disabled' ?>"
-                        href="<?= URL ?>workingHours/new">New</a>
+                    <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['exceptManager'])): ?>
+                        <a class="nav-link active" href="<?= URL ?>workingHours/new">New</a>
+                    <?php endif; ?>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="<?= URL ?>workingHours/exportCurrentWeek">Export This Week</a>
+                    <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])): ?>
+                        <a class="nav-link active" href="<?= URL ?>workingHours/exportCurrentWeek">Export This Week</a>
+                    <?php endif; ?>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="<?= URL ?>workingHours/export">Export All</a>
+                    <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])): ?>
+                        <a class="nav-link active" href="<?= URL ?>workingHours/export">Export All</a>
+                    <?php endif; ?>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="#" data-bs-toggle="modal" data-bs-target="#exportModal">Export Month</a>
+                    <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])): ?>
+                        <a class="nav-link active" href="#" data-bs-toggle="modal" data-bs-target="#exportModal">Export
+                            Month</a>
+                    <?php endif; ?>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="#" data-bs-toggle="modal" data-bs-target="#exportModalWeek">Export Week</a>
+                    <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])): ?>
+                        <a class="nav-link active" href="#" data-bs-toggle="modal" data-bs-target="#exportModalWeek">Export
+                            Week</a>
+                    <?php endif; ?>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"

@@ -12,13 +12,6 @@
                         href="<?= URL ?>projectManagers/new">New</a>
                 </li>
             </ul>
-            <form class="d-flex" method="get" action="<?= URL ?>projectManagers/search">
-                <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search"
-                    name="expresion">
-                <button
-                    class="btn btn-outline-secondary <?= in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']) ? 'null' : 'disabled' ?>"
-                    type="submit">Search</button>
-            </form>
         </div>
     </div>
 </nav>

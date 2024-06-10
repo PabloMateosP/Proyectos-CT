@@ -38,7 +38,8 @@ class workingHoursModel extends Model
                 projects p ON wh.id_project = p.id
             LEFT JOIN 
                 tasks t ON wh.id_task = t.id
-            ORDER by wh.id asc;";
+            WHERE YEARWEEK(wh.date_worked, 1) = YEARWEEK(CURDATE(), 1) 
+            ORDER by wh.id asc ;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
@@ -115,30 +116,29 @@ class workingHoursModel extends Model
     public function get_employeeHours($user_email)
     {
         try {
-            $sql = "
-        SELECT 
-            wh.id,
-            wh.id_employee,
-            concat_ws(', ', emp.last_name, emp.name) employee_name,
-            tc.time_code,
-            p.project AS project_name,
-            t.description AS task_description,
-            wh.date_worked,
-            wh.duration
-        FROM 
-            working_hours wh
-        JOIN 
-            employees emp ON wh.id_employee = emp.id
-        JOIN 
-            time_codes tc ON wh.id_time_code = tc.id
-        LEFT JOIN 
-            projects p ON wh.id_project = p.id
-        LEFT JOIN
-            tasks t ON wh.id_task = t.id
-        JOIN users u on emp.email = u.email
-        WHERE
-            u.email = :email
-        ORDER BY wh.id ASC;";
+            $sql = "SELECT 
+                        wh.id,
+                        wh.id_employee,
+                        concat_ws(', ', emp.last_name, emp.name) employee_name,
+                        tc.time_code,
+                        p.project AS project_name,
+                        t.description AS task_description,
+                        wh.date_worked,
+                        wh.duration
+                    FROM 
+                        working_hours wh
+                    JOIN 
+                        employees emp ON wh.id_employee = emp.id
+                    JOIN 
+                        time_codes tc ON wh.id_time_code = tc.id
+                    LEFT JOIN 
+                        projects p ON wh.id_project = p.id
+                    LEFT JOIN
+                        tasks t ON wh.id_task = t.id
+                    JOIN users u on emp.email = u.email
+                    WHERE
+                        u.email = :email AND YEARWEEK(wh.date_worked, 1) = YEARWEEK(CURDATE(), 1)
+                    ORDER BY wh.id ASC;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
@@ -871,7 +871,7 @@ class workingHoursModel extends Model
     public function subtractTH($duration, $employee_id)
     {
         try {
-           
+
             $sql = "UPDATE employees SET total_hours = total_hours - :duration WHERE id = :employee_id";
 
             $pdoSt = $this->db->connect()->prepare($sql);
@@ -1015,6 +1015,7 @@ class workingHoursModel extends Model
                 projects p ON wh.id_project = p.id
             LEFT JOIN 
                 tasks t ON wh.id_task = t.id
+            WHERE YEARWEEK(wh.date_worked, 1) = YEARWEEK(CURDATE(), 1)
             ORDER by :criterio;";
 
             $conexion = $this->db->connect();
@@ -1047,28 +1048,27 @@ class workingHoursModel extends Model
     public function orderEmp(int $criterio, $id)
     {
         try {
-            $sql = "
-            SELECT 
-                wh.id, 
-                wh.id_employee, 
-                concat_ws(', ', emp.last_name, emp.name) employee_name, 
-                tc.time_code, 
-                p.project AS project_name,  
-                t.description AS task_description,  
-                wh.date_worked, 
-                wh.duration 
-            FROM 
-                working_hours wh
-            JOIN 
-                employees emp ON wh.id_employee = emp.id
-            JOIN 
-                time_codes tc ON wh.id_time_code = tc.id
-            LEFT JOIN 
-                projects p ON wh.id_project = p.id
-            LEFT JOIN 
-                tasks t ON wh.id_task = t.id
-            WHERE wh.id_employee = :id
-            ORDER by :criterio;";
+            $sql = "SELECT 
+                        wh.id, 
+                        wh.id_employee, 
+                        concat_ws(', ', emp.last_name, emp.name) employee_name, 
+                        tc.time_code, 
+                        p.project AS project_name,  
+                        t.description AS task_description,  
+                        wh.date_worked, 
+                        wh.duration 
+                    FROM 
+                        working_hours wh
+                    JOIN 
+                        employees emp ON wh.id_employee = emp.id
+                    JOIN 
+                        time_codes tc ON wh.id_time_code = tc.id
+                    LEFT JOIN 
+                        projects p ON wh.id_project = p.id
+                    LEFT JOIN 
+                        tasks t ON wh.id_task = t.id
+                    WHERE wh.id_employee = :id AND YEARWEEK(wh.date_worked, 1) = YEARWEEK(CURDATE(), 1)
+                    ORDER by :criterio;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
@@ -1101,15 +1101,14 @@ class workingHoursModel extends Model
     {
         try {
 
-            $sql = "
-                    SELECT 
+            $sql = "SELECT 
                         wh.id, 
                         wh.id_employee, 
                         concat_ws(', ', emp.last_name, emp.name) AS employee_name, 
                         tc.time_code, 
                         p.project AS project_name,  
                         t.description AS task_description,  
-                        wo.description AS work_order_description, 
+                        wh.description AS work_order_description, 
                         wh.date_worked, 
                         wh.duration 
                     FROM 
@@ -1122,14 +1121,14 @@ class workingHoursModel extends Model
                         projects p ON wh.id_project = p.id
                     LEFT JOIN 
                         tasks t ON wh.id_task = t.id
-                    WHERE 
+                    WHERE YEARWEEK(wh.date_worked, 1) = YEARWEEK(CURDATE(), 1) and
                         concat_ws(  
                             ' ',
                             emp.last_name,
                             emp.name,
                             tc.time_code,
                             t.description,
-                            wo.description,
+                            wh.description,
                             wh.date_worked,
                             wh.duration
                             )
@@ -1171,39 +1170,39 @@ class workingHoursModel extends Model
     public function filterEmp($empId, $expresion)
     {
         try {
-            $sql = "
-                SELECT 
-                    wh.id, 
-                    wh.id_employee, 
-                    concat_ws(', ', emp.last_name, emp.name) AS employee_name, 
-                    tc.time_code, 
-                    p.project AS project_name,  
-                    t.description AS task_description,  
-                    wh.date_worked, 
-                    wh.duration 
-                FROM 
-                    working_hours wh
-                JOIN 
-                    employees emp ON wh.id_employee = emp.id
-                JOIN 
-                    time_codes tc ON wh.id_time_code = tc.id
-                JOIN 
-                    projects p ON wh.id_project = p.id
-                JOIN 
-                    tasks t ON wh.id_task = t.id
-                WHERE 
-                    wh.id_employee = :empId AND
-                    concat_ws(
-                        ' ',
-                        emp.last_name,
-                        emp.name,
-                        tc.time_code,
-                        t.description,
-                        wo.description,
-                        wh.date_worked,
-                        wh.duration
-                    ) LIKE :expresion
-                ORDER BY id ASC";
+            $sql = "SELECT 
+                        wh.id, 
+                        wh.id_employee, 
+                        concat_ws(', ', emp.last_name, emp.name) AS employee_name, 
+                        tc.time_code, 
+                        p.project AS project_name,  
+                        t.description AS task_description,  
+                        wh.description AS work_order_description, 
+                        wh.date_worked, 
+                        wh.duration 
+                    FROM 
+                        working_hours wh
+                    JOIN 
+                        employees emp ON wh.id_employee = emp.id
+                    JOIN 
+                        time_codes tc ON wh.id_time_code = tc.id
+                    LEFT JOIN 
+                        projects p ON wh.id_project = p.id
+                    LEFT JOIN 
+                        tasks t ON wh.id_task = t.id
+                    WHERE YEARWEEK(wh.date_worked, 1) = YEARWEEK(CURDATE(), 1) AND
+                        wh.id_employee = :empId AND
+                        concat_ws(
+                            ' ',
+                            emp.last_name,
+                            emp.name,
+                            tc.time_code,
+                            t.description,
+                            wh.description,
+                            wh.date_worked,
+                            wh.duration
+                        ) LIKE :expresion
+                    ORDER BY id ASC";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);

@@ -5,6 +5,19 @@
     <!-- head -->
     <?php require_once ("template/partials/head.php"); ?>
     <title>employees</title>
+    <style>
+        .hours-green {
+            background-color: green !important;
+            color: white !important;
+            /* Para que el texto sea legible */
+        }
+
+        .hours-red {
+            background-color: #8C1A1A !important;
+            color: white !important;
+            /* Para que el texto sea legible */
+        }
+    </style>
 </head>
 
 <body>
@@ -34,9 +47,7 @@
                             <th>Phone</th>
                             <th>City</th>
                             <th>Total Hours</th>
-                            <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin'])): ?>
-                                <th>Actions</th>
-                            <?php elseif ((isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['organiser']))): ?>
+                            <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])): ?>
                                 <th>Actions</th>
                             <?php endif; ?>
                         </tr>
@@ -46,7 +57,6 @@
                             <tr>
                                 <td>
                                     <?= $employee->identification ?>
-                                </td>
                                 </td>
                                 <td>
                                     <?= $employee->employee ?>
@@ -60,7 +70,7 @@
                                 <td>
                                     <?= $employee->city ?>
                                 </td>
-                                <td>
+                                <td class="<?= $employee->total_hours >= 40 ? 'hours-green' : 'hours-red' ?>">
                                     <?= $employee->total_hours ?>
                                 </td>
                                 <?php if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['admin_manager'])): ?>

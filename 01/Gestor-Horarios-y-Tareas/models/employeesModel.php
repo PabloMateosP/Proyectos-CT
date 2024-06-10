@@ -168,28 +168,29 @@ class employeesModel extends Model
     {
         try {
             $sql = "SELECT 
-                        wh.id,
-                        wh.id_employee,
-                        concat_ws(', ', emp.last_name, emp.name) employee_name,
-                        tc.time_code,
-                        p.project AS project_name,
-                        t.description AS task_description,
-                        wh.date_worked,
-                        wh.duration
-                    FROM 
-                        working_hours wh
-                    JOIN 
-                        employees emp ON wh.id_employee = emp.id
-                    JOIN 
-                        time_codes tc ON wh.id_time_code = tc.id
-                    LEFT JOIN 
-                        projects p ON wh.id_project = p.id
-                    LEFT JOIN 
-                        tasks t ON wh.id_task = t.id
-                    JOIN users u on emp.email = u.email
-                    WHERE
-                        emp.id = :id
-                    ORDER BY wh.id ASC;";
+                    wh.id,
+                    wh.id_employee,
+                    concat_ws(', ', emp.last_name, emp.name) employee_name,
+                    tc.time_code,
+                    p.project AS project_name,
+                    t.description AS task_description,
+                    wh.date_worked,
+                    wh.duration
+                FROM 
+                    working_hours wh
+                JOIN 
+                    employees emp ON wh.id_employee = emp.id
+                JOIN 
+                    time_codes tc ON wh.id_time_code = tc.id
+                LEFT JOIN 
+                    projects p ON wh.id_project = p.id
+                LEFT JOIN 
+                    tasks t ON wh.id_task = t.id
+                JOIN users u on emp.email = u.email
+                WHERE
+                    emp.id = :id
+                    AND YEARWEEK(wh.date_worked, 1) = YEARWEEK(CURDATE(), 1)
+                ORDER BY wh.id ASC;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
@@ -771,7 +772,7 @@ class employeesModel extends Model
 
         }
     }
- 
+
     # ---------------------------------------------------------------------------------    
     #   _____ ______ _______ ______ __  __ _____  _      ______     ________ ______ _    _  ____  _    _ _____   _____ ________   _______   ____  _____ _______ 
     #   / ____|  ____|__   __|  ____|  \/  |  __ \| |    / __ \ \   / /  ____|  ____| |  | |/ __ \| |  | |  __ \ / ____|  ____\ \ / /  __ \ / __ \|  __ \__   __|
@@ -785,29 +786,28 @@ class employeesModel extends Model
     public function get_employeeHoursExport($id)
     {
         try {
-            $sql = "
-        SELECT
-            emp.identification,
-            concat_ws(', ', emp.last_name, emp.name) employee_name,
-            tc.time_code,
-            p.project AS project_name,
-            t.description AS task_description,
-            wh.date_worked,
-            wh.duration
-        FROM 
-            working_hours wh
-        JOIN 
-            employees emp ON wh.id_employee = emp.id
-        JOIN 
-            time_codes tc ON wh.id_time_code = tc.id
-        LEFT JOIN 
-            projects p ON wh.id_project = p.id
-        LEFT JOIN 
-            tasks t ON wh.id_task = t.id
-        JOIN users u on emp.email = u.email
-        WHERE
-            emp.id = :id
-        ORDER BY wh.id ASC;";
+            $sql = "SELECT
+                        emp.identification,
+                        concat_ws(', ', emp.last_name, emp.name) employee_name,
+                        tc.time_code,
+                        p.project AS project_name,
+                        t.description AS task_description,
+                        wh.date_worked,
+                        wh.duration
+                    FROM 
+                        working_hours wh
+                    JOIN 
+                        employees emp ON wh.id_employee = emp.id
+                    JOIN 
+                        time_codes tc ON wh.id_time_code = tc.id
+                    LEFT JOIN 
+                        projects p ON wh.id_project = p.id
+                    LEFT JOIN 
+                        tasks t ON wh.id_task = t.id
+                    JOIN users u on emp.email = u.email
+                    WHERE
+                        emp.id = :id AND YEARWEEK(wh.date_worked, 1) = YEARWEEK(CURDATE(), 1)
+                    ORDER BY wh.id ASC;";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
