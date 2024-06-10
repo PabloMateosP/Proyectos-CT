@@ -223,18 +223,33 @@ class WorkingHours extends Controller
                 $errores['id_task'] = 'Field task too long';
             }
 
-            # Description
-            if (empty($description)) {
-                $errores['description'] = 'The field description is required';
-            } else if (strlen($description) > 50) {
-                $errores['description'] = 'Description too long';
-            }
-
-            # Date Worked
             if (empty($date_worked)) {
                 $errores['date_worked'] = 'The field date_worked is required';
-            } else if (strlen($date_worked) > 20) {
+            } else if (strlen($date_worked) > 16) { // Actualiza la longitud máxima según el formato esperado
                 $errores['date_worked'] = 'Date worked too long';
+            } else {
+                // Convertir la fecha trabajada a un objeto DateTime
+                $dateWorkedObj = DateTime::createFromFormat('Y-m-d\TH:i', $date_worked);
+
+                // Verificar si la fecha es válida
+                if (!$dateWorkedObj) {
+                    $errores['date_worked'] = 'Invalid date format';
+                } else {
+                    // Verificar si el formato después de la conversión coincide exactamente con la entrada original
+                    $formattedDate = $dateWorkedObj->format('Y-m-d\TH:i');
+                    if ($formattedDate !== $date_worked) {
+                        $errores['date_worked'] = 'Invalid date format after conversion. Formatted date: ' . $formattedDate;
+                    } else {
+                        // Obtener la fecha actual y calcular la fecha límite de dos semanas atrás
+                        $currentDate = new DateTime();
+                        $twoWeeksAgo = (clone $currentDate)->modify('-2 weeks');
+
+                        // Comparar la fecha trabajada con la fecha límite de dos semanas atrás
+                        if ($dateWorkedObj < $twoWeeksAgo) {
+                            $errores['date_worked'] = 'Fecha sobrepasa el límite de tiempo de dos semanas';
+                        }
+                    }
+                }
             }
 
             #4. Verify Validation
