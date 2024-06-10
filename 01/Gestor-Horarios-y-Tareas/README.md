@@ -58,10 +58,21 @@ Para el uso de la app esta debe estar cimentada en una LAMP (Linux-Apache-MySql-
 
 Mis conocimientos todavía no son tan avanzados como para el despegue de la app en un servidor por lo que con la construcción de ella espero dejar el último paso para un especialista en ello. 
 
+Otra cosa a destacar es que para el funcionamiento de la importación de datos a la tabla empleados se ha usado la librería php office spreadsheet instalada mediante composer por lo que anteriormente se debe de instalar composer para la instalación de la librería en cuestión.
+
+Como otro punto a parar tenemos la instalación de fullcalendar para los eventos, instalado mediante node. 
+
 ## IMPORTANTE ## 
 Como la app será de entrada solo para aquellos que el administrador de la web haya añadido el apartado Sign Up del Inicio de la web debe ser eliminado una vez que el administrador se cree su propio usuario, por defecto el primer usuario creado será administrador por lo que al crear ese usuario ya puede hacer todas las acciones  
 
-Por otra parte, el correo del empleado y del usuario de el mismo deben ser iguales ya que al ser únicos es la forma más segurad de referenciar el empleado por su usuario en casos como: 
+Por otra parte, el correo del empleado y del usuario de el mismo deben ser iguales ya que al ser únicos es la forma más segura de referenciar el empleado por su usuario en casos como: 
 * Ver sus horas
 * Ver los proyectos en los que fue asignado 
 * ... 
+
+**Una de las cosas más importantes también es el hecho de si un proyecto o una tarea de un proyecto fuese borrado, las horas trabajadas que estuviesen asignaddas en ese proyecto se actualizaría y pondría ese campo como nulo tanto la tarea y el proyecto si el proyecto fuese borrado por lo que el borrado de proyectos sería de lo último que se debería de hacer por no decir que no lo haría ya que se puede editar el mismo siempre y borrar sus tareas ...** 
+
+
+------------------------------------------------------------------------------------------------------------------------------------------
+## Authors ##
+1º - Pablo Mateos Palas (Prácticas en CT Puerto Santa María)

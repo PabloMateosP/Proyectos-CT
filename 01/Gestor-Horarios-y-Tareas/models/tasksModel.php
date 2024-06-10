@@ -269,7 +269,7 @@ class tasksModel extends Model
     #
     # ---------------------------------------------------------------------------------
     # Method read 
-    # Get the data of a working hour
+    # Get the data of a task
     public function read($id)
     {
         try {
@@ -456,7 +456,7 @@ class tasksModel extends Model
     #                             
     # ---------------------------------------------------------------------------------
     # Method order
-    # Permit execute command ORDER BY at the table tasks
+    # Permit execute command ORDER BY at the table tasks for the employee view
     public function orderTaskEmp($criterio, $id_project)
     {
         try {

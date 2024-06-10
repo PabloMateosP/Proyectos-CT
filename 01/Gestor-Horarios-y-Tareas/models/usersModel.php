@@ -14,7 +14,7 @@ class usersModel extends Model
     #
     # ---------------------------------------------------------------------------------
     # Method get 
-    # Select form table users
+    # Select from table users
     public function get()
     {
         try {
@@ -193,30 +193,26 @@ class usersModel extends Model
 
         try {
 
-            $sql = "
-                UPDATE users 
-                SET
-                    name=:name,
-                    email=:email,
-                    password=:password,
-                    update_at = now()
-                WHERE 
-                    id=:id
-                LIMIT 1";
+            $sql = "UPDATE users 
+                    SET
+                        name=:name,
+                        email=:email,
+                        password=:password,
+                        update_at = now()
+                    WHERE 
+                        id=:id
+                    LIMIT 1";
 
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
 
-            // Vinculamos los parámetros
             $pdoSt->bindParam(":name", $user->name, PDO::PARAM_STR, 30);
             $pdoSt->bindParam(":email", $user->email, PDO::PARAM_INT);
             $pdoSt->bindValue(":password", $user->password, PDO::PARAM_STR);
             $pdoSt->bindParam(":id", $id, PDO::PARAM_INT);
 
-            // Ejecutamos la consulta
             $pdoSt->execute();
 
-            // Actualizamos el rol del usuario
             $sql = "UPDATE 
                         roles_users 
                     SET
@@ -227,7 +223,6 @@ class usersModel extends Model
 
             $pdoSt = $conexion->prepare($sql);
 
-            // Vinculamos los parámetros
             $pdoSt->bindParam(":role_id", $id_Rol, PDO::PARAM_INT);
             $pdoSt->bindParam(":user_id", $id, PDO::PARAM_INT);
 
@@ -295,14 +290,13 @@ class usersModel extends Model
 
         try {
             $sql = " SELECT
-            id,
-            name,
-            email,
-            password
-        FROM 
-            users
-        WHERE id =  :id;
-                ";
+                        id,
+                        name,
+                        email,
+                        password
+                    FROM 
+                        users
+                    WHERE id =  :id;";
 
             # Conectar con la base de datos
             $conexion = $this->db->connect();
@@ -365,11 +359,22 @@ class usersModel extends Model
         }
     }
 
+    # ---------------------------------------------------------------------------------
+    #    
+    #    ____  _____  _____  ______ _____  
+    #   / __ \|  __ \|  __ \|  ____|  __ \ 
+    #  | |  | | |__) | |  | | |__  | |__) |
+    #  | |  | |  _  /| |  | |  __| |  _  / 
+    #  | |__| | | \ \| |__| | |____| | \ \ 
+    #   \____/|_|  \_\_____/|______|_|  \_\
+    #                             
+    # ---------------------------------------------------------------------------------
+    # Method order
+    # Permit execute command ORDER BY at the table users
     public function order(int $criterio)
     {
         try {
-            $sql = "
-                    SELECT 
+            $sql = "SELECT 
                         id,
                         name,
                         email,

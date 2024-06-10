@@ -303,3 +303,17 @@ Día 03/06/24
 Día 04/06/24
     - Llegando cerca del punto final con la empresa me he puesto a describir todos los documentos y sus funciones levemente para una fácil comprensión a futuro.
 
+Día 05/06/24
+    - Añadí al archivo README pautas de cómo debe ser el servidor donde se cimente la app desde mis conocimientos donde creo que debe de ser en un servidor apache junto con mysql y php.
+
+Día 06/06/24
+    - Finalizamos de describir métodos y funciones de los controladores, además dejé código con ascii art para su fácil comprensión y encontrar métodos más rápido mediante el minimapa lateral de los editores de código.
+
+Día 07/06/24
+    - Empiezo a implementar las horas totales de los empleados en un año como un parámetro nuevo de este y que se reste a medida que se sube una nueva hora trabajada.
+
+## SEMANA 9 ##
+
+Día 10/06/24
+    - Debido al poco tiempo que me queda en la empresa y la de cambios que se deben de hacer para implementar las horas totales y para no dejar a medias, he optado por no añadir ese parámetro ya que habría que modificar unos 4 métodos para ello así como la base de datos.
+    - He seguido documentando al máximo posible los métodos para que el siguiente que siga tenga fácil comprensión de todo. 
