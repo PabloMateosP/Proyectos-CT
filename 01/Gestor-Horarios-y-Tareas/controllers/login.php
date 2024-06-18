@@ -1,5 +1,7 @@
 <?php
 
+use Firebase\JWT\JWT;
+
 class Login extends Controller
 {
 
@@ -137,7 +139,7 @@ class Login extends Controller
                 // If the user is admin, redirect to the employees page
                 $_SESSION['mensaje'] = "User " . $user->name . " has logged in";
                 header("location:" . URL . "employees/");
-                
+
             } elseif ((in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee']))) {
                 // If the user is not admin, redirect to the workingHours page
                 $_SESSION['mensaje'] = "User " . $user->name . " has logged in";

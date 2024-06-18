@@ -323,3 +323,8 @@ Día 10/06/24
 
 Día 17/06/24
     - El lunes empecé a documentar cambios que hay que hacer en la web para la securización de la misma.
+
+Día 18/06/24
+    - He arreglado casos de actualización y borrado en la tabla customer. 
+    - He añadido la actualización a la tabla customer.
+    - A la hora de borrar un customer he añadido que se actualice la relación con los proyectos.
