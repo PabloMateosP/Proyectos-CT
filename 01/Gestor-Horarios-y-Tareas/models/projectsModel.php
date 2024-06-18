@@ -504,7 +504,7 @@ class projectsModel extends Model
                     WHERE
                     id_project=:id
                     LIMIT 1";
-            
+
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->bindParam(":id", $id_project, PDO::PARAM_STR);
@@ -1048,6 +1048,37 @@ class projectsModel extends Model
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->bindParam(':customerId', $customerId, PDO::PARAM_INT);
             $pdoSt->bindParam(':projectId', $projectId, PDO::PARAM_INT);
+            $pdoSt->execute();
+
+        } catch (PDOException $e) {
+
+            require_once ("template/partials/errorDB.php");
+            exit();
+
+        }
+    }
+
+
+    # ---------------------------------------------------------------------------------
+    #
+    #     _____ _____  ______       _______ ______ _____  ______ _            _______ _____ ____  _   _  _____ _    _  _____ _______ ____  __  __ ______ _____  _____  _____  
+    #    / ____|  __ \|  ____|   /\|__   __|  ____|  __ \|  ____| |        /\|__   __|_   _/ __ \| \ | |/ ____| |  | |/ ____|__   __/ __ \|  \/  |  ____|  __ \|  __ \|  __ \ 
+    #   | |    | |__) | |__     /  \  | |  | |__  | |__) | |__  | |       /  \  | |    | || |  | |  \| | |    | |  | | (___    | | | |  | | \  / | |__  | |__) | |__) | |__) |
+    #   | |    |  _  /|  __|   / /\ \ | |  |  __| |  _  /|  __| | |      / /\ \ | |    | || |  | | . ` | |    | |  | |\___ \   | | | |  | | |\/| |  __| |  _  /|  ___/|  _  / 
+    #   | |____| | \ \| |____ / ____ \| |  | |____| | \ \| |____| |____ / ____ \| |   _| || |__| | |\  | |____| |__| |____) |  | | | |__| | |  | | |____| | \ \| |    | | \ \ 
+    #    \_____|_|  \_\______/_/    \_\_|  |______|_|  \_\______|______/_/    \_\_|  |_____\____/|_| \_|\_____|\____/|_____/   |_|  \____/|_|  |_|______|_|  \_\_|    |_|  \_\
+    #
+    # ---------------------------------------------------------------------------------
+    # Create Relation Customer Project
+    public function createRelationCustomerProject($id_project, $id_customer)
+    {
+        try {
+
+            $sql = "INSERT INTO customer_project (id_project, id_customer) VALUES (:id, :id_customer)";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(':id_customer', $id_customer, PDO::PARAM_INT);
+            $pdoSt->bindParam(':id', $id_project, PDO::PARAM_INT);
             $pdoSt->execute();
 
         } catch (PDOException $e) {

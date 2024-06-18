@@ -99,7 +99,7 @@ class Login extends Controller
             $_SESSION['errores'] = $errors;
 
             $_SESSION['email'] = $email;
-            $_SESSION['password'] = $password;
+            // $_SESSION['password'] = $password;
 
             $_SESSION['error'] = "Authentication Failed";
 
@@ -111,7 +111,7 @@ class Login extends Controller
             $_SESSION['errores'] = $errors;
 
             $_SESSION['email'] = $email;
-            $_SESSION['password'] = $password;
+            // $_SESSION['password'] = $password;
 
             $_SESSION['error'] = "Authentication Failed";
 
@@ -137,6 +137,7 @@ class Login extends Controller
                 // If the user is admin, redirect to the employees page
                 $_SESSION['mensaje'] = "User " . $user->name . " has logged in";
                 header("location:" . URL . "employees/");
+                
             } elseif ((in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee']))) {
                 // If the user is not admin, redirect to the workingHours page
                 $_SESSION['mensaje'] = "User " . $user->name . " has logged in";

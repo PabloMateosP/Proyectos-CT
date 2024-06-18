@@ -226,7 +226,33 @@ class customersModel extends Model
     public function deleteRelation($id_customer)
     {
         try {
-            $sql = " DELETE FROM customer_project WHERE id_customer = :id_customer;";
+            $sql = "DELETE FROM customer_project WHERE id_customer = :id_customer;";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":id_customer", $id_customer, PDO::PARAM_INT);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
+    # ---------------------------------------------------------------------------------
+    #
+    #    _____  ______ _      ______ _______ ______ _____  ______ _            _______ _____ ____  _   _ 
+    #    |  __ \|  ____| |    |  ____|__   __|  ____|  __ \|  ____| |        /\|__   __|_   _/ __ \| \ | |
+    #    | |  | | |__  | |    | |__     | |  | |__  | |__) | |__  | |       /  \  | |    | || |  | |  \| |
+    #    | |  | |  __| | |    |  __|    | |  |  __| |  _  /|  __| | |      / /\ \ | |    | || |  | | . ` |
+    #    | |__| | |____| |____| |____   | |  | |____| | \ \| |____| |____ / ____ \| |   _| || |__| | |\  |
+    #    |_____/|______|______|______|  |_|  |______|_|  \_\______|______/_/    \_\_|  |_____\____/|_| \_|
+    #
+    # ---------------------------------------------------------------------------------
+    public function deleteRelationProj($id_customer)
+    {
+        try {
+            $sql = "UPDATE projects SET id_customer = null WHERE id_customer=:id_customer";
             $conexion = $this->db->connect();
             $pdoSt = $conexion->prepare($sql);
             $pdoSt->bindParam(":id_customer", $id_customer, PDO::PARAM_INT);
@@ -281,6 +307,54 @@ class customersModel extends Model
             exit();
         }
 
+    }
+
+    # ---------------------------------------------------------------------------------
+    #
+    #   _    _  _____   _____         _______  ______ 
+    #  | |  | ||  __ \ |  __ \    /\ |__   __||  ____|
+    #  | |  | || |__) || |  | |  /  \   | |   | |__   
+    #  | |  | ||  ___/ | |  | | / /\ \  | |   |  __|  
+    #  | |__| || |     | |__| |/ ____ \ | |   | |____ 
+    #   \____/ |_|     |_____//_/    \_\|_|   |______|
+    #                                               
+    # ---------------------------------------------------------------------------------
+    # Method update
+    # Update an customer's details once edited in the form
+    public function update(classCustomer $customer, $id)
+    {
+        try {
+            $sql = " 
+                    UPDATE customers
+                    SET
+                        name = :name,
+                        phone=:phone,
+                        city=:city,
+                        address=:address,
+                        email=:email,
+                        update_at = now()
+                    WHERE
+                        id=:id
+                    LIMIT 1";
+
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+
+            $pdoSt->bindParam(':name', $customer->name, PDO::PARAM_STR, 20);
+            $pdoSt->bindParam(":phone", $customer->phone, PDO::PARAM_INT, 9);
+            $pdoSt->bindParam(":city", $customer->city, PDO::PARAM_STR, 20);
+            $pdoSt->bindParam(":address", $customer->address, PDO::PARAM_STR, 20);
+            $pdoSt->bindParam(":email", $customer->email, PDO::PARAM_STR, 45);
+            $pdoSt->bindParam(":id", $id, PDO::PARAM_INT);
+
+            $pdoSt->execute();
+
+        } catch (PDOException $e) {
+
+            require_once ("template/partials/errorDB.php");
+            exit();
+
+        }
     }
 
 }

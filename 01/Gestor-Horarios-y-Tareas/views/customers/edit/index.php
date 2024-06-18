@@ -18,7 +18,7 @@
             </div>
             <div class="card-body">
                 <!-- formulario  -->
-                <form action="<?= URL ?>customers/create" method="POST">
+                <form action="<?= URL ?>customers/update/<?= $this->id ?>" method="POST">
                     <!-- name -->
                     <div class="mb-3">
                         <label for="" class="form-label">Name</label>

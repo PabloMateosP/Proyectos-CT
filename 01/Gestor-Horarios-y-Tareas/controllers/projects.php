@@ -480,6 +480,8 @@ class Projects extends Controller
                 }
             }
 
+            
+
             // finish_date
             if (strcmp($project->finish_date, $project_orig->finish_date) !== 0) {
                 if (empty($finish_date)) {
@@ -506,6 +508,8 @@ class Projects extends Controller
                 } else {
                     $formEmployees = [];
                 }
+
+                $this->model->createRelationCustomerProject($id, $id_customer);
 
                 $projectEmployeeRelated = $this->model->getProjectEmployees($id);
 

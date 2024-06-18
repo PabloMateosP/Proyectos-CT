@@ -250,6 +250,8 @@ class Customers extends Controller
 
             $this->model->deleteRelation($id);
 
+            $this->model->deleteRelationProj($id);
+
             $this->model->delete($id);
 
             $_SESSION['mensaje'] = 'Customer delete correctly';
@@ -281,7 +283,7 @@ class Customers extends Controller
         } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['exceptEmp']))) {
             $_SESSION['mensaje'] = "Operation without privileges";
 
-            header('location:' . URL . 'projects');
+            header('location:' . URL . 'customers');
 
         } else {
             $id = $param[0];
@@ -296,7 +298,7 @@ class Customers extends Controller
                 $this->view->error = $_SESSION['error'];
 
                 // We autofill the form
-                $this->view->project_ = unserialize($_SESSION['employee']);
+                $this->view->customer_ = unserialize($_SESSION['customer']);
 
                 // I recover array of specific errors
                 $this->view->errores = $_SESSION['errores'];
@@ -304,11 +306,125 @@ class Customers extends Controller
                 // We must free the session variables since their purpose has been resolved
                 unset($_SESSION['error']);
                 unset($_SESSION['errores']);
-                unset($_SESSION['projects']);
+                unset($_SESSION['customer']);
                 // If these variables exist when there are no errors, we will enter the error blocks in the conditionals
             }
 
             $this->view->render("customers/edit/index");
+        }
+    }
+
+
+    public function update($param = [])
+    {
+        // Start Session
+        session_start();
+
+        if (!isset($_SESSION['id'])) {
+            $_SESSION['mensaje'] = "User must be authenticated";
+            header("location:" . URL . "login");
+        } else if ((!in_array($_SESSION['id_rol'], $GLOBALS['admin_manager']))) {
+            $_SESSION['mensaje'] = "Operation without privileges";
+            header("location:" . URL . "customers");
+        } else {
+            // Sanitize data
+            $name = filter_var($_POST['name'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+            $phone = filter_var($_POST['phone'] ?? '', FILTER_SANITIZE_NUMBER_INT);
+            $city = filter_var($_POST['city'] ?? '', FILTER_SANITIZE_STRING);
+            $address = filter_var($_POST['address'] ?? '', FILTER_SANITIZE_STRING);
+            $email = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
+            
+            
+            // Create a project object
+            $customer = new classCustomer(
+                null,
+                $name,
+                $phone,
+                $city,
+                $address,
+                $email,
+                null,
+                null
+            );
+
+            $id = $param[0];
+
+            // Get original project data
+            $customer_orig = $this->model->read($id);
+
+            // 3. Validation
+            // Only if necessary
+            // Only in case when the field is modified 
+
+            $errors = [];
+
+            // name
+            if (strcmp($customer->name, $customer_orig->name) !== 0) {
+                if (empty($name)) {
+                    $errors['customer'] = 'The field name is required';
+                } else if (strlen($name) > 20) {
+                    $errors['customer'] = 'The field name is too long';
+                }
+            }
+
+            // phone
+            if (strcmp($customer->phone, $customer_orig->phone) !== 0) {
+                if (empty($phone)) {
+                    $errors['phone'] = 'The field phone is required';
+                } else if (strlen($phone) > 9) {
+                    $errors['phone'] = 'The field phone is too long';
+                }
+            }
+
+            // city
+            if (strcmp($customer->city, $customer_orig->city) !== 0) {
+                if (empty($city)) {
+                    $errors['city'] = 'The field city is required';
+                } else if (strlen($city) > 20) {
+                    $errors['city'] = 'The field city is too long';
+                }
+            }
+
+            // address
+            if (strcmp($customer->address, $customer_orig->address) !== 0) {
+                if (empty($address)) {
+                    $errors['address'] = 'The field address is required';
+                } else if (strlen($address) > 10) {
+                    $errors['address'] = 'The field address is too long';
+                }
+            }
+
+            // email
+            if (strcmp($customer->email, $customer_orig->email) !== 0) {
+                if (empty($email)) {
+                    $errors['email'] = 'The field email is required';
+                } else if (strlen($email) > 45) {
+                    $errors['email'] = 'The field email is too long';
+                }
+            }
+
+            if (!empty($errors)) {
+
+                // Validation's error
+                $_SESSION['customer'] = serialize($customer);
+                $_SESSION['error'] = 'Form not validated';
+                $_SESSION['errores'] = $errors;
+
+                // Redirect to workingHour's main
+                header('location:' . URL . 'customers/edit/' . $id);
+
+            } else {
+
+                // Update project data
+                $this->model->update($customer, $id);
+
+                // Message
+                $_SESSION['mensaje'] = "Customer updated correctly";
+
+                // Redirect to projects main
+                header('location:' . URL . 'customers');
+
+            }
         }
     }
 

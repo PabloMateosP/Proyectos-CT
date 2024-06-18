@@ -1,11 +1,11 @@
 --
 -- Base de Datos Proyecto gestor Proyectos, Tareas y Horarios 
 --
-drop database if EXISTS gesWorkingHours;
+drop database if EXISTS gestionsur;
 
-create database if not EXISTS gesWorkingHours;
+create database if not EXISTS gestionsur;
 
-use gesWorkingHours;
+use gestionsur;
 
 -- Table structure for table `employees`
 -- Table to collect employee data
