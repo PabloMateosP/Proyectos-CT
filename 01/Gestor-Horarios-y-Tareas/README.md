@@ -62,6 +62,14 @@ Otra cosa a destacar es que para el funcionamiento de la importación de datos a
 
 Como otro punto a parar tenemos la instalación de fullcalendar para los eventos, instalado mediante node. 
 
+Por otra parte se debe de activar los eventos para crear el siguiente evento:
+CREATE EVENT reiniciar_horasTotales
+ON SCHEDULE EVERY 1 WEEK
+STARTS '2024-06-23 23:59:59' 
+DO
+UPDATE employees SET total_hours = 0;
+Este evento hace que las horas totales de cada empleado se reinicien a las 11:59:59 del domingo que viene es decir la fehca de starts se debe de modificar según cuando se ejecute la app. 
+
 ## IMPORTANTE ## 
 Como la app será de entrada solo para aquellos que el administrador de la web haya añadido el apartado Sign Up del Inicio de la web debe ser eliminado una vez que el administrador se cree su propio usuario, por defecto el primer usuario creado será administrador por lo que al crear ese usuario ya puede hacer todas las acciones  
 
@@ -72,9 +80,7 @@ Por otra parte, el correo del empleado y del usuario de el mismo deben ser igual
 
 **Una de las cosas más importantes también es el hecho de si un proyecto o una tarea de un proyecto fuese borrado, las horas trabajadas que estuviesen asignaddas en ese proyecto se actualizaría y pondría ese campo como nulo tanto la tarea y el proyecto si el proyecto fuese borrado por lo que el borrado de proyectos sería de lo último que se debería de hacer por no decir que no lo haría ya que se puede editar el mismo siempre y borrar sus tareas ...** 
 
-
 ------------------------------------------------------------------------------------------------------------------------------------------
 ## Authors ##
 1º - Pablo Mateos Palas (Prácticas en CT Puerto Santa María)
-CT_Ingenieros13
-adminPablo1301-
+Hecho con todo el cariño posible que se le puede dar a una app :)

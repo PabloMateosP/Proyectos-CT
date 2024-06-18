@@ -328,3 +328,4 @@ Día 18/06/24
     - He arreglado casos de actualización y borrado en la tabla customer. 
     - He añadido la actualización a la tabla customer.
     - A la hora de borrar un customer he añadido que se actualice la relación con los proyectos.
+    - He subido la app al servidor de forma interna y se ha creado el evento que pone las horas totales a 0 cada domingo 
