@@ -42,21 +42,21 @@
                         <label for="rol" class="form-label">Rol</label>
                         <select class="form-select" name="rol">
                             <?php foreach ($this->roles as $rol): ?>
-                                <option value="<?= $rol->id ?>" <?= ($rol) ? 'selected' : '' ?>>
+                                <option value="<?= $rol->id ?>" <?= ($rol->id == $this->rol->id) ? 'selected' : '' ?>>
                                     <?= $rol->name ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
 
+
                     <!-- password -->
                     <div class="mb-3">
                         <label for="" class="form-label">Password</label>
-                        <input type="password" class="form-control" name="password"
-                            placeholder="Add a new password">
+                        <input type="password" class="form-control" name="password" placeholder="Add a new password">
                         <?php if (isset($this->errores['password'])): ?>
-                    <span class=" form-text text-danger" role="alert">
-                            <?= $this->errores['password'] ?>
+                            <span class=" form-text text-danger" role="alert">
+                                <?= $this->errores['password'] ?>
                             </span>
                         <?php endif; ?>
                     </div>

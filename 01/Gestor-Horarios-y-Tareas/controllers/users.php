@@ -296,11 +296,10 @@ class Users extends Controller
 
             $this->view->id = $id;
             $this->view->title = "Form edit user";
+
             $this->view->user = $this->model->read($id);
 
-            $this->view->user = $this->model->getUser($this->view->id);
-
-            $this->view->rol = $this->model->getUserRole($this->view->id);
+            $this->view->rol = $this->model->getUserRole($id);
 
             if (isset($_SESSION['error'])) {
                 $this->view->error = $_SESSION['error'];

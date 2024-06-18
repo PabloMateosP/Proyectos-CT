@@ -252,8 +252,7 @@ class usersModel extends Model
                     SELECT     
                         id,
                         name,
-                        email,
-                        password
+                        email
                     FROM  
                         users  
                     WHERE
@@ -292,8 +291,7 @@ class usersModel extends Model
             $sql = " SELECT
                         id,
                         name,
-                        email,
-                        password
+                        email
                     FROM 
                         users
                     WHERE id =  :id;";
