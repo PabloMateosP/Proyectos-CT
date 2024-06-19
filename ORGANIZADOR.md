@@ -335,3 +335,4 @@ Día 19/06/24
     - He estado arreglando algunos fallos de última hora, por otra parte he modificado partes del login para mejor seguridad
     - He testeado fallos en la app una vez estando en el servidor de empresa. 
     - He añadido al controlador base una función para cerrar la sesión después de media hora. 
+    - He añadido más datos a la importación: límite de 100 

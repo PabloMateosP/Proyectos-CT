@@ -383,6 +383,22 @@ class employeesModel extends Model
         }
     }
 
+    public function deleteWH($id_employee) 
+    {
+        try {
+            $sql = " DELETE FROM working_hours WHERE id_employee = :id_employee;";
+            $conexion = $this->db->connect();
+            $pdoSt = $conexion->prepare($sql);
+            $pdoSt->bindParam(":id_employee", $id_employee, PDO::PARAM_INT);
+            $pdoSt->execute();
+            return $pdoSt;
+
+        } catch (PDOException $e) {
+            require_once ("template/partials/errorDB.php");
+            exit();
+        }
+    }
+
     # ---------------------------------------------------------------------------------
     #
     #    _____  ______          _____  

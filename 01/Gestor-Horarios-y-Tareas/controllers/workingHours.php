@@ -35,7 +35,7 @@ class WorkingHours extends Controller
 
             $this->view->title = "Working Hours";
 
-            if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['employee'])) {
+            if (isset($_SESSION['id_rol']) && in_array($_SESSION['id_rol'], $GLOBALS['organiser_employee'])) {
 
                 $email = $this->view->email_account = $this->model->get_userEmailById($_SESSION['id']);
 

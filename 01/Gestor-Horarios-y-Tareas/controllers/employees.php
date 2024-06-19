@@ -289,6 +289,7 @@ class Employees extends Controller
         } else {
             $id = $param[0];
 
+            $this->model->deleteWH($id);
             $this->model->deleteRelation($id);
             $this->model->delete($id);
 
@@ -733,7 +734,6 @@ class Employees extends Controller
     # ---------------------------------------------------------------------------------
     function importarDatos()
     {
-
         session_start();
         if (!isset($_SESSION['id'])) {
             $_SESSION['mensaje'] = "User must be authenticated";
@@ -745,7 +745,7 @@ class Employees extends Controller
             exit();
         }
 
-        # Validate if is an excel file
+        # Validate if it is an excel file
         $allowed_extensions = array('xlsx');
         $file_extension = pathinfo($_FILES['archivos']['name'], PATHINFO_EXTENSION);
         if (!in_array(strtolower($file_extension), $allowed_extensions)) {
@@ -759,7 +759,15 @@ class Employees extends Controller
         $worksheet = $spreadsheet->getActiveSheet();
         $rows = [];
 
+        $isFirstRow = true;
+        $row_count = 0; // Variable to count processed rows
+
         foreach ($worksheet->getRowIterator() as $row) {
+            if ($isFirstRow) {
+                $isFirstRow = false;
+                continue;  # Skip the first row
+            }
+
             $cellIterator = $row->getCellIterator();
             $cellIterator->setIterateOnlyExistingCells(FALSE);
             $cells = [];
@@ -768,18 +776,45 @@ class Employees extends Controller
                 $cells[] = $sanitized_value;
             }
             $rows[] = $cells;
+
+            $row_count++;
+            if ($row_count >= 100) {
+                break; // Exit the loop after processing 100 rows
+            }
         }
 
-        # Sanitize the data
+        # Sanitize the data and handle unique constraints
+        $dni_counter = 0; // Counter for assigning unique numbers to empty dni values
+        $email_counter = 0; // Counter for assigning unique numbers to empty email values
+
         foreach ($rows as $fila) {
             $employee = new classEmployee();
             $employee->identification = isset($fila[0]) ? filter_var($fila[0], FILTER_SANITIZE_STRING) : null;
+
+            // Stop inserting if identification is null or empty
+            if (empty($employee->identification)) {
+                break;
+            }
+
             $employee->name = isset($fila[1]) ? filter_var($fila[1], FILTER_SANITIZE_STRING) : null;
             $employee->last_name = isset($fila[2]) ? filter_var($fila[2], FILTER_SANITIZE_STRING) : null;
             $employee->phone = isset($fila[3]) ? filter_var($fila[3], FILTER_SANITIZE_NUMBER_INT) : null;
             $employee->city = isset($fila[4]) ? filter_var($fila[4], FILTER_SANITIZE_STRING) : null;
-            $employee->dni = isset($fila[5]) ? filter_var($fila[5], FILTER_SANITIZE_STRING) : null;
-            $employee->email = isset($fila[6]) ? filter_var($fila[6], FILTER_SANITIZE_EMAIL) : null;
+
+            // Handle dni field
+            if (isset($fila[5]) && !empty($fila[5])) {
+                $employee->dni = filter_var($fila[5], FILTER_SANITIZE_STRING);
+            } else {
+                $employee->dni = ++$dni_counter; // Assign unique number for empty dni
+            }
+
+            // Handle email field
+            if (isset($fila[6]) && !empty($fila[6])) {
+                $employee->email = filter_var($fila[6], FILTER_SANITIZE_EMAIL);
+            } else {
+                $employee->email = "empty_email_" . ++$email_counter . "@example.com"; // Assign unique email for empty email
+            }
+
             $employee->total_hours = isset($fila[7]) ? filter_var($fila[7], FILTER_SANITIZE_NUMBER_INT) : null;
 
             $this->model->create($employee);
@@ -789,6 +824,7 @@ class Employees extends Controller
         header("location:" . URL . "employees");
         exit();
     }
+
 
     # ---------------------------------------------------------------------------------
     #
