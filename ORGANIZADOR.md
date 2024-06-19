@@ -331,3 +331,7 @@ Día 18/06/24
     - He subido la app al servidor de forma interna y se ha creado el evento que pone las horas totales a 0 cada domingo 
     - He actualizado diferentes métodos de usuarios para dar más permisos al manager así como hacer que la actualización de usuarios sea correcta. 
     
+Día 19/06/24
+    - He estado arreglando algunos fallos de última hora, por otra parte he modificado partes del login para mejor seguridad
+    - He testeado fallos en la app una vez estando en el servidor de empresa. 
+    - He añadido al controlador base una función para cerrar la sesión después de media hora. 
